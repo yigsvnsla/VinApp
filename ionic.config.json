@@ -1,0 +1,7 @@
+{
+  "name": "SearchVin",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

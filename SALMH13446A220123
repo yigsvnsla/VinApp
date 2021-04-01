@@ -1,0 +1,30 @@
+SALMH13446A220123
+
+Cazonete	4RUNNER	
+Cazonete	86	
+Cazonete	AVALON	
+Cazonete	AVANZA	
+Cazonete	C-HR	
+Cazonete	CAMRY	
+Cazonete	COROLLA	
+Cazonete	HIACE	
+Cazonete	HIGHLANDER	
+Cazonete	HILUX	
+Cazonete	LAND CRUISER	
+Cazonete	PRIUS	
+Cazonete	PRIUS C	
+Cazonete	RAV4	
+Cazonete	SEQUOIA	
+Cazonete	SIENNA	
+Cazonete	TACOMA	
+Cazonete	TUNDRA	
+Cazonete	YARIS	
+
+
+
+config.XML:
+     // <preference name="resizeOnFullScreen" value="true" />
+
+manifest: 
+
+mainActivity:
