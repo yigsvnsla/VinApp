@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" style="width: 100% ;">
-      <ion-back-button (click)="exitClick()" defaultHref="home"></ion-back-button>
+      <ion-back-button defaultHref="home"></ion-back-button>
       <ion-title>Vehicle</ion-title>
       <ion-icon button style="margin-right: 32px;" slot="start" name="add" (click)="addComponent()"></ion-icon>
       <ion-icon button (click)="copyInfoVehicle()" class="component" slot="end" name="copy"></ion-icon>
@@ -16,9 +16,9 @@
     <ion-item-divider>
       <ion-label>Vehicle</ion-label>
       <ion-label class="ion-margin" slot="end" >{{car.Id}}#</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="carInfo" (ionChange)="toogle($event)"></ion-toggle>
+      <ion-toggle slot="end" [(ngModel)]="carInfo"></ion-toggle>
     </ion-item-divider>
-  
+
     <ion-grid fixed *ngIf="carInfo">
       <ion-row>
         <ion-col size="6">
@@ -98,7 +98,7 @@
             <ion-input
               type="text"
               placeholder="Awesome Input"
-              [(ngModel)]="car.BoddyClass"
+              [(ngModel)]="car.Body"
             ></ion-input>
           </ion-item>
         </ion-col>
@@ -133,6 +133,13 @@
       </ion-row>
     </ion-grid>
   </ion-item-group>
+
+  <div class="notComponents" *ngIf="this.components.length == 0 " >
+    <div *ngIf="!carInfo" class="notComponents">
+      <img  src="../../../assets/img/undraw_empty_xct9.svg" alt="">
+      <ion-label class="ion-margin">No components loaded</ion-label>
+    </div>
+  </div>
 
   <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider>
     <!--  -->

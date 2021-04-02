@@ -33,6 +33,7 @@ export class ListPartComponent implements OnInit {
 
   async cardClick(index: CoreVechicle) {
     this.modalController.dismiss();
+    console.log(index)
     this.main.viewVehicle(index);
   }
 

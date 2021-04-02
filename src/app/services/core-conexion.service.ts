@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { LoadingController } from "@ionic/angular";
 import { CorePart, CoreVechicle } from "./temp.service";
 import { Plugins } from "@capacitor/core";
-import { async } from "@angular/core/testing";
 const { Device } = Plugins;
 
 @Injectable({
@@ -43,15 +42,14 @@ export class CoreConexionService {
               Year: parseInt(res.Results[9].Value),
               Trim: res.Results[12].Value,
               Serie: res.Results[11].Value,
-              Body: res.Results[23].Value,
-              Cylinders: parseInt(res.Results[70].Value),
+              Body: res.Results[22].Value,
+              Cylinders: parseInt(res.Results[69].Value),
+              Type: res.Results[13].Value,
               Parts: null,
               Vin: vin,
-              Type: "",
               Device: info.uuid,
               Name: "",
             });
-            console.log(parseInt(res.Results[70].Value));
             loading.dismiss();
           },
           (fail) => {

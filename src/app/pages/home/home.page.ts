@@ -6,6 +6,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  ToastController,
 } from "@ionic/angular";
 
 import { Plugins, KeyboardInfo } from "@capacitor/core";
@@ -14,15 +15,18 @@ import { CoreConexionService } from "src/app/services/core-conexion.service";
 
 const { Device, Keyboard } = Plugins;
 
-Keyboard.addListener("keyboardWillShow", (info: KeyboardInfo) => {
-  console.log("keyboard will show with height", info.keyboardHeight);
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
-
-Keyboard.addListener("keyboardWillHide", () => {
-  console.log("keyboard will hide");
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
+try {
+  //keyboard Show
+  Keyboard.addListener("keyboardWillShow", (info: KeyboardInfo) => {
+    document.getElementById("ionFooter").classList.toggle("hidden");
+  });
+  //keyboard Hide
+  Keyboard.addListener("keyboardWillHide", () => {
+    document.getElementById("ionFooter").classList.toggle("hidden");
+  }).remove();
+} catch (e) {
+  console.error('WEB/PC Keyborad not load')
+}
 
 @Component({
   selector: "app-home",
@@ -44,9 +48,10 @@ export class HomePage implements OnInit {
     private loading: LoadingController,
     private modalController: ModalController,
     private alertController: AlertController,
+    private toastController: ToastController,
     private main: TempService,
     private core: CoreConexionService,
-  ) {}
+  ) { }
 
   // public checked;
   // checkbox(event) {
@@ -72,7 +77,7 @@ export class HomePage implements OnInit {
     return;
   };
 
-  result: string = "SALMH13446A220123";
+  result: string = "";
 
   async scan() {
     const _result = await this.barcode.scan({
@@ -83,8 +88,21 @@ export class HomePage implements OnInit {
   }
 
   async searchVin() {
+
+    // VIN 
+    // xxx / primeros 3 digitos / WMI
+    // xxxxxx / 6 digitos siguientes /  VDS
+    // xxxxxxxx //  restante / VIS
+
+
+    let alert = this.toastController.create({
+      message: 'Insert vin code',
+      cssClass: 'toast1',
+      duration: 10000
+    })
     let a = await this.core.search(this.result);
-    a? this.main.setVehicle(a) : console.log("error");
+    a ? this.main.setVehicle(a) : (await alert).present();
+
   }
 
   manualPage() {

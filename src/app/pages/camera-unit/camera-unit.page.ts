@@ -13,18 +13,7 @@ import {
   CameraPreviewPictureOptions,
 } from "@capacitor-community/camera-preview";
 
-Keyboard.addListener("keyboardWillShow", (info: KeyboardInfo) => {
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
-
-Keyboard.addListener("keyboardWillHide", () => {
-  console.log("keyboard will hide");
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
-
 import { DinamicModalComponent } from "src/app/component/dinamic-modal/dinamic-modal.component";
-import { HttpService } from "src/app/services/http.service";
-import { ActivatedRoute, Router } from "@angular/router";
 import {
   CorePart,
   CoreVechicle,
@@ -41,13 +30,13 @@ import { CoreConexionService } from "src/app/services/core-conexion.service";
 export class CameraUnitPage implements OnInit {
   nameIcon: string = "close-circle";
   public viewCam: boolean = false;
-  private currentNull: boolean;
   vehicle: CoreVechicle;
   part: CorePart;
   statusId: number;
   constructor(
     private sanitizer: DomSanitizer,
     public modalController: ModalController,
+    public alertController:AlertController,
     private main: TempService,
     private core: CoreConexionService
   ) {}
@@ -56,9 +45,8 @@ export class CameraUnitPage implements OnInit {
     this.vehicle = this.main.currentVehicle;
     this.part = this.main.currentPart;
     this.sliderOptions = this.sliderBoostrap();
-    this.currentNull = true;
+    this.part.status = 'Reconditioned'
   }
-
   //camera
   public cameraActive: boolean = false;
   torchActive = false;
@@ -72,14 +60,14 @@ export class CameraUnitPage implements OnInit {
       disableExifHeaderStripping: false,
     };
     this.cameraActive = true;
-
+    document.getElementById("ionFooter").classList.toggle("hidden");
     CameraPreview.start(cameraPreviewOptions).then(() => {
-      document.getElementById("ionFooter").classList.toggle("hidden");
     });
   }
   async stopCamera() {
+    document.getElementById("ionFooter").classList.toggle("hidden");
     await CameraPreview.stop().then(() => {
-      document.getElementById("ionFooter").classList.toggle("hidden");
+      
     });
     this.cameraActive = false;
     this.viewCam = false;
@@ -149,9 +137,9 @@ export class CameraUnitPage implements OnInit {
       `data:image/jpge;base64,${url}`
     );
   }
-
-  public range: string;
+  
   rangeChange(event) {
+    console.log(event)
     this.part.status = this.status(event.detail.value);
   }
   status(id: any){
@@ -159,7 +147,7 @@ export class CameraUnitPage implements OnInit {
       case 0:
         return "New"
       case 1:
-        return "Reconditioned/Certified";
+        return "Reconditioned";
       case 2:
         return "Open box"
       case 3:
@@ -168,18 +156,35 @@ export class CameraUnitPage implements OnInit {
   }
 
   async getCategories() {
- this.presentModal(false, await this.core.findArray('Categories'), "Categories").then((x) => {
-     this.part.category = x.name;
-     this.part.categoryId = x.id;
-     this.part.part = ""
+    this.presentModal(false, await this.core.findArray('Categories'), "Categories").then((x) => {
+      this.part.category = x.name;
+      this.part.categoryId = x.id;
+      this.part.part = ""
     });
   }
 
   async getParts() {
     this.presentModal(false, await this.core.findArray('Parts', `?category.id_eq=${this.part.categoryId}`), "Parts").then((x) => {
-     this.part.part = x.name;
-     this.part.id = x.id;
+      this.part.part = x.name;
+      this.part.id = x.id;
     });
+  }
+
+  private async validation(){
+    let alert = await this.alertController.create({
+      header:'Alert',
+      message:`need to add data`,
+      buttons:[
+        {
+          text:'okay'
+        }
+      ]
+    })
+    if ( this.part.images.length == 0 || this.part.price == 0 || this.part.category == "" || this.part.part == ""){
+      alert.present()
+      return false
+    }
+    return true
   }
 
   // Modal Template
@@ -203,6 +208,9 @@ export class CameraUnitPage implements OnInit {
   }
   //Funcion que se encarga de agregar y modificar partes a un vehiculo dentro del modal.
   async finish() {
-    this.main.uploadPart()
+    if(await this.validation() == true ) {
+      this.main.uploadPart()
+      this.main.test()
+    }
   }
 }

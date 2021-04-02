@@ -8,6 +8,7 @@ const { Device } = Plugins;
 @Injectable({
   providedIn: "root",
 })
+
 export class TempService {
   currentVehicle: CoreVechicle;
   currentPart: CorePart;
@@ -22,6 +23,10 @@ export class TempService {
   setVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = vehicle;
     this.router.navigateByUrl("/manual");
+  }
+
+  async test(){
+    this.viewVehicle(this.currentVehicle);
   }
 
   async viewVehicle(vehicle: CoreVechicle) {
@@ -42,7 +47,7 @@ export class TempService {
       Trim: "",
       Serie: "",
       Body: "",
-      Cylinders: 0,
+      Cylinders:4,
       Parts: null,
       Vin: "",
       Id: "",

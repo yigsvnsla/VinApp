@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpService } from "./../../services/http.service";
-import { ModalController, ToastController,IonSlides} from "@ionic/angular";
+import { ModalController, ToastController,IonSlides, AlertController} from "@ionic/angular";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ModalPage } from "src/app/component/modal/modal.page";
 import { Plugins } from "@capacitor/core";
@@ -25,10 +25,9 @@ export class ItemsDetailsPage implements OnInit {
   constructor(
     private modalController: ModalController,
     private http: HttpService,
-    private route: ActivatedRoute,
     private toastController: ToastController,
-    private go: Router,
-    private main: TempService
+    private main: TempService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -36,10 +35,6 @@ export class ItemsDetailsPage implements OnInit {
     this.car = this.main.currentVehicle;
     this.maxYear = new Date().getFullYear().toString();
     console.log(this.components);
-  }
-
-  toogle(checked){
-    console.log(checked, " - ", this.carInfo)
   }
 
   addComponent(){
@@ -74,15 +69,7 @@ export class ItemsDetailsPage implements OnInit {
     });
       return
     })
-    
-
-   
   }
-
-  exitClick() {
-    this.modalList();
-  }
-
   satinize(url: string) {
     return `http://backuppapa.sytes.net:1337${url}`;
   }
@@ -109,9 +96,30 @@ export class ItemsDetailsPage implements OnInit {
    //console.log(com.id);
   }
   
-  cDelete(id: any) {
-    this.http.deleteComponent(id).subscribe((succes) => {
-      console.log("DELETE" + id);
-    });
+  async cDelete(id: any) {
+
+    let alert = await this.alertController.create({
+      header:'Alert',
+      message:'are you sure you want to remove this component?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Okay',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.http.deleteComponent(id).subscribe((succes) => {
+              console.log("DELETE" + id);
+            });
+          }
+        }
+      ]
+    })
+    alert.present()
   }
 }

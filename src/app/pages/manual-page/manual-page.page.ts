@@ -7,17 +7,6 @@ import {
   ModalController,
 } from "@ionic/angular";
 
-import { KeyboardInfo, Plugins } from "@capacitor/core";
-const { Keyboard } = Plugins;
-Keyboard.addListener("keyboardWillShow", (info: KeyboardInfo) => {
-  console.log("keyboard will show with height", info.keyboardHeight);
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
-
-Keyboard.addListener("keyboardWillHide", () => {
-  console.log("keyboard will hide");
-  document.getElementById("ionFooter").classList.toggle("hidden");
-});
 import { DinamicModalComponent } from "../../component/dinamic-modal/dinamic-modal.component";
 import { CoreVechicle, TempService } from "src/app/services/temp.service";
 @Component({
@@ -41,9 +30,7 @@ export class ManualPagePage implements OnInit {
   Vehicle: CoreVechicle;
 
   async ngOnInit() {
-    // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
-    // primero verifica que exista un objeto instanciado en el servicio TransferService
-    // dado el caso que no exista, se debe instanciar uno vacio
+
     this.maxYear = "2050";
     this.Vehicle = this.main.currentVehicle;
   }
