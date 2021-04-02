@@ -1,0 +1,208 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" style="width: 100% ;">
+      <ion-back-button (click)="exitClick()" defaultHref="home"></ion-back-button>
+      <ion-title>Vehicle</ion-title>
+    
+      <ion-icon button style="margin-right: 32px;" slot="start" name="add" (click)="addComponent()"></ion-icon>
+      <ion-icon button (click)="copyInfoVehicle()" class="component" slot="end" name="copy"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider style="margin-top: -32px;">
+    </ion-item-divider>
+    <ion-item-divider>
+      <ion-label>Vehicle</ion-label>
+      <ion-label class="ion-margin" slot="end" >{{car.Id}}#</ion-label>
+      <ion-toggle slot="end" [(ngModel)]="carInfo" (ionChange)="toogle($event)"></ion-toggle>
+    </ion-item-divider>
+  
+    <ion-grid fixed *ngIf="carInfo">
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon slot="start" name="hammer" class="component"></ion-icon>
+            <ion-label position="floating">Maker</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Select Maker"
+              [value]="car.Maker"
+              readonly="true"
+              autocapitalize="true"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item class="component">
+            <ion-icon slot="start" name="calendar" class="component"></ion-icon>
+            <ion-label position="floating">Year</ion-label>
+            <ion-datetime readonly="true" class="ion-no-margin" (ionChange)="change($event)" displayFormat="YYYY" min="1985" [max]="maxYear" [value]="car.Year"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon
+              slot="start"
+              src="../../../assets/img/svg/018-garage.svg"
+            class="component"></ion-icon>
+            <ion-label position="floating">Model</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [value]="car.Model"
+              readonly="true"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon
+              slot="start"
+              src="../../../assets/img/svg/020-checklist.svg"
+            class="component"></ion-icon>
+            <ion-label position="floating">Trim</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [(ngModel)]="car.Trim"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon
+              slot="start"
+              src="../../../assets/img/svg/035-engine.svg"
+            class="component"></ion-icon>
+            <ion-label position="floating">Cylinders</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [(ngModel)]="car.Cylinders"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon
+              slot="start"
+              src="../../../assets/img/svg/047-car-3.svg"
+            class="component"></ion-icon>
+            <ion-label position="floating">Body Class</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [(ngModel)]="car.BoddyClass"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon slot="start" name="car" class="component"></ion-icon>
+            <ion-label position="floating">Series</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [value]="car.Serie"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-icon
+              slot="start"
+              src="../../../assets/img/svg/030-chassis.svg"
+              class="component"
+            ></ion-icon>
+            <ion-label position="floating">Type</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Awesome Input"
+              [(ngModel)]="car.Type"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item-group>
+
+  <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider>
+    <!--  -->
+    <ion-slide *ngFor="let c of components; let i = index; let count = count">
+      <ion-slides mode="md" pager="md">
+        <ion-slide *ngFor="let z of c.images;"> 
+          <img class="slide" [src]="z.getImage()" alt="" >
+        </ion-slide>
+      </ion-slides>
+    <!--  -->
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-buttons slot="start" *ngIf="i > 0">
+            <ion-button (click)="cPrevent()">
+              <ion-icon slot="start" name="caret-back"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-label>Component</ion-label>
+          <ion-label class="ion-margin" slot="end" >{{c.code}}#</ion-label>
+          <ion-buttons slot="end" *ngIf="i < count - 1">
+            <ion-button (click)="cNext()">
+              <ion-icon name="caret-forward"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item-divider>
+        <ion-grid fixed (click)="goComponent(c)">
+          <ion-row>
+            <ion-col size="6">
+              <ion-item >
+                <ion-icon slot="start" name="logo-usd" class="component"></ion-icon>
+                <ion-label position="floating">Price: </ion-label>
+                <ion-input readonly="true" [(ngModel)]="c.price"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item>
+                <ion-icon slot="start" name="star" class="component"></ion-icon>
+                <ion-label position="floating">Status:</ion-label>
+                <ion-input readonly=true  [(ngModel)]="c.status"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item >
+                <ion-icon slot="start" name="list" class="component"></ion-icon>
+                <ion-label position="floating">Category </ion-label>
+                <ion-input readonly="true" [value]="c.category"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6">
+              <ion-item>
+                <ion-icon slot="start" name="grid" class="component"></ion-icon>
+                <ion-label position="floating">Name</ion-label>
+                <ion-input readonly=true [value]="c.part"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="12">
+              <ion-button (click)="deletePart(c.code, i)" expand="block" shape="round" color="danger">
+                <ion-label>Delete</ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item-group>
+    </ion-slide>
+  </ion-slides>
+
+  
+</ion-content>

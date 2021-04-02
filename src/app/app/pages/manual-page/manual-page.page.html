@@ -1,0 +1,121 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>manualPage</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <ion-item button (click)="getMakers()" >
+    <ion-icon slot="start" name="hammer"></ion-icon>
+    <ion-label position="floating">Maker</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Select Maker"
+      [(ngModel)]="Vehicle.Maker"
+      readonly="true"
+      autocapitalize="true"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item (click)="selectYear()">
+    <ion-icon slot="start" name="calendar"></ion-icon>
+    <ion-label position="floating">Year</ion-label>
+    <ion-input type="number" placeholder="Select Year" readonly="true" [(ngModel)]="Vehicle.Year"></ion-input>
+  </ion-item>
+
+  <ion-item (click)="getModels()">
+    <ion-icon
+      slot="start"
+      src="../../../assets/img/svg/018-garage.svg"
+    ></ion-icon>
+    <ion-label position="floating">Model</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Select Model"
+      [(ngModel)]="Vehicle.Model"
+      readonly="true"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon
+      slot="start"
+      src="../../../assets/img/svg/020-checklist.svg"
+    ></ion-icon>
+    <ion-label position="floating">Trim</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Insert trim"
+      [(ngModel)]="Vehicle.Trim"
+    ></ion-input>
+
+  </ion-item>
+
+  <ion-item>
+    <ion-icon
+      slot="start"
+      src="../../../assets/img/svg/035-engine.svg"
+    ></ion-icon>
+    <ion-label position="floating">Cylinders</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Insert cylinders"
+      [(ngModel)]="Vehicle.Cylinders"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon
+      slot="start"
+      src="../../../assets/img/svg/047-car-3.svg"
+    ></ion-icon>
+    <ion-label position="floating">Body Class</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Insert body class"
+      [(ngModel)]="Vehicle.BodyClass"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon
+      slot="start"
+      src="../../../assets/img/svg/030-chassis.svg"
+    ></ion-icon>
+    <ion-label position="floating">Type Vehicle</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Insert type"
+      [(ngModel)]="Vehicle.Type"
+    ></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon slot="start" name="car"></ion-icon>
+    <ion-label position="floating">Series</ion-label>
+    <ion-input
+      type="text"
+      placeholder="Insert serie"
+      [(ngModel)]="Vehicle.Serie"
+    ></ion-input>
+  </ion-item>
+
+</ion-content>
+  
+<ion-footer id="ionFooter">
+  <ion-button
+    size="large"
+    class="ion-margin"
+    expand="block"
+    fill="outline"
+    shape="round"
+    (click)="submit()"
+  >
+    <ion-label>Continue</ion-label>
+    <ion-icon slot="end" name="chevron-forward"></ion-icon>
+  </ion-button>
+</ion-footer>

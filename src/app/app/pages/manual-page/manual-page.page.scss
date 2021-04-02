@@ -1,0 +1,18 @@
+ion-button {
+  --border-color: #00bfa6;
+  color: #00bfa6;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: stretch;
+  align-items: flex-start;
+  margin-left: 1%;
+}
+
+ion-input {
+  text-transform: uppercase;
+}

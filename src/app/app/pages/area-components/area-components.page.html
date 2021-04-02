@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Components</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="notComponents" *ngIf="car.components.length === 0">
+    <img src="../../../assets/img/undraw_empty_xct9.svg" alt="">
+    <ion-label class="ion-margin">No components loaded</ion-label>
+  </div>
+
+  <!-- fab placed to the top end -->
+  <ion-fab vertical="bottom" horizontal="end" color="success" slot="fixed">
+    <ion-fab-button (click)="presentModal()" color="success">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+    <!--Ion card space grid-->
+  <ion-card *ngFor="let part of car.components" (click)="presentModal(part)">
+    <ion-card-header>
+      <ion-card-title>{{part.category}}</ion-card-title>
+      <ion-card-subtitle>{{part.name}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <ion-slides >
+        <ion-slide class="slide" *ngFor="let item of part.photos">
+          <img class="slide" [src]="item.min">
+        </ion-slide>
+      </ion-slides>
+      <ion-item>
+        <ion-label>Price: {{part.price}}$</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="ion-text-center">
+      <ion-button (click)="submit()" color="success" size="large" expand="block" class="ion-margin" >
+        <ion-label>Finish</ion-label>
+        <ion-icon slot="end" name="checkmark-circle"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
