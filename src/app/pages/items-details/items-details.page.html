@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" style="width: 100% ;">
-      <ion-back-button defaultHref="home"></ion-back-button>
+      <ion-back-button routerLink="/home"></ion-back-button>
       <ion-title>Vehicle</ion-title>
       <ion-icon button style="margin-right: 32px;" slot="start" name="add" (click)="addComponent()"></ion-icon>
       <ion-icon button (click)="copyInfoVehicle()" class="component" slot="end" name="copy"></ion-icon>
@@ -156,8 +156,7 @@
               <ion-icon slot="start" name="caret-back"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <ion-label>Component
-          </ion-label>
+          <ion-label>Component - {{i+1}}/{{count}}</ion-label>
           <ion-label class="ion-margin" slot="end" >{{c.code}}#</ion-label>
           <ion-buttons slot="end" *ngIf="i < count - 1">
             <ion-button (click)="cNext()">
