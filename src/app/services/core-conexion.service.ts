@@ -161,7 +161,7 @@ export class CoreConexionService {
     });
   }
 
-  async uploadPart(id: string, part: CorePart, param: number[]): Promise<any> {
+  async uploadPart(id: string, part: CorePart, param: number[]): Promise<CorePart> {
     return new Promise(async (value) => {
       this.http
         .post<any>(
@@ -182,9 +182,15 @@ export class CoreConexionService {
         )
         .subscribe(
           (res) => {
-            value({
-              id: res.id,
-            });
+            console.log(res);
+            let r: CorePart = new CorePart();
+            r.code = res.id;
+            r.part = res.part.name;
+            r.price = res.price;
+            r.status = res.status;
+            r.setCategory(res.part.category);
+            r.setImagesFromURL(res.photos);
+            value(r);
           },
           (fail) => {
             value(null);

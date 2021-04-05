@@ -35,7 +35,7 @@
         <ion-slide *ngFor="let x of part.images; let i = index">
           <ion-card class="carrousel" >
             <ion-icon (click)="iDelete(i)" name="close" class="carrousel" ></ion-icon>
-            <img class="slide" [src]="getSantizeUrl(x.b64)" alt="">
+            <img class="slide" [src]="getSantizeUrl(x.getImage())" alt="">
           </ion-card>
         </ion-slide>
       </ion-slides> 

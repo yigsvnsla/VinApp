@@ -134,9 +134,8 @@ export class CameraUnitPage implements OnInit {
   }
   public getSantizeUrl(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(
-      `data:image/jpge;base64,${url}`
+      `${url}`
     );
-    // `data:image/jpge;base64,${url}`
   }
   // Ion-Range
   rangeChange(event) {
@@ -210,7 +209,7 @@ export class CameraUnitPage implements OnInit {
   //Funcion que se encarga de agregar y modificar partes a un vehiculo dentro del modal.
   async finish() {
     if(await this.validation() == true ) {
-      this.main.uploadPart()
+      this.main.uploadPart();
     }
   }
 

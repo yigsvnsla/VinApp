@@ -55,21 +55,23 @@ export class TempService {
   }
   async uploadPart() {
     if (this.currentPart.code === 0) {
-       this.currentPart.code = (
+       this.currentVehicle.Parts.push((
         await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
           await this.core.imagesStrapi(await this.form(true))
         ))
-      ).id;
-      this.showMessage("Uploaded!");
+      ));
+      this.viewVehicle(this.currentVehicle);
       console.log(await this.core.uploadHeisler(await this.form()));
       return;
     }
-    this.core.updatePart(
+    if(this.core.updatePart(
       this.currentPart,
       await this.currentPart.getNumbers(
         await this.core.imagesStrapi(await this.form(true))
       )
-    );
+    )){
+      this.viewVehicle(this.currentVehicle);
+    }
   }
 
   async form(boo?: boolean): Promise<FormData> {
