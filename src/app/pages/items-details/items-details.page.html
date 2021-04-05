@@ -142,30 +142,30 @@
   </div>
 
   <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider>
-    <!--  -->
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
         <ion-slide *ngFor="let z of c.images;"> 
           <img class="slide" [src]="z.getImage()" alt="" >
         </ion-slide>
-      </ion-slides>
-    <!--  -->
+      </ion-slides> 
+    
       <ion-item-group>
-        <ion-item-divider>
+        <ion-item-divider >
           <ion-buttons slot="start" *ngIf="i > 0">
             <ion-button (click)="cPrevent()">
               <ion-icon slot="start" name="caret-back"></ion-icon>
             </ion-button>
           </ion-buttons>
-          <ion-label>Component</ion-label>
-          <ion-label class="ion-margin" slot="end" >{{c.id}}#</ion-label>
+          <ion-label>Component
+          </ion-label>
+          <ion-label class="ion-margin" slot="end" >{{c.code}}#</ion-label>
           <ion-buttons slot="end" *ngIf="i < count - 1">
             <ion-button (click)="cNext()">
               <ion-icon name="caret-forward"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-item-divider>
-        <ion-grid fixed (click)="goComponent(c)">
+        <ion-grid fixed >
           <ion-row>
             <ion-col size="6">
               <ion-item >
@@ -199,9 +199,16 @@
             </ion-col>
           </ion-row>
           <ion-row>
-            <ion-col size="12">
-              <ion-button (click)="cDelete(c.id)" expand="block" shape="round" color="danger">
+            <ion-col size="6">
+              <ion-button (click)="deletePart(c.code, i)" expand="block" shape="round" color="danger">
                 <ion-label>Delete</ion-label>
+                <ion-icon slot="end" name="trash"></ion-icon>
+              </ion-button>
+            </ion-col>
+            <ion-col size="6">
+              <ion-button (click)="goComponent(c)" expand="block" shape="round" color="primary">
+                <ion-label>Edit</ion-label>
+                <ion-icon slot="end" name="create"></ion-icon>
               </ion-button>
             </ion-col>
           </ion-row>

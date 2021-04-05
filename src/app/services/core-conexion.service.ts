@@ -118,6 +118,7 @@ export class CoreConexionService {
         );
     });
   }
+
   async findArray(table: string, query?: string): Promise<any[]> {
     return new Promise(async (value) => {
       this.http
@@ -132,6 +133,7 @@ export class CoreConexionService {
         );
     });
   }
+
   async findComponents(id: string): Promise<CorePart[]> {
     return new Promise(async (value) => {
       this.http
@@ -159,7 +161,7 @@ export class CoreConexionService {
     });
   }
 
-  async uploadPart(id: string, part: CorePart): Promise<any> {
+  async uploadPart(id: string, part: CorePart, param: number[]): Promise<any> {
     return new Promise(async (value) => {
       this.http
         .post<any>(
@@ -167,7 +169,7 @@ export class CoreConexionService {
           {
             part: part.id,
             price: part.price,
-            photos: part.arrImage,
+            photos: param,
             product: parseInt(id),
             status: part.status,
             category: part.categoryId,
@@ -223,22 +225,50 @@ export class CoreConexionService {
 
   async imagesStrapi(data: FormData): Promise<number[]> {
     return new Promise(async (value) => {
-      let loading = await this.showLoading("Subiendo imagenes...");
-      this.http.post<any>(this.URL + "upload", data).subscribe((res) => {
-        loading.dismiss();
-        value(res);
-      });
+      if (!data.has("files")) {
+        value([]);
+        return;
+      } else {
+        let loading = await this.showLoading("Subiendo imagenes...");
+        this.http.post<any>(this.URL + "upload", data).subscribe((res) => {
+          let r: number[] = [];
+          res.forEach((element) => {
+            r.push(element.id);
+          });
+          loading.dismiss();
+          value(r);
+        });
+      }
     });
   }
 
   async uploadHeisler(data: FormData): Promise<any> {
     return new Promise(async (value) => {
+      if (!data.has("files[]")) {
+        value("No changes on heisler");
+        return
+      }
       this.http.post<any>(this.PANEL, data).subscribe((res) => {
         value(res);
       });
     });
   }
-
+  //UPDATES
+  async updatePart(part: CorePart, param: number[]): Promise<boolean> {
+    return new Promise(async (value) => {
+      this.http
+        .put(`${this.URL}Components/${part.code}`, {
+          part: part.id,
+          price: part.price,
+          photos: param,
+          status: part.status,
+          category: part.categoryId,
+        })
+        .subscribe((res) => {
+          value(true);
+        });
+    });
+  }
   //DELETES
   async delete(table: string, param?: string): Promise<boolean> {
     return new Promise(async (value) => {

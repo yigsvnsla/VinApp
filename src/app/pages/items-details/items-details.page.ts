@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { ModalPage } from "src/app/component/modal/modal.page";
 import { Plugins } from "@capacitor/core";
 import { CorePart, CoreVechicle, TempService } from "src/app/services/temp.service";
+import { CoreConexionService } from "src/app/services/core-conexion.service";
 
 const { Clipboard } = Plugins;
 @Component({
@@ -27,32 +28,28 @@ export class ItemsDetailsPage implements OnInit {
     private http: HttpService,
     private toastController: ToastController,
     private main: TempService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private core: CoreConexionService
   ) {}
 
   ngOnInit() {
     this.components = this.main.currentVehicle.Parts;
     this.car = this.main.currentVehicle;
     this.maxYear = new Date().getFullYear().toString();
-    console.log(this.components);
+    console.log(this.components)
   }
-
   addComponent(){
     this.main.viewPart();
   }
-
   cNext(){
     this.slides.slideNext();
   }
-  
   cPrevent(){
     this.slides.slidePrev();
   }
-
   change(event) {
     this.car.Year = parseInt(event.detail.value);
   }
-
   async copyInfoVehicle() {
     const toast = await this.toastController.create({
       message: "Info vehicle copy into clipboard.",
@@ -70,10 +67,6 @@ export class ItemsDetailsPage implements OnInit {
       return
     })
   }
-  satinize(url: string) {
-    return `http://backuppapa.sytes.net:1337${url}`;
-  }
-
   async modalList() {
     const modal = await this.modalController.create({
       component: ModalPage,
@@ -91,35 +84,45 @@ export class ItemsDetailsPage implements OnInit {
     }
   }
   goComponent(com: any) {
-    //this.go.navigateByUrl("/camera");
-    //this.transfer.component = com;
-   //console.log(com.id);
+   this.main.viewPart(com);
   }
-  
-  async cDelete(id: any) {
+  async deletePart(id: any, index: any) {
+    //deleting
+    var removeItemFromArr = (arr, item) => {
+     return arr.filter((e) => e !== item);
+   };
+   //filter
+   var filter = (item) => {
+     if (this.components.indexOf(item) != -1) {
+       return item;
+     } else {
+       console.log("item not found");
+     }
+   };
 
-    let alert = await this.alertController.create({
-      header:'Alert',
-      message:'are you sure you want to remove this component?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-            console.log('Confirm Cancel');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            console.log('Confirm Okay');
-            this.http.deleteComponent(id).subscribe((succes) => {
-              console.log("DELETE" + id);
-            });
+   let alert = await this.alertController.create({
+    header:'Alert',
+    message:'are you sure you want to remove this component?',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: (blah) => {
+          console.log('Confirm Cancel');
+        }
+      }, {
+        text: 'Okay',
+        handler: async () => {
+          console.log('Confirm Okay');
+          if(await this.core.delete(`Components/${id}`)){
+            this.components= removeItemFromArr(this.components, filter(this.components[index]))
           }
         }
-      ]
-    })
-    alert.present()
-  }
+      }
+    ]
+  })
+  alert.present()
+ }
+
 }

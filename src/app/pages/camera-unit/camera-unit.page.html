@@ -75,7 +75,7 @@
   </ion-item-group>
 </ion-content>
 
-<ion-footer id="ionFooter">
+<ion-footer id="ionFooter" *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' ">
   <ion-toolbar class="ion-text-center">
     <ion-button (click)="finish()" color="success" size="large">
       <ion-label>Finished</ion-label>

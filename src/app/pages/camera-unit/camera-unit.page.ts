@@ -42,6 +42,7 @@ export class CameraUnitPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    document.getElementById("ionFooter").classList.toggle("hidden");
     this.vehicle = this.main.currentVehicle;
     this.part = this.main.currentPart;
     this.sliderOptions = this.sliderBoostrap();
@@ -60,7 +61,6 @@ export class CameraUnitPage implements OnInit {
       disableExifHeaderStripping: false,
     };
     this.cameraActive = true;
-    document.getElementById("ionFooter").classList.toggle("hidden");
     CameraPreview.start(cameraPreviewOptions).then(() => {
     });
   }
@@ -72,7 +72,6 @@ export class CameraUnitPage implements OnInit {
     this.cameraActive = false;
     this.viewCam = false;
   }
-  //temp
   count: number = 0;
   async captureImage() {
     const cameraPreviewPictureOptions: CameraPreviewPictureOptions = {
@@ -82,6 +81,7 @@ export class CameraUnitPage implements OnInit {
     this.part.images.push(new Image(result.value, `Testing ${this.count}`));
     this.count++;
     if (this.count > 0) this.nameIcon = "checkmark";
+ 
   }
   flipCamera() {
     CameraPreview.flip();
@@ -91,24 +91,24 @@ export class CameraUnitPage implements OnInit {
     this.openCamera();
   }
   //Delete photos
-  iDelete(x: number) {
-    //deleting
-    var removeItemFromArr = (arr, item) => {
-      return arr.filter((e) => e !== item);
-    };
-    //filter
-    var filter = (item) => {
-      if (this.part.images.indexOf(item) != -1) {
-        return item;
-      } else {
-        console.log("item not found");
-      }
-    };
-    this.part.images = removeItemFromArr(
-      this.part.images,
-      filter(this.part.images[x])
-    );
-    console.log(this.part.images);
+  iDelete(x: Image) {
+  //deleting
+  var removeItemFromArr = (arr, item) => {
+    return arr.filter((e) => e !== item);
+  };
+  //filter
+  var filter = (arr, item) => {
+    if (arr.indexOf(item) != -1) {
+      return item;
+    } else {
+      console.log("item not found");
+    }
+  };
+  this.part.images = removeItemFromArr(
+    this.part.images,
+    filter(this.part.images, x)
+  );
+  console.log(this.part.images);
   }
   //Sliders
   public sliderOptions: any;
@@ -136,8 +136,9 @@ export class CameraUnitPage implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(
       `data:image/jpge;base64,${url}`
     );
+    // `data:image/jpge;base64,${url}`
   }
-  
+  // Ion-Range
   rangeChange(event) {
     console.log(event)
     this.part.status = this.status(event.detail.value);
@@ -170,7 +171,7 @@ export class CameraUnitPage implements OnInit {
     });
   }
 
-  private async validation(){
+  async validation(){
     let alert = await this.alertController.create({
       header:'Alert',
       message:`need to add data`,
@@ -210,7 +211,18 @@ export class CameraUnitPage implements OnInit {
   async finish() {
     if(await this.validation() == true ) {
       this.main.uploadPart()
-      this.main.test()
     }
+  }
+
+  async verify(): Promise<Image[]>{
+    return new Promise(async value=>{
+      let r: Image[] = []
+      this.part.images.forEach(element => {
+        if(!element.url && !element.id){
+          r.push(element);
+        }
+      });
+      value(r)
+    })
   }
 }

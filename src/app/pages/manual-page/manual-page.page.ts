@@ -31,6 +31,10 @@ export class ManualPagePage implements OnInit {
 
   async ngOnInit() {
 
+    // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
+    // primero verifica que exista un objeto instanciado en el servicio TransferService
+    // dado el caso que no exista, se debe instanciar uno vacio
+
     this.maxYear = "2050";
     this.Vehicle = this.main.currentVehicle;
   }

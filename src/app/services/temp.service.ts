@@ -18,26 +18,20 @@ export class TempService {
     private router: Router,
     private core: CoreConexionService,
     private alert: AlertController
-  ) {}
+  ) { }
 
   setVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = vehicle;
     this.router.navigateByUrl("/manual");
   }
-
-  async test(){
-    this.viewVehicle(this.currentVehicle);
-  }
-
   async viewVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = await this.core.searchVehicle(vehicle.Id);
-    this.router.navigateByUrl("/item");
+    await this.router.navigateByUrl("/item");
   }
   async viewPart(part?: CorePart) {
     this.currentPart = part ? part : new CorePart();
     this.router.navigateByUrl("/camera");
   }
-
   async empty() {
     let info = await Device.getInfo();
     this.currentVehicle = {
@@ -47,7 +41,7 @@ export class TempService {
       Trim: "",
       Serie: "",
       Body: "",
-      Cylinders:4,
+      Cylinders: 4,
       Parts: null,
       Vin: "",
       Id: "",
@@ -60,13 +54,22 @@ export class TempService {
     return this.currentVehicle;
   }
   async uploadPart() {
-    this.currentPart.arrImage = await this.core.imagesStrapi(
-      await this.form(true)
+    if (this.currentPart.code === 0) {
+       this.currentPart.code = (
+        await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
+          await this.core.imagesStrapi(await this.form(true))
+        ))
+      ).id;
+      this.showMessage("Uploaded!");
+      console.log(await this.core.uploadHeisler(await this.form()));
+      return;
+    }
+    this.core.updatePart(
+      this.currentPart,
+      await this.currentPart.getNumbers(
+        await this.core.imagesStrapi(await this.form(true))
+      )
     );
-    this.currentPart.code = (
-      await this.core.uploadPart(this.currentVehicle.Id, this.currentPart)
-    ).id;
-    console.log(await this.core.uploadHeisler(await this.form()));
   }
 
   async form(boo?: boolean): Promise<FormData> {
@@ -74,22 +77,27 @@ export class TempService {
       let data: FormData = new FormData();
       if (boo) {
         this.currentPart.images.forEach((element) => {
-          data.append(
-            "files",
-            element.blob,
-            `${this.currentVehicle.Id}-${this.currentPart.id}.jpg`
-          );
+          if (parseInt(element.id) === 0) {
+            data.append(
+              "files",
+              element.blob,
+              `${this.currentVehicle.Id}-${this.currentPart.id}.jpg`
+            );
+          }
         });
         value(data);
       } else {
         this.currentPart.images.forEach((element) => {
-          data.append(
-            "files[]",
-            element.blob,
-            `${this.currentVehicle.Id}-${this.currentPart.id}.jpg`
-          );
+          if (parseInt(element.id) === 0) {
+            data.append(
+              "files[]",
+              element.blob,
+              `${this.currentVehicle.Id}-${this.currentPart.id}.jpg`
+            );
+          }
         });
         data.append("ref", this.currentVehicle.Id);
+        data.append("refads", this.currentVehicle.Id);
         data.append("refpart", this.currentPart.code.toString());
         data.append("nombre", this.currentPart.part);
         data.append("descrip", "Vacio");
@@ -106,7 +114,6 @@ export class TempService {
     ).toString();
     this.viewVehicle(this.currentVehicle);
   }
-
   async showMessage(text: string) {
     let alert = await this.alert.create({
       header: "Alert",
@@ -118,6 +125,7 @@ export class TempService {
     return alert;
   }
 }
+
 export interface CoreVechicle {
   Model: string;
   Maker: string;
@@ -133,6 +141,7 @@ export interface CoreVechicle {
   Device: string;
   Name: String;
 }
+
 export class CorePart {
   code: number;
   id: string;
@@ -143,6 +152,18 @@ export class CorePart {
   price: number;
   images: Image[];
   arrImage: number[];
+
+  constructor() {
+    this.id = "";
+    this.code = 0;
+    this.part = "";
+    this.status = "";
+    this.category = "";
+    this.categoryId = "";
+    this.price = 0;
+    this.images = [];
+  }
+
   setCategory(id: any) {
     this.categoryId = id;
     switch (id) {
@@ -161,49 +182,57 @@ export class CorePart {
       case 4:
         this.category = "WHEEL";
         break;
-      case 6:
+      case 5:
         this.category = "BODY";
         break;
-      case 7:
+      case 6:
         this.category = "MECHANICAL";
         break;
     }
   }
 
-  constructor() {
-    this.id = "";
-    this.part = "";
-    this.status = "";
-    this.category = "";
-    this.categoryId = "";
-    this.price = 0;
-    this.images = [];
+
+  async getNumbers(param: any[]): Promise<number[]> {
+    return new Promise(async (value) => {
+      let newArr: number[] = [];
+      this.images.forEach((e) => {
+        if (parseInt(e.id) !== 0) {
+          newArr.push(parseInt(e.id));
+        }
+      });
+      value(newArr.concat(param));
+    });
   }
-  setImagesFromURL(param: any[]){
-    param.forEach(element => {
-      let a: Image = new Image()
+
+  setImagesFromURL(param: any[]) {
+    param.forEach((element) => {
+      let a: Image = new Image();
       a.setURL(element.url);
+      a.id = element.id;
+      this.images.push(a);
     });
   }
 }
 export class Image {
+  id: string;
   url: string;
   blob: Blob;
   b64: string;
   name: string;
   constructor(b64?: string, name?: string) {
-    if(b64 && name){
+    if (b64 && name) {
+      this.id = "0";
       this.url = "";
-    this.blob = this.b64toBlob(b64, "image/jpeg");
-    this.name = name;
-    this.b64 = b64;
+      this.blob = this.b64toBlob(b64, "image/jpeg");
+      this.name = name;
+      this.b64 = b64;
     }
   }
   setURL(url: string) {
-    this.url = `http://backuppapa.sytes.net:1337 ${url}`;
+    this.url = `http://backuppapa.sytes.net:1337${url}`;
   }
-  getImage():string{
-    return this.b64 ? this.b64 : this.url;
+  getImage(): string {
+    return this.b64 ? "data:image/jpge;base64," + this.b64 : this.url;
   }
 
   b64toBlob(b64Data: any, contentType = "", sliceSize = 512) {
