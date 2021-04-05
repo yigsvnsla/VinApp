@@ -210,7 +210,7 @@ export class CameraUnitPage implements OnInit {
   //Funcion que se encarga de agregar y modificar partes a un vehiculo dentro del modal.
   async finish() {
     if(await this.validation() == true ) {
-      this.main.uploadPart();
+      this.main.uploadPart(true);
     }
   }
 
@@ -231,8 +231,11 @@ export class CameraUnitPage implements OnInit {
       duration:1000,
       message:"the inputs have been cleaned"
     })
+    if(await this.validation() == true ) {
+    this.main.uploadPart(false);
     this.part = new CorePart();
-    this.main.currentPart = this.part
+    this.main.currentPart = this.part;
     toast.present()
+    }
   }
 }

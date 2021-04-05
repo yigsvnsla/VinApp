@@ -53,14 +53,14 @@ export class TempService {
     this.router.navigateByUrl("/manual");
     return this.currentVehicle;
   }
-  async uploadPart() {
+  async uploadPart(boo: boolean) {
     if (this.currentPart.code === 0) {
        this.currentVehicle.Parts.push((
         await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
           await this.core.imagesStrapi(await this.form(true))
         ))
       ));
-      this.viewVehicle(this.currentVehicle);
+      boo ? this.viewVehicle(this.currentVehicle) : null;
       console.log(await this.core.uploadHeisler(await this.form()));
       return;
     }
@@ -70,7 +70,7 @@ export class TempService {
         await this.core.imagesStrapi(await this.form(true))
       )
     )){
-      this.viewVehicle(this.currentVehicle);
+      boo ? this.viewVehicle(this.currentVehicle) : null;
     }
   }
 
