@@ -98,7 +98,7 @@ export class HomePage implements OnInit {
     let alert = this.toastController.create({
       message: 'Insert vin code',
       cssClass: 'toast1',
-      duration: 10000
+      duration: 1000
     })
     let a = await this.core.search(this.result);
     a ? this.main.setVehicle(a) : (await alert).present();

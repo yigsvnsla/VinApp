@@ -4,6 +4,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  ToastController,
 } from "@ionic/angular";
 import { Plugins, KeyboardInfo } from "@capacitor/core";
 import "@capacitor-community/camera-preview";
@@ -38,11 +39,11 @@ export class CameraUnitPage implements OnInit {
     public modalController: ModalController,
     public alertController:AlertController,
     private main: TempService,
-    private core: CoreConexionService
+    private core: CoreConexionService,
+    private toastcontroller: ToastController
   ) {}
 
   ngOnInit() {
-    document.getElementById("ionFooter").classList.toggle("hidden");
     this.vehicle = this.main.currentVehicle;
     this.part = this.main.currentPart;
     this.sliderOptions = this.sliderBoostrap();
@@ -224,5 +225,15 @@ export class CameraUnitPage implements OnInit {
       });
       value(r)
     })
+  }
+
+  async cleanForm(){
+    let toast = await this.toastcontroller.create({
+      duration:1000,
+      message:"the inputs have been cleaned"
+    })
+    this.part = new CorePart();
+    this.main.currentPart = this.part
+    toast.present()
   }
 }

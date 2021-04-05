@@ -1,5 +1,4 @@
 <ion-content >
-	
 	<div id="cameraPreview" class="cameraPreview" fullscreen>
     <div id="block" *ngIf="cameraActive" >
       <!--  -->
@@ -77,10 +76,23 @@
 
 <ion-footer id="ionFooter" *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' ">
   <ion-toolbar class="ion-text-center">
-    <ion-button (click)="finish()" color="success" size="large">
-      <ion-label>Finished</ion-label>
-      <ion-icon slot="end" name="checkmark"></ion-icon>
-    </ion-button>
+
+    <ion-grid class="" fixed>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="finish()" color="success" expand="block">
+            <ion-label>save/exit</ion-label>
+            <ion-icon slot="end" name="save"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col >
+          <ion-button (click)="cleanForm()" color="primary" expand="block">
+            <ion-label>add other</ion-label>
+            <ion-icon slot="end" name="add"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-footer>
 
