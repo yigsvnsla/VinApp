@@ -156,13 +156,13 @@ export class CameraUnitPage implements OnInit {
   status(id: any) {
     switch (id) {
       case 1:
-        return "Other damage (see description)";
+        return "damage";
       case 2:
-        return "Moderate damage";
+        return "Moderate";
       case 3:
         return "Reconditioned";
       case 4:
-        return "Used (normal wear)";
+        return "Used";
       case 5:
         return "No damage";
       case 6:
@@ -171,13 +171,13 @@ export class CameraUnitPage implements OnInit {
   }
   setStatus(text: string) {
     switch (text) {
-      case "Other damage (see description)":
+      case "damage":
         return 1;
-      case "Moderate damage":
+      case "Moderate":
         return 2;
       case "Reconditioned":
         return 3;
-      case "Used (normal wear)":
+      case "Used":
         return 4;
       case "No damage":
         return 5;

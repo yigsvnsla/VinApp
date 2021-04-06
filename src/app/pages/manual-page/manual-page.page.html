@@ -24,7 +24,7 @@
   <ion-item (click)="selectYear()">
     <ion-icon slot="start" name="calendar"></ion-icon>
     <ion-label position="floating">Year</ion-label>
-    <ion-input type="number" placeholder="Select Year" readonly="true" [(ngModel)]="Vehicle.Year"></ion-input>
+    <ion-input button type="number" placeholder="Select Year" readonly="true" [(ngModel)]="Vehicle.Year"></ion-input>
   </ion-item>
 
   <ion-item (click)="getModels()">
@@ -54,18 +54,19 @@
     ></ion-input>
 
   </ion-item>
-
+  
   <ion-item>
     <ion-icon
       slot="start"
       src="../../../assets/img/svg/035-engine.svg"
     ></ion-icon>
     <ion-label position="floating">Cylinders</ion-label>
-    <ion-input
-      type="text"
-      placeholder="Insert cylinders"
-      [(ngModel)]="Vehicle.Cylinders"
-    ></ion-input>
+    <ion-select placeholder="Insert cylinders" (ionChange)="cylinderEvent($event)" interface="popover">
+      <ion-select-option value="2">2 - Cylinder </ion-select-option>
+      <ion-select-option value="3">3 - Cylinder</ion-select-option>
+      <ion-select-option value="4">4 - Cylinder</ion-select-option>
+      <ion-select-option value="6">6 - Cylinder</ion-select-option>
+    </ion-select>
   </ion-item>
 
   <ion-item>
@@ -75,7 +76,7 @@
     ></ion-icon>
     <ion-label position="floating">Body Class</ion-label>
     <ion-input
-      type="text"
+    type="text"
       placeholder="Insert body class"
       [(ngModel)]="Vehicle.Body"
     ></ion-input>
@@ -95,8 +96,8 @@
   </ion-item>
 
   <ion-item>
-    <ion-icon slot="start" name="car"></ion-icon>
     <ion-label position="floating">Series</ion-label>
+    <ion-icon slot="start" name="car"></ion-icon>
     <ion-input
       type="text"
       placeholder="Insert serie"

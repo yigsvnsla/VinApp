@@ -37,11 +37,11 @@ export class TempService {
     this.currentVehicle = {
       Maker: "",
       Model: "",
-      Year: 1985,
+      Year: null,
       Trim: "",
       Serie: "",
       Body: "",
-      Cylinders: 4,
+      Cylinders: null,
       Parts: null,
       Vin: "",
       Id: "",

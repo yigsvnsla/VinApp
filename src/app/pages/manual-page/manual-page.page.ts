@@ -17,7 +17,7 @@ import { CoreVechicle, TempService } from "src/app/services/temp.service";
 export class ManualPagePage implements OnInit {
   public maxYear: string;
   public makeId: any;
-
+  Vehicle: CoreVechicle;
   constructor(
     private router: Router,
     private http: HttpService,
@@ -27,10 +27,14 @@ export class ManualPagePage implements OnInit {
     private main: TempService
   ) {}
 
-  Vehicle: CoreVechicle;
+    cylinderEvent(e){
+      this.Vehicle.Cylinders = parseInt(e.detail.value)
+      console.log(parseInt(e.detail.value))
+
+      this.Vehicle.Year = null 
+    }
 
   async ngOnInit() {
-
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
     // dado el caso que no exista, se debe instanciar uno vacio
@@ -48,8 +52,10 @@ export class ManualPagePage implements OnInit {
       });
     }
     this.presentModal(false, temp, "Select Year").then(
-      (x) => (this.Vehicle.Year = x.id)
-    );
+      (x) =>{ 
+        this.Vehicle.Year = x.id 
+        console.log(this.Vehicle.Year)
+      });
   }
 
   async getMakers() {
@@ -71,27 +77,25 @@ export class ManualPagePage implements OnInit {
   }
 
   async getModels() {
-    let loading = await this.loading.create({
-      message: "Loading...",
+    let alerta = await this.alert.create({
+         header: "ERROR",
+         subHeader: "Select maker first",
+         buttons: [
+           {
+             text: "Ok",
+             role: "Ok",
+           },
+         ],
     });
-    if (this.makeId !== 0) {
+
+    if (this.makeId == undefined || this.makeId == 0){
+      await alerta.present();
+    }else{
       this.http.getModels(this.makeId.toString()).subscribe((success) => {
         this.presentModal(false, success, "Models").then((x) => {
           this.Vehicle.Model = x.name;
         });
       });
-    } else {
-      let alerta = await this.alert.create({
-        header: "ERROR",
-        subHeader: "Select maker first",
-        buttons: [
-          {
-            text: "Ok",
-            role: "Ok",
-          },
-        ],
-      });
-      await alerta.present();
     }
   }
 
