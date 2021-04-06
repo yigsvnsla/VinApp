@@ -234,7 +234,7 @@ export class Image {
     this.url = `http://backuppapa.sytes.net:1337${url}`;
   }
   getImage(): string {
-    return this.b64 ? "data:image/jpge;base64," + this.b64 : this.url;
+    return this.id === "0" ? "data:image/jpge;base64," + this.b64 : this.url;
   }
 
   b64toBlob(b64Data: any, contentType = "", sliceSize = 512) {

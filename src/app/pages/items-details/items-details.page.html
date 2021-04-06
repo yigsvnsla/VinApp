@@ -145,7 +145,7 @@
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
         <ion-slide *ngFor="let z of c.images;"> 
-          <img class="slide" [src]="z.getImage()" alt="" >
+          <img class="slide" [src]="getSantizeUrl(z.getImage())" alt="" >
         </ion-slide>
       </ion-slides> 
     
