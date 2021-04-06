@@ -6,6 +6,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  Platform,
   ToastController,
 } from "@ionic/angular";
 
@@ -41,6 +42,7 @@ export class HomePage implements OnInit {
     Validators.minLength(17),
   ]);
 
+  subcribe:any
   async ngOnInit() {
   }
   constructor(
@@ -51,13 +53,19 @@ export class HomePage implements OnInit {
     private toastController: ToastController,
     private main: TempService,
     private core: CoreConexionService,
-  ) { }
+    private platform: Platform
+  ) {
+    this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
+      if(this.constructor.name == 'HomePage'){
+        if(window.confirm("do you want to exit app")){
+          navigator['app'].exitApp()
+        }
+      }
+    })
+   }
 
-  // public checked;
-  // checkbox(event) {
-  //   document.getElementById("ionFooter").classList.toggle("hidden");
-  //   console.log(event);
-  // }
+
+  
 
   private filter: Function = async (string: string) => {
     const alert = await this.alertController.create({

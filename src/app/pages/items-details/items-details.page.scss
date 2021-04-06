@@ -1,18 +1,16 @@
-ion-slide {
-  img.slide {
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-  }
-}
+
 
 ion-slides.content {
   .swiper-slide {
     display: block;
     img{
-      height: 50vh;
+      height: 40vh;
+
     }
   }
 }
+
+
 
 ion-toogle{
   transform: rotate(90deg);

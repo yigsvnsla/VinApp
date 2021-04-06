@@ -4,6 +4,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  Platform,
   ToastController,
 } from "@ionic/angular";
 import { Plugins, KeyboardInfo } from "@capacitor/core";
@@ -35,14 +36,22 @@ export class CameraUnitPage implements OnInit {
   part: CorePart;
   statusId: number;
   editMode: boolean;
+  subcribe:any
   constructor(
     private sanitizer: DomSanitizer,
     public modalController: ModalController,
     public alertController: AlertController,
     private main: TempService,
     private core: CoreConexionService,
-    private toastcontroller: ToastController
-  ) {}
+    private toastcontroller: ToastController,
+    private platform: Platform
+  ) {
+    this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
+      if(this.constructor.name == 'CameraUnitPage'){
+        this.stopCamera()
+      }
+    })
+  }
 
   ngOnInit() {
     this.vehicle = this.main.currentVehicle;
