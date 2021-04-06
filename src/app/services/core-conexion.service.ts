@@ -145,6 +145,7 @@ export class CoreConexionService {
               let a: CorePart = new CorePart();
               a.code = element.id;
               a.part = element.part.name;
+              a.id = element.part.id;
               a.price = element.price;
               a.status = element.status;
               a.setCategory(element.part.category);

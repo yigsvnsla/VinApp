@@ -169,25 +169,25 @@ export class CorePart {
   setCategory(id: any) {
     this.categoryId = id;
     switch (id) {
-      case 0:
+      case 1:
         this.category = "EXTERIOR";
         break;
-      case 1:
+      case 2:
         this.category = "INTERIOR";
         break;
-      case 2:
+      case 3:
         this.category = "UNDERHOOD";
         break;
-      case 3:
+      case 4:
         this.category = "UNDERNEATH";
         break;
-      case 4:
+      case 5:
         this.category = "WHEEL";
         break;
-      case 5:
+      case 6:
         this.category = "BODY";
         break;
-      case 6:
+      case 7:
         this.category = "MECHANICAL";
         break;
     }
