@@ -6,6 +6,7 @@ import { ModalPage } from "src/app/component/modal/modal.page";
 import { Plugins } from "@capacitor/core";
 import { CorePart, CoreVechicle, TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 const { Clipboard } = Plugins;
 @Component({
@@ -29,7 +30,8 @@ export class ItemsDetailsPage implements OnInit {
     private toastController: ToastController,
     private main: TempService,
     private alertController: AlertController,
-    private core: CoreConexionService
+    private core: CoreConexionService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -49,6 +51,9 @@ export class ItemsDetailsPage implements OnInit {
   }
   change(event) {
     this.car.Year = parseInt(event.detail.value);
+  }
+  public getSantizeUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(`${url}`);
   }
   async copyInfoVehicle() {
     const toast = await this.toastController.create({
