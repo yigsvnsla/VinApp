@@ -85,6 +85,7 @@ export class CameraUnitPage implements OnInit {
     await CameraPreview.stop().then(() => {});
     this.cameraActive = false;
     this.viewCam = false;
+    this.nameIcon= "close";
   }
   count: number = 0;
   async captureImage() {
@@ -169,6 +170,7 @@ export class CameraUnitPage implements OnInit {
         return "New";
     }
   }
+  
   setStatus(text: string) {
     switch (text) {
       case "damage":
@@ -281,6 +283,12 @@ export class CameraUnitPage implements OnInit {
       this.main.uploadPart(false);
       this.part = new CorePart();
       this.main.currentPart = this.part;
+      if(this.part.status == ""){
+        this.part.status = "Used (normal wear)"
+        this.statusId = 4;
+      }else{
+        this.statusId = this.setStatus(this.part.status)
+      }
       toast.present();
     }
   }

@@ -102,15 +102,24 @@ export class HomePage implements OnInit {
     // xxxxxx / 6 digitos siguientes /  VDS
     // xxxxxxxx //  restante / VIS
 
-
-    let alert = this.toastController.create({
-      message: 'Insert vin code',
-      cssClass: 'toast1',
-      duration: 1000
+    let popup = await this.alertController.create({
+      message:'make sure you have entered a valid Vin',
+      buttons:['ok'],
     })
-    let a = await this.core.search(this.result);
-    a ? this.main.setVehicle(a) : (await alert).present();
 
+    if(this.result.length == 17 ){
+      this.main.setVehicle(await this.core.search(this.result)) 
+    }else{
+      if( this.result == '' ){
+        this.manualPage();
+      }else{
+        if(this.result.length < 17 || this.result.length > 17){
+          popup.present()
+        }
+      }
+
+      
+    }
   }
 
   manualPage() {

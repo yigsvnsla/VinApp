@@ -15,7 +15,8 @@ import { CoreVechicle, TempService } from "src/app/services/temp.service";
   styleUrls: ["./manual-page.page.scss"],
 })
 export class ManualPagePage implements OnInit {
-  public maxYear: string;
+  public maxYear: number;
+  private date = new Date()
   public makeId: any;
   Vehicle: CoreVechicle;
   constructor(
@@ -39,18 +40,19 @@ export class ManualPagePage implements OnInit {
     // primero verifica que exista un objeto instanciado en el servicio TransferService
     // dado el caso que no exista, se debe instanciar uno vacio
 
-    this.maxYear = "2050";
+    this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
   }
 
   selectYear() {
     let temp: {}[] = [];
-    for (let i = 1985; i < parseInt(this.maxYear); i++) {
+    for (let i = 1985; i < this.maxYear + 1; i++) {
       temp.push({
         id: i,
         name: i,
       });
     }
+    temp.reverse()
     this.presentModal(false, temp, "Select Year").then(
       (x) =>{ 
         this.Vehicle.Year = x.id 

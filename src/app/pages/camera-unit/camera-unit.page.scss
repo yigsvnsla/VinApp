@@ -21,8 +21,8 @@ ion-slides {
   ion-slide {
     width: unset !important;
     img.slide {
-      -webkit-transform: scaleX(-1);
-      transform: scaleX(-1);
+      // -webkit-transform: scaleX(-1);
+      // transform: scaleX(-1);
     }
   }
 }
