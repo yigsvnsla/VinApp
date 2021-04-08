@@ -201,6 +201,12 @@ export class CameraUnitPage implements OnInit {
   }
 
   async getParts() {
+
+    console.log(await this.core.findArray(
+      "Parts",
+      `?category.id_eq=${this.part.categoryId}`
+    ))
+
     this.presentModal(
       false,
       await this.core.findArray(

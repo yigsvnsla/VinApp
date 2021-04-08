@@ -66,7 +66,7 @@ export class HttpService {
   }
 
   getModels(id: string) {
-    return this.http.get<any[]>(this.url + `Models?maker.id=${id}`);
+    return this.http.get<any[]>(this.url + `Models?maker.id=${id}&_sort=name:asc`);
   }
 
   showCategories() {}
