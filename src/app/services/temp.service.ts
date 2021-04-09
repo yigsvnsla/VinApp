@@ -55,26 +55,25 @@ export class TempService {
   }
   async uploadPart(boo: boolean) {
     if (this.currentPart.code === 0) {
-       this.currentVehicle.Parts.push((
-        await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
-          await this.core.imagesStrapi(await this.form(true))
-        ))
-      ));
+      let tempPart: CorePart = await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
+        await this.core.imagesStrapi(await this.form(true))
+      ))
+      this.currentVehicle.Parts.push(tempPart);
       boo ? this.viewVehicle(this.currentVehicle) : null;
-      console.log(await this.core.uploadHeisler(await this.form()));
+      console.log(await this.core.uploadHeisler(await this.form(false, tempPart.code)));
       return;
     }
-    if(this.core.updatePart(
+    if (this.core.updatePart(
       this.currentPart,
       await this.currentPart.getNumbers(
         await this.core.imagesStrapi(await this.form(true))
       )
-    )){
+    )) {
       boo ? this.viewVehicle(this.currentVehicle) : null;
     }
   }
 
-  async form(boo?: boolean): Promise<FormData> {
+  async form(boo?: boolean, id?: number): Promise<FormData> {
     return new Promise(async (value) => {
       let data: FormData = new FormData();
       if (boo) {
@@ -99,8 +98,8 @@ export class TempService {
           }
         });
         data.append("ref", this.currentVehicle.Id);
-        data.append("refads", this.currentVehicle.Id);
-        data.append("refpart", this.currentPart.code.toString());
+        data.append("refads",this.currentVehicle.Id);
+        data.append("refpart", id.toString());
         data.append("nombre", this.currentPart.part);
         data.append("descrip", "Vacio");
         data.append("precio", this.currentPart.price.toString());
@@ -116,7 +115,7 @@ export class TempService {
     ).toString();
     this.viewVehicle(this.currentVehicle);
   }
-  async updateVehicle(){
+  async updateVehicle() {
     await this.core.updateVehicle(this.currentVehicle);
   }
   async showMessage(text: string) {
