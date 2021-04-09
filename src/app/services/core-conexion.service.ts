@@ -205,7 +205,7 @@ export class CoreConexionService {
       let loading = await this.showLoading("Sing in...");
       this.http
         .post<any>(this.URL + "Products", {
-          name: `${data.Maker} ${data.Model} ${data.Year}`,
+          name: `${data.Year} ${data.Maker.toUpperCase()} ${data.Model.toUpperCase()}`,
           maker: data.Maker,
           model: data.Model,
           year: data.Year,
