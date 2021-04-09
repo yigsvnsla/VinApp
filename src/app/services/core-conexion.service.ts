@@ -40,7 +40,7 @@ export class CoreConexionService {
               Maker: res.Results[6].Value,
               Model: res.Results[8].Value,
               Year: parseInt(res.Results[9].Value),
-              Trim: res.Results[12].Value,
+              Trim: res.Results[12].Value,//aqui ingresar algoritmo para devolver un array delista
               Serie: res.Results[11].Value,
               Body: res.Results[22].Value,
               Cylinders: parseInt(res.Results[69].Value),

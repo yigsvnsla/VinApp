@@ -61,7 +61,7 @@
       src="../../../assets/img/svg/035-engine.svg"
     ></ion-icon>
     <ion-label position="floating">Cylinders</ion-label>
-    <ion-select placeholder="Insert cylinders" [value]="Vehicle.Cylinders" (ionChange)="cylinderEvent($event)" interface="popover">
+    <ion-select placeholder="Insert cylinders" [(ngModel)]="tempCylinder" interface="popover">
       <ion-select-option value="2">2 - Cylinder </ion-select-option>
       <ion-select-option value="3">3 - Cylinder</ion-select-option>
       <ion-select-option value="4">4 - Cylinder</ion-select-option>
@@ -77,12 +77,8 @@
       src="../../../assets/img/svg/047-car-3.svg"
     ></ion-icon>
     <ion-label position="floating">Body Class</ion-label>
-    <!-- <ion-input
-    type="text"
-      placeholder="Insert body class"
-      [(ngModel)]="Vehicle.Body"
-    ></ion-input> -->
-    <ion-select placeholder="Insert type vehicle" [value]="Vehicle.Body" (ionChange)="bodyClassEvent($event)" interface="action-sheet">
+
+    <ion-select placeholder="Insert type vehicle" [(ngModel)]="tempBody" interface="action-sheet">
       <ion-select-option value="SEDAN">SEDAN </ion-select-option>
       <ion-select-option value="COUPE">COUPE</ion-select-option>
       <ion-select-option value="HATCHBACK">HATCHBACK</ion-select-option>
@@ -105,12 +101,7 @@
       src="../../../assets/img/svg/030-chassis.svg"
     ></ion-icon>
     <ion-label position="floating">Type Vehicle</ion-label>
-    <!-- <ion-input
-      type="text"
-      placeholder="Insert type"
-      [(ngModel)]="Vehicle.Type"
-    ></ion-input> -->
-    <ion-select placeholder="Insert type vehicle" [value]="Vehicle.Type" (ionChange)="typeVehicleEvent($event)" interface="action-sheet">
+    <ion-select placeholder="Insert type vehicle" [(ngModel)]="tempType"  interface="action-sheet">
       <ion-select-option value="Automobile">Automobile </ion-select-option>
       <ion-select-option value="All-Terrain Vehicle (ATV/Four-wheeler)">All-Terrain Vehicle (ATV/Four-wheeler)</ion-select-option>
       <ion-select-option value="Boat Jet Ski">Boat Jet Ski</ion-select-option>
@@ -134,7 +125,6 @@
       [(ngModel)]="Vehicle.Serie"
     ></ion-input>
   </ion-item>
-
 </ion-content>
   
 <ion-footer id="ionFooter">
