@@ -99,6 +99,7 @@ export class ManualPagePage implements OnInit {
       await alerta.present();
     }else{
       this.http.getModels(this.makeId.toString()).subscribe((success) => {
+        console.log(success.sort())
         this.presentModal(false, success, "Models").then((x) => {
           this.Vehicle.Model = x.name;
         });
