@@ -28,12 +28,17 @@ export class ManualPagePage implements OnInit {
     private main: TempService
   ) {}
 
-    cylinderEvent(e){
-      this.Vehicle.Cylinders = parseInt(e.detail.value)
-      console.log(parseInt(e.detail.value))
+  bodyClassEvent(e){
+    this.Vehicle.Body = e.detail.value
+  }
 
-      this.Vehicle.Year = null 
-    }
+  typeVehicleEvent(e){
+    this.Vehicle.Type = e.detail.value
+  }
+
+  cylinderEvent(e){
+    this.Vehicle.Cylinders = parseInt(e.detail.value)
+  }
 
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual

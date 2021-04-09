@@ -50,6 +50,7 @@ export class CoreConexionService {
               Device: info.uuid,
               Name: "",
             });
+            console.log(res)
             loading.dismiss();
           },
           (fail) => {

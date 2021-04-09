@@ -23,6 +23,7 @@ import {
   TempService,
 } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
+import { CurrencyPipe } from "@angular/common";
 
 @Component({
   selector: "app-camera-unit",
@@ -37,6 +38,7 @@ export class CameraUnitPage implements OnInit {
   statusId: number;
   editMode: boolean;
   subcribe:any
+  da:any
   constructor(
     private sanitizer: DomSanitizer,
     public modalController: ModalController,
@@ -44,7 +46,8 @@ export class CameraUnitPage implements OnInit {
     private main: TempService,
     private core: CoreConexionService,
     private toastcontroller: ToastController,
-    private platform: Platform
+    private platform: Platform,
+    private currencyPipe : CurrencyPipe
   ) {
     this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
       if(this.constructor.name == 'CameraUnitPage'){
@@ -64,7 +67,17 @@ export class CameraUnitPage implements OnInit {
     }else{
       this.statusId = this.setStatus(this.part.status)
     }
+    this.da=""
   }
+
+  eventPrice(e){
+    this.part.price = e.target.value;
+    this.currencyPipe.transform(this.part.price, '$')
+  }
+  eventClear(e){
+    e.target.value = "";
+  }
+
   //camera
   public cameraActive: boolean = false;
   torchActive = false;

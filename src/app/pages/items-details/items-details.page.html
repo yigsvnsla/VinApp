@@ -170,7 +170,7 @@
               <ion-item >
                 <!-- <ion-icon slot="end" name="logo-usd" class="component"></ion-icon> -->
                 <ion-label position="floating">Price: </ion-label>
-                <ion-input readonly="true" [(ngModel)]="c.price">$</ion-input>
+                <ion-input readonly="true" [value]="c.price|currency"></ion-input>
               </ion-item>
             </ion-col>
             <ion-col size="6">

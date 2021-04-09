@@ -1,7 +1,7 @@
 import { PipesModule } from "./../pipes/pipes.module";
 import { IonicModule } from "@ionic/angular";
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, CurrencyPipe } from "@angular/common";
 import { ListPartComponent } from "./list-part/list-part.component";
 import { DinamicModalComponent } from "./dinamic-modal/dinamic-modal.component";
 @NgModule({
@@ -11,5 +11,6 @@ import { DinamicModalComponent } from "./dinamic-modal/dinamic-modal.component";
   ],
   exports: [DinamicModalComponent, ListPartComponent],
   imports: [CommonModule, IonicModule, PipesModule],
+  providers:[CurrencyPipe]
 })
 export class ComponentModule {}

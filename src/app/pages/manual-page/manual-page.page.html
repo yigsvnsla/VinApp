@@ -61,7 +61,7 @@
       src="../../../assets/img/svg/035-engine.svg"
     ></ion-icon>
     <ion-label position="floating">Cylinders</ion-label>
-    <ion-select placeholder="Insert cylinders" (ionChange)="cylinderEvent($event)" interface="popover">
+    <ion-select placeholder="Insert cylinders" [value]="Vehicle.Cylinders" (ionChange)="cylinderEvent($event)" interface="popover">
       <ion-select-option value="2">2 - Cylinder </ion-select-option>
       <ion-select-option value="3">3 - Cylinder</ion-select-option>
       <ion-select-option value="4">4 - Cylinder</ion-select-option>
@@ -77,11 +77,26 @@
       src="../../../assets/img/svg/047-car-3.svg"
     ></ion-icon>
     <ion-label position="floating">Body Class</ion-label>
-    <ion-input
+    <!-- <ion-input
     type="text"
       placeholder="Insert body class"
       [(ngModel)]="Vehicle.Body"
-    ></ion-input>
+    ></ion-input> -->
+    <ion-select placeholder="Insert type vehicle" [value]="Vehicle.Body" (ionChange)="bodyClassEvent($event)" interface="action-sheet">
+      <ion-select-option value="SEDAN">SEDAN </ion-select-option>
+      <ion-select-option value="COUPE">COUPE</ion-select-option>
+      <ion-select-option value="HATCHBACK">HATCHBACK</ion-select-option>
+      <ion-select-option value="CROSSOVER">SPORTS</ion-select-option>
+      <ion-select-option value="MINIVAN">MINIVAN</ion-select-option>
+      <ion-select-option value="VAN">VAN</ion-select-option>
+      <ion-select-option value="PICKUP">PICKUP</ion-select-option>
+      <ion-select-option value="WAGON">WAGON</ion-select-option>
+      <ion-select-option value="CONVERTIBLE">CONVERTIBLE</ion-select-option>
+      <ion-select-option value="SPORTS CAR">SPORTS CARS</ion-select-option>
+      <ion-select-option value="SPORT-UTILITY VEHICLE (SUV)">SPORT-UTILITY VEHICLE (SUV)</ion-select-option>
+      <ion-select-option value="MULTI-UTILITY VEHICLE (MUV)">MULTI-UTILITY VEHICLE (MUV)</ion-select-option>
+      <ion-select-option value="MULTIPURPOSE PASSENGER VEHICLE (MPV)">MULTIPURPOSE PASSENGER VEHICLE (MPV)</ion-select-option>
+    </ion-select>
   </ion-item>
 
   <ion-item>
@@ -90,11 +105,24 @@
       src="../../../assets/img/svg/030-chassis.svg"
     ></ion-icon>
     <ion-label position="floating">Type Vehicle</ion-label>
-    <ion-input
+    <!-- <ion-input
       type="text"
       placeholder="Insert type"
       [(ngModel)]="Vehicle.Type"
-    ></ion-input>
+    ></ion-input> -->
+    <ion-select placeholder="Insert type vehicle" [value]="Vehicle.Type" (ionChange)="typeVehicleEvent($event)" interface="action-sheet">
+      <ion-select-option value="Automobile">Automobile </ion-select-option>
+      <ion-select-option value="All-Terrain Vehicle (ATV/Four-wheeler)">All-Terrain Vehicle (ATV/Four-wheeler)</ion-select-option>
+      <ion-select-option value="Boat Jet Ski">Boat Jet Ski</ion-select-option>
+      <ion-select-option value="Camper/Trailer/RV">Camper/Trailer/RV</ion-select-option>
+      <ion-select-option value="Commercial Truck">Commercial Truck</ion-select-option>
+      <ion-select-option value="Fire Truck">Fire Truck</ion-select-option>
+      <ion-select-option value="Fleet Vehicle">Fleet Vehicle</ion-select-option>
+      <ion-select-option value="Golf Cart">Golf Cart</ion-select-option>
+      <ion-select-option value="Mobile Home">Mobile Home</ion-select-option>
+      <ion-select-option value="Moped">Moped</ion-select-option>
+      <ion-select-option value="Motorcycle">Motorcycle</ion-select-option>
+    </ion-select>
   </ion-item>
 
   <ion-item>

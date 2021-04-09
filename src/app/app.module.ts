@@ -5,7 +5,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserModule } from "@angular/platform-browser";
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-
+import { NgxCurrencyModule } from "ngx-currency";
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
@@ -31,6 +31,7 @@ import "@capacitor-community/camera-preview";
     HttpClientModule,
     ReactiveFormsModule,
     CommonModule,
+    NgxCurrencyModule
   ],
   exports: [],
   providers: [

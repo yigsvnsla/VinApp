@@ -55,7 +55,7 @@
     <ion-item>
       <ion-label>Price</ion-label>
       <ion-icon name="logo-usd" slot="end"></ion-icon>
-      <ion-input maxlength="6" minlength="1" type="tel" [(ngModel)]="part.price"></ion-input>
+      <ion-input maxlength="12" minlength="1" type="tel" [value]="this.part.price|currency" (ionBlur)="eventPrice($event)" (ionFocus)="eventClear($event)"></ion-input>
     </ion-item>
 
     <ion-item>
