@@ -41,7 +41,7 @@ export class HomePage implements OnInit {
     Validators.maxLength(17),
     Validators.minLength(17),
   ]);
-
+  private modalState:boolean
   subcribe:any
   async ngOnInit() {
   }
@@ -56,9 +56,11 @@ export class HomePage implements OnInit {
     private platform: Platform
   ) {
     this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
-      if(this.constructor.name == 'HomePage'){
-        if(window.confirm("do you want to exit app")){
-          navigator['app'].exitApp()
+      if(this.modalState == false){
+        if(this.constructor.name == 'HomePage'){
+          if(window.confirm("do you want to exit app")){
+            navigator['app'].exitApp()
+          }
         }
       }
     })
@@ -133,8 +135,10 @@ export class HomePage implements OnInit {
       swipeToClose: true,
     });
 
-    await modal.present();
-
+    await modal.present().then(()=>{
+      this.modalState=true;
+    });
+      
     // el formulario hijo al dispara el evento ondissmiss
     // returna un objeto global que es data
     // de este objeto data trae los datos del formulario hijo
@@ -142,5 +146,6 @@ export class HomePage implements OnInit {
     if (data) {
       console.log(data);
     }
+    this.modalState=false
   }
 }
