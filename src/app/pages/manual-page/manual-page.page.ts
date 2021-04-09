@@ -37,8 +37,6 @@ export class ManualPagePage implements OnInit {
       this.Vehicle.Year = null 
     }
 
-    editMode: boolean;
-
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
@@ -46,10 +44,12 @@ export class ManualPagePage implements OnInit {
 
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
-    this.Vehicle.Id !== "0"? this.editMode = true : this.editMode = false; 
   }
 
   selectYear() {
+    if(this.main.currentVehicle.Id !== "0"){
+      return;
+    }
     let temp: {}[] = [];
     for (let i = 1985; i < this.maxYear + 1; i++) {
       temp.push({
@@ -66,6 +66,9 @@ export class ManualPagePage implements OnInit {
   }
 
   async getMakers() {
+    if(this.main.currentVehicle.Id !== "0"){
+      return;
+    }
     let loading = await this.loading.create({
       message: "Loading...",
     });
@@ -84,6 +87,9 @@ export class ManualPagePage implements OnInit {
   }
 
   async getModels() {
+    if(this.main.currentVehicle.Id !== "0"){
+      return;
+    }
     let alerta = await this.alert.create({
          header: "ERROR",
          subHeader: "Select maker first",
@@ -129,7 +135,7 @@ export class ManualPagePage implements OnInit {
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.
   async submit() {
-   if(this.editMode){
+   if(this.main.currentVehicle.Id !== "0"){
      console.log("Editando carro!");
      await this.main.updateVehicle();
      this.loc.back();
