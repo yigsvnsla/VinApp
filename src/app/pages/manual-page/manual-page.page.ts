@@ -9,6 +9,7 @@ import {
 
 import { DinamicModalComponent } from "../../component/dinamic-modal/dinamic-modal.component";
 import { CoreVechicle, TempService } from "src/app/services/temp.service";
+import { Location } from "@angular/common";
 @Component({
   selector: "app-manual-page",
   templateUrl: "./manual-page.page.html",
@@ -25,7 +26,8 @@ export class ManualPagePage implements OnInit {
     private loading: LoadingController,
     private alert: AlertController,
     private modalController: ModalController,
-    private main: TempService
+    private main: TempService,
+    private loc: Location
   ) {}
 
     cylinderEvent(e){
@@ -35,6 +37,8 @@ export class ManualPagePage implements OnInit {
       this.Vehicle.Year = null 
     }
 
+    editMode: boolean;
+
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
@@ -42,6 +46,7 @@ export class ManualPagePage implements OnInit {
 
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
+    this.Vehicle.Id !== "0"? this.editMode = true : this.editMode = false; 
   }
 
   selectYear() {
@@ -122,12 +127,18 @@ export class ManualPagePage implements OnInit {
   // Funcion que se encarga de verificar si todos los datos estan ingresados correctamente
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.
-  submit() {
-   if(this.Vehicle.Maker == ""|| this.Vehicle.Model == ""){
-     this.main.showMessage("Falta maker o model!")
-     return 
+  async submit() {
+   if(this.editMode){
+     console.log("Editando carro!");
+     await this.main.updateVehicle();
+     this.loc.back();
+   }else{
+    if(this.Vehicle.Maker == ""|| this.Vehicle.Model == ""){
+      this.main.showMessage("Falta maker o model!")
+      return 
+    }
+    console.log(this.Vehicle);
+    this.main.uploadVehicle();
    }
-   console.log(this.Vehicle);
-   this.main.uploadVehicle();
-  }
+   }
 }

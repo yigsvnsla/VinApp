@@ -44,7 +44,7 @@ export class TempService {
       Cylinders: null,
       Parts: null,
       Vin: "",
-      Id: "",
+      Id: "0",
       Type: "",
       Device: info.uuid,
       Name: "",
@@ -115,6 +115,9 @@ export class TempService {
       await this.core.uploadVehicle(this.currentVehicle)
     ).toString();
     this.viewVehicle(this.currentVehicle);
+  }
+  async updateVehicle(){
+    await this.core.updateVehicle(this.currentVehicle);
   }
   async showMessage(text: string) {
     let alert = await this.alert.create({
