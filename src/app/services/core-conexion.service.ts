@@ -206,9 +206,9 @@ export class CoreConexionService {
       let loading = await this.showLoading("Sing in...");
       this.http
         .post<any>(this.URL + "Products", {
-          name: `${data.Year} ${data.Maker.toUpperCase()} ${data.Model.toUpperCase()}`,
-          maker: data.Maker,
-          model: data.Model,
+          name: this.capitalizeAtWord(`${data.Year} ${data.Maker} ${data.Model}`, " "),
+          maker: this.capitalizeAtWord(data.Maker, "dasdasd"),
+          model: this.capitalizeAtWord(data.Model, "dasdasdasd"),
           year: data.Year,
           cylinders: data.Cylinders,
           serie: data.Serie,
@@ -277,6 +277,23 @@ export class CoreConexionService {
         });
     });
   }
+  async updateVehicle(vehicle: CoreVechicle): Promise<boolean>{
+    return new Promise(async (value)=>{
+      this.http
+        .put(`${this.URL}Products/${vehicle.Id}`, {
+          cylinders: vehicle.Cylinders,
+          serie: vehicle.Serie,
+          trim: vehicle.Trim,
+          type: vehicle.Type,
+          boddyClass: vehicle.Body,
+        })
+        .subscribe((res) => {
+          value(true);
+        }, fail =>{
+          value(false);
+        });
+    })
+  }
   //DELETES
   async delete(table: string, param?: string): Promise<boolean> {
     return new Promise(async (value) => {
@@ -300,6 +317,67 @@ export class CoreConexionService {
       value(await this.delete("Products/", id));
     });
     
+  }
+
+
+  //UTILITIES
+  capitalizeAtWord(message: string, split: string): string {
+    if (message.split(split).length > 1) {
+      let r: string[] = [];
+      message
+        .toLowerCase()
+        .split(split)
+        .forEach((element) => {
+          if (
+            element === null ||
+            element === "null" ||
+            element === undefined ||
+            element === "undefined"
+          ) {
+            return;
+          }
+          r.push(
+            element.charAt(0).toUpperCase() + element.substr(1).toLowerCase()
+          );
+        });
+      return r.toString().replace(/\,/gi, " ");
+    }
+    return message.charAt(0).toUpperCase() + message.substr(1).toLowerCase();
+  }
+
+  removeWords(text: string, op?: string) {
+    if (op) {
+      return this.deleteWords(text);
+    }
+    let r: string[] = [];
+    let trash = text;
+
+    while (trash.indexOf("(") > -1 && trash.indexOf(")") > -1) {
+      let w = trash.substr(
+        trash.indexOf("(") + 1,
+        trash.indexOf(")") - trash.indexOf("(") - 1
+      );
+      r.push(this.rectifier(w));
+      trash = this.rectifier(trash.replace(`(${w})`, ""));
+    }
+
+    return r.toString().replace(/\,/gi, "/").toUpperCase();
+  }
+  private rectifier(text: string): string {
+    if (text.charAt(0) === " ") {
+      return text.substr(1).replace(/\  /gi, " ");
+    }
+    return text.replace(/\  /gi, " ");
+  }
+  private deleteWords(text: string): string {
+    if (text.indexOf("(") > -1 && text.indexOf(")") > -1) {
+      let del = text.substr(
+        text.indexOf("("),
+        text.indexOf(")") - text.indexOf("(") + 1
+      );
+      return this.deleteWords(this.rectifier(text.replace(del, "")));
+    }
+    return this.rectifier(text);
   }
 }
 

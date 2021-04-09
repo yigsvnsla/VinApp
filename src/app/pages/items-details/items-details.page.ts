@@ -26,12 +26,12 @@ export class ItemsDetailsPage implements OnInit {
   public carInfo:boolean = false;
   constructor(
     private modalController: ModalController,
-    private http: HttpService,
     private toastController: ToastController,
     private main: TempService,
     private alertController: AlertController,
     private core: CoreConexionService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private route: Router
   ) {}
 
   ngOnInit() {
@@ -128,6 +128,9 @@ export class ItemsDetailsPage implements OnInit {
     ]
   })
   alert.present()
+ }
+ async editVehicle(){
+  this.route.navigateByUrl("/manual");
  }
 
 }
