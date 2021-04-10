@@ -254,18 +254,15 @@ export class CoreConexionService {
     return new Promise(async (value) => {
       let loading = await this.showLoading("Uploading to server!");
       if (!data.has("files[]")) {
-        console.log("No changes on heisler");
         value("No changes on heisler");
         loading.dismiss()
         return
       }
       this.http.post<any>(this.PANEL, data).subscribe((res) => {
-        console.log("Subido a heisler")
         loading.dismiss()
         value(res);
       }, fail => {
         loading.dismiss()
-        console.log("Subido a heisler, pero fallido");
         value(null);
       });
     });
