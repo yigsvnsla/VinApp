@@ -42,6 +42,9 @@ export class ManualPagePage implements OnInit {
     this.Vehicle.Cylinders = parseInt(e.detail.value)
   }
 
+  tempType
+  tempCylinder 
+  tempBody
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
@@ -49,6 +52,10 @@ export class ManualPagePage implements OnInit {
 
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
+
+   this.tempType = this.Vehicle.Type
+   this.tempCylinder = this.Vehicle.Cylinders.toString()
+   console.log(this.tempCylinder)
   }
 
   selectYear() {
