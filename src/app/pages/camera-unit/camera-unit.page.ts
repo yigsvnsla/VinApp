@@ -299,7 +299,7 @@ export class CameraUnitPage implements OnInit {
       message: "the inputs have been cleaned",
     });
     if ((await this.validation()) == true) {
-      this.main.uploadPart(false);
+      await this.main.uploadPart(false);
       this.part = new CorePart();
       this.main.currentPart = this.part;
       if(this.part.status == ""){

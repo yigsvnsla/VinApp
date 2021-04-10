@@ -58,9 +58,10 @@ export class TempService {
       let tempPart: CorePart = await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
         await this.core.imagesStrapi(await this.form(true))
       ))
+      await this.core.uploadHeisler(await this.form(false, tempPart.code))
       this.currentVehicle.Parts.push(tempPart);
       boo ? this.viewVehicle(this.currentVehicle) : null;
-      console.log(await this.core.uploadHeisler(await this.form(false, tempPart.code)));
+      (console.log("Funciona"))
       return;
     }
     if (this.core.updatePart(
@@ -69,6 +70,7 @@ export class TempService {
         await this.core.imagesStrapi(await this.form(true))
       )
     )) {
+      console.log(this.currentPart.code);
       boo ? this.viewVehicle(this.currentVehicle) : null;
     }
   }
@@ -98,7 +100,7 @@ export class TempService {
           }
         });
         data.append("ref", this.currentVehicle.Id);
-        data.append("refads",this.currentVehicle.Id);
+        data.append("refads", this.currentVehicle.Id);
         data.append("refpart", id.toString());
         data.append("nombre", this.currentPart.part);
         data.append("descrip", "Vacio");
