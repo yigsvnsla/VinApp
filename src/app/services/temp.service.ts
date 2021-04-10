@@ -118,7 +118,12 @@ export class TempService {
     this.viewVehicle(this.currentVehicle);
   }
   async updateVehicle() {
-    await this.core.updateVehicle(this.currentVehicle);
+    let temp = await this.core.updateVehicle(this.currentVehicle);
+    this.currentVehicle.Cylinders = temp.Cylinders;
+    this.currentVehicle.Trim = temp.Trim;
+    this.currentVehicle.Type = temp.Type;
+    this.currentVehicle.Body = temp.Body;
+    this.currentVehicle.Serie = temp.Serie;
   }
   async showMessage(text: string) {
     let alert = await this.alert.create({

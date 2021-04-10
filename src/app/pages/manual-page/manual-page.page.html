@@ -61,13 +61,13 @@
       src="../../../assets/img/svg/035-engine.svg"
     ></ion-icon>
     <ion-label position="floating">Cylinders</ion-label>
-    <ion-select placeholder="Insert cylinders" [(ngModel)]="tempCylinder" interface="popover">
-      <ion-select-option value="2">2 - Cylinder </ion-select-option>
-      <ion-select-option value="3">3 - Cylinder</ion-select-option>
-      <ion-select-option value="4">4 - Cylinder</ion-select-option>
-      <ion-select-option value="6">6 - Cylinder</ion-select-option>
-      <ion-select-option value="8">8 - Cylinder</ion-select-option>
-      <ion-select-option value="12">12 - Cylinder</ion-select-option>
+    <ion-select placeholder="Insert cylinders" [(ngModel)]="Vehicle.Cylinders" interface="popover">
+      <ion-select-option [value]="2">2 - Cylinder </ion-select-option>
+      <ion-select-option [value]="3">3 - Cylinder</ion-select-option>
+      <ion-select-option [value]="4">4 - Cylinder</ion-select-option>
+      <ion-select-option [value]="6">6 - Cylinder</ion-select-option>
+      <ion-select-option [value]="8">8 - Cylinder</ion-select-option>
+      <ion-select-option [value]="12">12 - Cylinder</ion-select-option>
     </ion-select>
   </ion-item>
 

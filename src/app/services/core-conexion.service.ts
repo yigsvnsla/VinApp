@@ -283,10 +283,10 @@ export class CoreConexionService {
         });
     });
   }
-  async updateVehicle(vehicle: CoreVechicle): Promise<boolean> {
+  async updateVehicle(vehicle: CoreVechicle): Promise<any> {
     return new Promise(async (value) => {
       this.http
-        .put(`${this.URL}Products/${vehicle.Id}`, {
+        .put<any>(`${this.URL}Products/${vehicle.Id}`, {
           cylinders: vehicle.Cylinders,
           serie: vehicle.Serie,
           trim: vehicle.Trim,
@@ -294,9 +294,16 @@ export class CoreConexionService {
           boddyClass: vehicle.Body,
         })
         .subscribe((res) => {
-          value(true);
+          value({
+            Trim: res.trim,
+            Serie: res.serie,
+            Body: res.boddyClass,
+            Cylinders: parseInt(res.cylinders),
+            Type: res.type,
+            Name: res.name,
+          });
         }, fail => {
-          value(false);
+          value(null);
         });
     })
   }
