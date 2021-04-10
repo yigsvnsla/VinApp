@@ -25,6 +25,10 @@ export class CoreConexionService {
     });
   }
 
+  public filterSlash(str:string):string[]{
+    return str.split("/");
+  }
+
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
     return new Promise(async (value) => {
@@ -325,15 +329,15 @@ export class CoreConexionService {
       }
       value(await this.delete("Products/", id));
     });
-
+    
   }
 
 
   //ERROR HANDLING
   heislerHandler(error: HttpErrorResponse) {
 
-  }
-
+  }  
+  
   //UTILITIES
   capitalizeAtWord(message: string, split: string): string {
     if (message.split(split).length > 1) {

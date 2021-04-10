@@ -8,8 +8,7 @@
 </ion-header>
 
 <ion-content>
-  
-  <ion-item button (click)="getMakers()" >
+  <ion-item button (click)="getMakers()">
     <ion-icon slot="start" name="hammer"></ion-icon>
     <ion-label position="floating">Maker</ion-label>
     <ion-input
@@ -24,7 +23,13 @@
   <ion-item (click)="selectYear()">
     <ion-icon slot="start" name="calendar"></ion-icon>
     <ion-label position="floating">Year</ion-label>
-    <ion-input button type="number" placeholder="Select Year" readonly="true" [(ngModel)]="Vehicle.Year"></ion-input>
+    <ion-input
+      button
+      type="number"
+      placeholder="Select Year"
+      readonly="true"
+      [(ngModel)]="Vehicle.Year"
+    ></ion-input>
   </ion-item>
 
   <ion-item (click)="getModels()">
@@ -44,30 +49,48 @@
   <ion-item>
     <ion-icon
       slot="start"
+      src="../../../assets/img/svg/035-engine.svg"
+    ></ion-icon>
+    <ion-label position="floating">Cylinders</ion-label>
+    <ion-select
+      placeholder="Insert cylinders"
+      [(ngModel)]="Vehicle.Cylinders"
+      interface="popover"
+    >
+      <ion-select-option [value]="2">2 - Cylinder </ion-select-option>
+      <ion-select-option [value]="3">3 - Cylinder</ion-select-option>
+      <ion-select-option [value]="4">4 - Cylinder</ion-select-option>
+      <ion-select-option [value]="6">6 - Cylinder</ion-select-option>
+      <ion-select-option [value]="8">8 - Cylinder</ion-select-option>
+      <ion-select-option [value]="12">12 - Cylinder</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-icon
+      slot="start"
       src="../../../assets/img/svg/020-checklist.svg"
     ></ion-icon>
     <ion-label position="floating">Trim</ion-label>
     <ion-input
+      *ngIf="this.filterSlash(this.Vehicle.Trim,[]).length == 0"
       type="text"
       placeholder="Insert trim"
       [(ngModel)]="Vehicle.Trim"
     ></ion-input>
 
-  </ion-item>
-  
-  <ion-item>
-    <ion-icon
-      slot="start"
-      src="../../../assets/img/svg/035-engine.svg"
-    ></ion-icon>
-    <ion-label position="floating">Cylinders</ion-label>
-    <ion-select placeholder="Insert cylinders" [(ngModel)]="tempCylinder" interface="popover">
-      <ion-select-option value="2">2 - Cylinder </ion-select-option>
-      <ion-select-option value="3">3 - Cylinder</ion-select-option>
-      <ion-select-option value="4">4 - Cylinder</ion-select-option>
-      <ion-select-option value="6">6 - Cylinder</ion-select-option>
-      <ion-select-option value="8">8 - Cylinder</ion-select-option>
-      <ion-select-option value="12">12 - Cylinder</ion-select-option>
+    <ion-select
+      *ngIf="this.filterSlash(this.Vehicle.Trim,[]).length >= 1"
+      placeholder="Insert trim"
+      [(ngModel)]="this.Vehicle.Trim"
+      interface="action-sheet"
+    >
+      <ion-select-option
+        autocapitalize
+        *ngFor="let item of this.filterSlash(this.Vehicle.Trim,[])"
+        [value]="item"
+        >{{item}}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -77,21 +100,17 @@
       src="../../../assets/img/svg/047-car-3.svg"
     ></ion-icon>
     <ion-label position="floating">Body Class</ion-label>
-
-    <ion-select placeholder="Insert type vehicle" [(ngModel)]="tempBody" interface="action-sheet">
-      <ion-select-option value="SEDAN">SEDAN </ion-select-option>
-      <ion-select-option value="COUPE">COUPE</ion-select-option>
-      <ion-select-option value="HATCHBACK">HATCHBACK</ion-select-option>
-      <ion-select-option value="CROSSOVER">SPORTS</ion-select-option>
-      <ion-select-option value="MINIVAN">MINIVAN</ion-select-option>
-      <ion-select-option value="VAN">VAN</ion-select-option>
-      <ion-select-option value="PICKUP">PICKUP</ion-select-option>
-      <ion-select-option value="WAGON">WAGON</ion-select-option>
-      <ion-select-option value="CONVERTIBLE">CONVERTIBLE</ion-select-option>
-      <ion-select-option value="SPORTS CAR">SPORTS CARS</ion-select-option>
-      <ion-select-option value="SPORT-UTILITY VEHICLE (SUV)">SPORT-UTILITY VEHICLE (SUV)</ion-select-option>
-      <ion-select-option value="MULTI-UTILITY VEHICLE (MUV)">MULTI-UTILITY VEHICLE (MUV)</ion-select-option>
-      <ion-select-option value="MULTIPURPOSE PASSENGER VEHICLE (MPV)">MULTIPURPOSE PASSENGER VEHICLE (MPV)</ion-select-option>
+    <ion-select
+      placeholder="Insert body class"
+      [(ngModel)]="this.Vehicle.Body"
+      interface="action-sheet"
+    >
+      <ion-select-option
+      autocapitalize
+        *ngFor="let item of this.filterSlash(this.Vehicle.Body,this.listBodyClass)"
+        [value]="item"
+        >{{item}}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -101,18 +120,17 @@
       src="../../../assets/img/svg/030-chassis.svg"
     ></ion-icon>
     <ion-label position="floating">Type Vehicle</ion-label>
-    <ion-select placeholder="Insert type vehicle" [(ngModel)]="tempType"  interface="action-sheet">
-      <ion-select-option value="Automobile">Automobile </ion-select-option>
-      <ion-select-option value="All-Terrain Vehicle (ATV/Four-wheeler)">All-Terrain Vehicle (ATV/Four-wheeler)</ion-select-option>
-      <ion-select-option value="Boat Jet Ski">Boat Jet Ski</ion-select-option>
-      <ion-select-option value="Camper/Trailer/RV">Camper/Trailer/RV</ion-select-option>
-      <ion-select-option value="Commercial Truck">Commercial Truck</ion-select-option>
-      <ion-select-option value="Fire Truck">Fire Truck</ion-select-option>
-      <ion-select-option value="Fleet Vehicle">Fleet Vehicle</ion-select-option>
-      <ion-select-option value="Golf Cart">Golf Cart</ion-select-option>
-      <ion-select-option value="Mobile Home">Mobile Home</ion-select-option>
-      <ion-select-option value="Moped">Moped</ion-select-option>
-      <ion-select-option value="Motorcycle">Motorcycle</ion-select-option>
+    <ion-select
+    autocapitalize
+      placeholder="Insert type vehicle"
+      [(ngModel)]="this.Vehicle.Type"
+      interface="action-sheet"
+    >
+      <ion-select-option
+        *ngFor="let item of this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)"
+        [value]="item"
+        >{{item}}</ion-select-option
+      >
     </ion-select>
   </ion-item>
 
@@ -126,8 +144,8 @@
     ></ion-input>
   </ion-item>
 </ion-content>
-  
-<ion-footer id="ionFooter">
+
+<ion-footer id="ionFooter" *ngIf="Vehicle.Maker != '' && Vehicle.Year != 0 && Vehicle.Model != '' " id="ionFooter">
   <ion-button
     size="large"
     class="ion-margin"

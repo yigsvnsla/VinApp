@@ -148,7 +148,7 @@
     </div>
   </div>
 
-  <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider>
+  <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider *ngIf="!carInfo">
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
         <ion-slide *ngFor="let z of c.images;"> 

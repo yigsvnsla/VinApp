@@ -20,6 +20,9 @@ export class ManualPagePage implements OnInit {
   private date = new Date()
   public makeId: any;
   Vehicle: CoreVechicle;
+
+  public listBodyClass: string[]
+  public listTypeVehicle: string[]
   constructor(
     private router: Router,
     private http: HttpService,
@@ -28,23 +31,56 @@ export class ManualPagePage implements OnInit {
     private modalController: ModalController,
     private main: TempService,
     private loc: Location
-  ) {}
+  ) {
+    this.listBodyClass = ["SEDAN",
+      "COUPE",
+      "HATCHBACK",
+      "CROSSOVER",
+      "MINIVAN",
+      "VAN",
+      "PICKUP",
+      "WAGON",
+      "CONVERTIBLE",
+      "SPORTS CAR",
+      "MULTIPURPOSE  VEHICLE (SUV)",
+      "MULTIPURPOSE  VEHICLE (MUV)",
+      "MULTIPURPOSE PASSENGER VEHICLE (MPV)",]
 
-  bodyClassEvent(e){
+    this.listTypeVehicle = [
+      "Automobile",
+      "All-Terrain Vehicle (ATV/Four-wheeler)",
+      "Boat Jet Ski",
+      "Camper/Trailer/RV",
+      "Commercial Truck",
+      "Fire Truck",
+      "Fleet Vehicle",
+      "Golf Cart",
+      "Mobile Home",
+      "Moped",
+      "Motorcycle",]
+  }
+
+  bodyClassEvent(e) {
     this.Vehicle.Body = e.detail.value
   }
 
-  typeVehicleEvent(e){
+  typeVehicleEvent(e) {
     this.Vehicle.Type = e.detail.value
   }
 
-  cylinderEvent(e){
+  cylinderEvent(e) {
     this.Vehicle.Cylinders = parseInt(e.detail.value)
   }
 
+  public filterSlash(str: string, arr: string[]): string[] {
+    if (str.split("/").length > 1) {
+      return str.split("/")
+    } else {
+      return arr
+    }
+  }
+
   tempType
-  tempCylinder 
-  tempBody
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
@@ -53,13 +89,13 @@ export class ManualPagePage implements OnInit {
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
 
-   this.tempType = this.Vehicle.Type
-   this.tempCylinder = this.Vehicle.Cylinders.toString()
-   console.log(this.tempCylinder)
+    this.tempType = this.Vehicle.Type
+
+    console.log(this.filterSlash(this.Vehicle.Body, this.listBodyClass))
   }
 
   selectYear() {
-    if(this.main.currentVehicle.Id !== "0"){
+    if (this.main.currentVehicle.Id !== "0") {
       return;
     }
     let temp: {}[] = [];
@@ -71,14 +107,14 @@ export class ManualPagePage implements OnInit {
     }
     temp.reverse()
     this.presentModal(false, temp, "Select Year").then(
-      (x) =>{ 
-        this.Vehicle.Year = x.id 
+      (x) => {
+        this.Vehicle.Year = x.id
         console.log(this.Vehicle.Year)
       });
   }
 
   async getMakers() {
-    if(this.main.currentVehicle.Id !== "0"){
+    if (this.main.currentVehicle.Id !== "0") {
       return;
     }
     let loading = await this.loading.create({
@@ -99,23 +135,23 @@ export class ManualPagePage implements OnInit {
   }
 
   async getModels() {
-    if(this.main.currentVehicle.Id !== "0"){
+    if (this.main.currentVehicle.Id !== "0") {
       return;
     }
     let alerta = await this.alert.create({
-         header: "ERROR",
-         subHeader: "Select maker first",
-         buttons: [
-           {
-             text: "Ok",
-             role: "Ok",
-           },
-         ],
+      header: "ERROR",
+      subHeader: "Select maker first",
+      buttons: [
+        {
+          text: "Ok",
+          role: "Ok",
+        },
+      ],
     });
 
-    if (this.makeId == undefined || this.makeId == 0){
+    if (this.makeId == undefined || this.makeId == 0) {
       await alerta.present();
-    }else{
+    } else {
       this.http.getModels(this.makeId.toString()).subscribe((success) => {
         console.log(success.sort())
         this.presentModal(false, success, "Models").then((x) => {
@@ -147,17 +183,17 @@ export class ManualPagePage implements OnInit {
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.
   async submit() {
-   if(this.main.currentVehicle.Id !== "0"){
-     console.log("Editando carro!");
-     await this.main.updateVehicle();
-     this.loc.back();
-   }else{
-    if(this.Vehicle.Maker == ""|| this.Vehicle.Model == ""){
-      this.main.showMessage("Falta maker o model!")
-      return 
+    if (this.main.currentVehicle.Id !== "0") {
+      console.log("Editando carro!");
+      await this.main.updateVehicle();
+      this.loc.back();
+    } else {
+      if (this.Vehicle.Maker == "" || this.Vehicle.Model == "") {
+        this.main.showMessage("Falta maker o model!")
+        return
+      }
+      console.log(this.Vehicle);
+      this.main.uploadVehicle();
     }
-    console.log(this.Vehicle);
-    this.main.uploadVehicle();
-   }
-   }
+  }
 }
