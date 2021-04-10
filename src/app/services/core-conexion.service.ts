@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { LoadingController } from "@ionic/angular";
 import { CorePart, CoreVechicle } from "./temp.service";
@@ -12,7 +12,7 @@ export class CoreConexionService {
   URL = "http://backuppapa.sytes.net:1337/";
   PANEL = "https://panel.mdautoparts.com/form/storeMultipleFile";
 
-  constructor(private http: HttpClient, private loading: LoadingController) {}
+  constructor(private http: HttpClient, private loading: LoadingController) { }
 
   async showLoading(message: string): Promise<HTMLIonLoadingElement> {
     let r: HTMLIonLoadingElement;
@@ -252,12 +252,21 @@ export class CoreConexionService {
 
   async uploadHeisler(data: FormData): Promise<any> {
     return new Promise(async (value) => {
+      let loading = await this.showLoading("Uploading to server!");
       if (!data.has("files[]")) {
+        console.log("No changes on heisler");
         value("No changes on heisler");
+        loading.dismiss()
         return
       }
       this.http.post<any>(this.PANEL, data).subscribe((res) => {
+        console.log("Subido a heisler")
+        loading.dismiss()
         value(res);
+      }, fail => {
+        loading.dismiss()
+        console.log("Subido a heisler, pero fallido");
+        value(null);
       });
     });
   }
@@ -277,8 +286,8 @@ export class CoreConexionService {
         });
     });
   }
-  async updateVehicle(vehicle: CoreVechicle): Promise<boolean>{
-    return new Promise(async (value)=>{
+  async updateVehicle(vehicle: CoreVechicle): Promise<boolean> {
+    return new Promise(async (value) => {
       this.http
         .put(`${this.URL}Products/${vehicle.Id}`, {
           cylinders: vehicle.Cylinders,
@@ -289,7 +298,7 @@ export class CoreConexionService {
         })
         .subscribe((res) => {
           value(true);
-        }, fail =>{
+        }, fail => {
           value(false);
         });
     })
@@ -316,9 +325,14 @@ export class CoreConexionService {
       }
       value(await this.delete("Products/", id));
     });
-    
+
   }
 
+
+  //ERROR HANDLING
+  heislerHandler(error: HttpErrorResponse) {
+
+  }
 
   //UTILITIES
   capitalizeAtWord(message: string, split: string): string {
