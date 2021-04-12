@@ -24,6 +24,7 @@ export class ItemsDetailsPage implements OnInit {
   public components: CorePart[];
   public car: CoreVechicle;
   public carInfo:boolean = false;
+  public toggleView:boolean = false;
   constructor(
     private modalController: ModalController,
     private toastController: ToastController,
@@ -131,6 +132,16 @@ export class ItemsDetailsPage implements OnInit {
  }
  async editVehicle(){
   this.route.navigateByUrl("/manual");
+ }
+ async showDetails(e){
+  if(e.detail.checked){
+    this.toggleView? this.toggleView = false: null;
+  }
+ }
+ async toggleViewf(e){
+  if(e.detail.checked){
+    this.carInfo? this.carInfo = false : null;
+  }
  }
 
 }

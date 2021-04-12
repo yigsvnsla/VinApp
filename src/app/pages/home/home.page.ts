@@ -55,14 +55,12 @@ export class HomePage implements OnInit {
     private core: CoreConexionService,
     private platform: Platform
   ) {
-    this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
-      if(this.modalState == false){
+    this.subcribe = this.platform.backButton.subscribeWithPriority(2,()=>{
         if(this.constructor.name == 'HomePage'){
           if(window.confirm("do you want to exit app")){
             navigator['app'].exitApp()
           }
         }
-      }
     })
    }
 
@@ -137,6 +135,7 @@ export class HomePage implements OnInit {
 
     await modal.present().then(()=>{
       this.modalState=true;
+      console.log(this.modalState)
     });
       
     // el formulario hijo al dispara el evento ondissmiss

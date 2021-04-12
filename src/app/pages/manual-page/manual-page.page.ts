@@ -5,6 +5,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  Platform,
 } from "@ionic/angular";
 
 import { DinamicModalComponent } from "../../component/dinamic-modal/dinamic-modal.component";
@@ -23,6 +24,8 @@ export class ManualPagePage implements OnInit {
 
   public listBodyClass: string[]
   public listTypeVehicle: string[]
+
+  public subcribe
   constructor(
     private router: Router,
     private http: HttpService,
@@ -30,8 +33,16 @@ export class ManualPagePage implements OnInit {
     private alert: AlertController,
     private modalController: ModalController,
     private main: TempService,
-    private loc: Location
+    private loc: Location,
+    private platform : Platform
   ) {
+
+    this.subcribe = this.platform.backButton.subscribeWithPriority(5,()=>{
+      if(this.constructor.name == 'ManualPagePage '){
+          this.router.navigateByUrl('/home');
+      }
+    })
+
     this.listBodyClass = ["SEDAN",
       "COUPE",
       "HATCHBACK",
