@@ -102,14 +102,13 @@
     <ion-label position="floating">Body Class</ion-label>
     <ion-select
       placeholder="Insert body class"
-      [(ngModel)]="this.Vehicle.Body"
+      [value]="Vehicle.Body"
       interface="action-sheet"
     >
       <ion-select-option
-      autocapitalize
-        *ngFor="let item of this.filterSlash(this.Vehicle.Body,this.listBodyClass)"
-        [value]="item"
-        >{{item}}</ion-select-option
+        *ngFor="let x of filterSlash(Vehicle.Body,this.listBodyClass)"
+        value="x"
+        >{{x}}</ion-select-option
       >
     </ion-select>
   </ion-item>
