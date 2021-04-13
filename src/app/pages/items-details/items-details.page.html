@@ -25,9 +25,13 @@
   <ion-item-group>
     <ion-item-divider style="margin-top: -32px"> </ion-item-divider>
     <ion-item-divider>
-      <ion-label>Vehicle</ion-label>
-      <ion-label class="ion-margin" slot="end">{{car.Id}}#</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="carInfo"></ion-toggle>
+      <ion-label>Toggle view</ion-label>
+      <ion-toggle slot="end" (ionChange)="toggleViewf($event)" [(ngModel)]="toggleView"></ion-toggle>
+    </ion-item-divider>
+    <ion-item-divider>
+      <ion-label>Information</ion-label>
+      <ion-label class="ion-margin" slot="end" >{{car.Id}}#</ion-label>
+      <ion-toggle slot="end" (ionChange)="showDetails($event)" [(ngModel)]="carInfo"></ion-toggle>
     </ion-item-divider>
 
     <ion-grid fixed *ngIf="carInfo">
@@ -170,6 +174,16 @@
       </ion-row>
     </ion-grid>
   </ion-item-group>
+  <ion-item-group *ngIf="toggleView">
+    <ion-card button *ngFor="let item of components; let i = index"  class="ion-no-padding">
+      <ion-card-content class="ion-no-padding" (click)="goComponent(item)">
+        <ion-item>
+          <ion-label position="floating" >{{item.category}}</ion-label>
+          <ion-input readonly="true" autocapitalize="on" class="ion-no-margin ion-no-padding ion-text-center" [value]="item.part"></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </ion-item-group>
 
   <div class="notComponents" *ngIf="this.components.length == 0 ">
     <div *ngIf="!carInfo" class="notComponents">
@@ -178,14 +192,7 @@
     </div>
   </div>
 
-  <ion-slides
-    pager="false"
-    scrollbar="false"
-    class="content"
-    [options]="sliderFather"
-    #mySlider
-    *ngIf="!carInfo"
-  >
+  <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider *ngIf="!carInfo && !toggleView">
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
         <ion-slide *ngFor="let z of c.images;">

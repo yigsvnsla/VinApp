@@ -24,6 +24,8 @@ export class ManualPagePage implements OnInit {
 
   public listBodyClass: string[]
   public listTypeVehicle: string[]
+
+  public subcribe
   constructor(
     private router: Router,
     private http: HttpService,

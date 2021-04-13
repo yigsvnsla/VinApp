@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
     private main: TempService,
     private core: CoreConexionService,
     private platform: Platform
-  ) {
+  ){
     
     this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
       if(this.modalState == false){
@@ -65,7 +65,7 @@ export class HomePage implements OnInit {
         }
       }
     })
-   }
+  }
 
 
   
