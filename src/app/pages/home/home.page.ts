@@ -41,8 +41,8 @@ export class HomePage implements OnInit {
     Validators.maxLength(17),
     Validators.minLength(17),
   ]);
-  private modalState:boolean
   subcribe:any
+  private modalState:boolean
   async ngOnInit() {
   }
   constructor(
@@ -54,15 +54,18 @@ export class HomePage implements OnInit {
     private main: TempService,
     private core: CoreConexionService,
     private platform: Platform
-  ) {
-    this.subcribe = this.platform.backButton.subscribeWithPriority(2,()=>{
+  ){
+    
+    this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
+      if(this.modalState == false){
         if(this.constructor.name == 'HomePage'){
           if(window.confirm("do you want to exit app")){
             navigator['app'].exitApp()
           }
         }
+      }
     })
-   }
+  }
 
 
   
@@ -93,6 +96,7 @@ export class HomePage implements OnInit {
       disableSuccessBeep: true,
     });
     this.result = _result.text;
+
   }
 
   async searchVin() {
@@ -133,18 +137,17 @@ export class HomePage implements OnInit {
       swipeToClose: true,
     });
 
-    await modal.present().then(()=>{
+    await modal.present().then(e=>{
       this.modalState=true;
       console.log(this.modalState)
     });
-      
     // el formulario hijo al dispara el evento ondissmiss
     // returna un objeto global que es data
     // de este objeto data trae los datos del formulario hijo
     const { data } = await modal.onDidDismiss();
     if (data) {
-      console.log(data);
+      console.log("-",data);
+      this.modalState=false
     }
-    this.modalState=false
   }
 }

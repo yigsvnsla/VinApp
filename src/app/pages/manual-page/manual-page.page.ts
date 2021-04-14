@@ -34,16 +34,15 @@ export class ManualPagePage implements OnInit {
     private modalController: ModalController,
     private main: TempService,
     private loc: Location,
-    private platform : Platform
+    private platform:Platform
   ) {
 
-    this.subcribe = this.platform.backButton.subscribeWithPriority(5,()=>{
-      if(this.constructor.name == 'ManualPagePage '){
-          this.router.navigateByUrl('/home');
-      }
+    this.platform.backButton.subscribeWithPriority(10,()=>{
+      this.loc.back();
     })
 
-    this.listBodyClass = ["SEDAN",
+    this.listBodyClass = [
+      "SEDAN",
       "COUPE",
       "HATCHBACK",
       "CROSSOVER",
@@ -85,6 +84,7 @@ export class ManualPagePage implements OnInit {
 
   public filterSlash(str: string, arr: string[]): string[] {
     if (str.split("/").length > 1) {
+      let temp = str.split("/")
       return str.split("/")
     } else {
       return arr
@@ -92,6 +92,7 @@ export class ManualPagePage implements OnInit {
   }
 
   tempType
+  tempBody;
   async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
@@ -99,9 +100,8 @@ export class ManualPagePage implements OnInit {
 
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
-
-    this.tempType = this.Vehicle.Type
-
+    this.tempBody = this.Vehicle.Body;
+    this.tempType = this.Vehicle.Type;
     console.log(this.filterSlash(this.Vehicle.Body, this.listBodyClass))
   }
 

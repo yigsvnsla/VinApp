@@ -1,18 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" style="width: 100% ;">
+    <ion-buttons slot="start" style="width: 100%">
       <ion-back-button routerLink="/home"></ion-back-button>
       <ion-title>Vehicle</ion-title>
-      <ion-icon button style="margin-right: 32px;" slot="start" name="add" (click)="addComponent()"></ion-icon>
-      <ion-icon button (click)="copyInfoVehicle()" class="component" slot="end" name="copy"></ion-icon>
+      <ion-icon
+        button
+        style="margin-right: 32px"
+        slot="start"
+        name="add"
+        (click)="addComponent()"
+      ></ion-icon>
+      <ion-icon
+        button
+        (click)="copyInfoVehicle()"
+        class="component"
+        slot="end"
+        name="copy"
+      ></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-item-group>
-    <ion-item-divider style="margin-top: -32px;">
-    </ion-item-divider>
+    <ion-item-divider style="margin-top: -32px"> </ion-item-divider>
     <ion-item-divider>
       <ion-label>Parts list</ion-label>
       <ion-toggle slot="end" (ionChange)="toggleViewf($event)" [(ngModel)]="toggleView"></ion-toggle>
@@ -27,8 +38,8 @@
       <ion-row>
         <ion-col size="6">
           <ion-item>
-            <ion-icon slot="start" name="hammer" class="component"></ion-icon>
-            <ion-label position="floating">Make</ion-label>
+            <!-- <ion-icon slot="start" name="hammer" class="component"></ion-icon> -->
+            <ion-label position="floating">Maker</ion-label>
             <ion-input
               type="text"
               placeholder="Select Maker"
@@ -40,19 +51,25 @@
         </ion-col>
         <ion-col size="6">
           <ion-item class="component">
-            <ion-icon slot="start" name="calendar" class="component"></ion-icon>
+            <!-- <ion-icon slot="start" name="calendar" class="component"></ion-icon> -->
             <ion-label position="floating">Year</ion-label>
-            <ion-datetime readonly="true" class="ion-no-margin" (ionChange)="change($event)" displayFormat="YYYY" min="1985" [max]="maxYear" [value]="car.Year"></ion-datetime>
+            <ion-input
+              readonly="true"
+              [value]="car.Year"
+              type="text"
+              placeholder="no text"
+            ></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col size="6">
           <ion-item>
-            <ion-icon
+            <!-- <ion-icon
               slot="start"
               src="../../../assets/img/svg/018-garage.svg"
-            class="component"></ion-icon>
+              class="component"
+            ></ion-icon> -->
             <ion-label position="floating">Model</ion-label>
             <ion-input
               type="text"
@@ -64,12 +81,14 @@
         </ion-col>
         <ion-col size="6">
           <ion-item>
-            <ion-icon
+            <!-- <ion-icon
               slot="start"
               src="../../../assets/img/svg/020-checklist.svg"
-            class="component"></ion-icon>
+              class="component"
+            ></ion-icon> -->
             <ion-label position="floating">Trim</ion-label>
             <ion-input
+              readonly="true"
               type="text"
               placeholder="Awesome Input"
               [(ngModel)]="car.Trim"
@@ -80,13 +99,15 @@
       <ion-row>
         <ion-col size="6">
           <ion-item>
-            <ion-icon
+            <!-- <ion-icon
               slot="start"
               src="../../../assets/img/svg/035-engine.svg"
-            class="component"></ion-icon>
+              class="component"
+            ></ion-icon> -->
             <ion-label position="floating">Cylinders</ion-label>
             <ion-input
               type="text"
+              readonly="true"
               placeholder="Awesome Input"
               [(ngModel)]="car.Cylinders"
             ></ion-input>
@@ -94,12 +115,14 @@
         </ion-col>
         <ion-col size="6">
           <ion-item>
-            <ion-icon
+            <!-- <ion-icon
               slot="start"
               src="../../../assets/img/svg/047-car-3.svg"
-            class="component"></ion-icon>
+              class="component"
+            ></ion-icon> -->
             <ion-label position="floating">Body Class</ion-label>
             <ion-input
+              readonly="true"
               type="text"
               placeholder="Awesome Input"
               [(ngModel)]="car.Body"
@@ -110,9 +133,10 @@
       <ion-row>
         <ion-col size="6">
           <ion-item>
-            <ion-icon slot="start" name="car" class="component"></ion-icon>
+            <!-- <ion-icon slot="start" name="car" class="component"></ion-icon> -->
             <ion-label position="floating">Series</ion-label>
             <ion-input
+              readonly="true"
               type="text"
               placeholder="Awesome Input"
               [value]="car.Serie"
@@ -121,13 +145,14 @@
         </ion-col>
         <ion-col size="6">
           <ion-item>
-            <ion-icon
+            <!-- <ion-icon
               slot="start"
               src="../../../assets/img/svg/030-chassis.svg"
               class="component"
-            ></ion-icon>
+            ></ion-icon> -->
             <ion-label position="floating">Type</ion-label>
             <ion-input
+              readonly="true"
               type="text"
               placeholder="Awesome Input"
               [(ngModel)]="car.Type"
@@ -137,8 +162,13 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button expand="block" shape="round" color="primary" (click)="editVehicle()">
-            <ion-label>Edit</ion-label> 
+          <ion-button
+            expand="block"
+            shape="round"
+            color="primary"
+            (click)="editVehicle()"
+          >
+            <ion-label>Edit</ion-label>
           </ion-button>
         </ion-col>
       </ion-row>
@@ -155,9 +185,9 @@
     </ion-card>
   </ion-item-group>
 
-  <div class="notComponents" *ngIf="this.components.length == 0 " >
+  <div class="notComponents" *ngIf="this.components.length == 0 ">
     <div *ngIf="!carInfo" class="notComponents">
-      <img  src="../../../assets/img/undraw_empty_xct9.svg" alt="">
+      <img src="../../../assets/img/undraw_empty_xct9.svg" alt="" />
       <ion-label class="ion-margin">No components loaded</ion-label>
     </div>
   </div>
@@ -165,46 +195,49 @@
   <ion-slides pager="false" scrollbar="false" class="content" [options]="sliderFather" #mySlider *ngIf="!carInfo && !toggleView">
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
-        <ion-slide *ngFor="let z of c.images;"> 
-          <img class="slide" [src]="getSantizeUrl(z.getImage())" alt="" >
+        <ion-slide *ngFor="let z of c.images;">
+          <img class="slide" [src]="getSantizeUrl(z.getImage())" alt="" />
         </ion-slide>
-      </ion-slides> 
-    
+      </ion-slides>
+
       <ion-item-group>
-        <ion-item-divider >
+        <ion-item-divider>
           <ion-buttons slot="start" *ngIf="i > 0">
             <ion-button (click)="cPrevent()">
               <ion-icon slot="start" name="caret-back"></ion-icon>
             </ion-button>
           </ion-buttons>
           <ion-label>Component - {{i+1}}/{{count}}</ion-label>
-          <ion-label class="ion-margin" slot="end" >{{c.code}}#</ion-label>
+          <ion-label class="ion-margin" slot="end">{{c.code}}#</ion-label>
           <ion-buttons slot="end" *ngIf="i < count - 1">
             <ion-button (click)="cNext()">
               <ion-icon name="caret-forward"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-item-divider>
-        <ion-grid fixed >
+        <ion-grid fixed>
           <ion-row>
             <ion-col size="6">
-              <ion-item >
+              <ion-item>
                 <!-- <ion-icon slot="end" name="logo-usd" class="component"></ion-icon> -->
                 <ion-label position="floating">Price: </ion-label>
-                <ion-input readonly="true" [value]="c.price|currency"></ion-input>
+                <ion-input
+                  readonly="true"
+                  [value]="c.price|currency"
+                ></ion-input>
               </ion-item>
             </ion-col>
             <ion-col size="6">
               <ion-item>
                 <!-- <ion-icon slot="start" name="star" class="component"></ion-icon> -->
                 <ion-label position="floating">Status:</ion-label>
-                <ion-input readonly=true  [(ngModel)]="c.status"></ion-input>
+                <ion-input readonly="true" [(ngModel)]="c.status"></ion-input>
               </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="6">
-              <ion-item >
+              <ion-item>
                 <!-- <ion-icon slot="start" name="list" class="component"></ion-icon> -->
                 <ion-label position="floating">Category </ion-label>
                 <ion-input readonly="true" [value]="c.category"></ion-input>
@@ -214,19 +247,29 @@
               <ion-item>
                 <!-- <ion-icon slot="start" name="grid" class="component"></ion-icon> -->
                 <ion-label position="floating">Name</ion-label>
-                <ion-input readonly=true [value]="c.part"></ion-input>
+                <ion-input readonly="true" [value]="c.part"></ion-input>
               </ion-item>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col size="6">
-              <ion-button (click)="deletePart(c.code, i)" expand="block" shape="round" color="danger">
+              <ion-button
+                (click)="deletePart(c.code, i)"
+                expand="block"
+                shape="round"
+                color="danger"
+              >
                 <ion-label>Delete</ion-label>
                 <ion-icon slot="end" name="trash"></ion-icon>
               </ion-button>
             </ion-col>
             <ion-col size="6">
-              <ion-button (click)="goComponent(c)" expand="block" shape="round" color="primary">
+              <ion-button
+                (click)="goComponent(c)"
+                expand="block"
+                shape="round"
+                color="primary"
+              >
                 <ion-label>Edit</ion-label>
                 <ion-icon slot="end" name="create"></ion-icon>
               </ion-button>
@@ -236,6 +279,4 @@
       </ion-item-group>
     </ion-slide>
   </ion-slides>
-
-  
 </ion-content>
