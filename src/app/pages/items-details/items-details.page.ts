@@ -25,6 +25,7 @@ export class ItemsDetailsPage implements OnInit {
   public car: CoreVechicle;
   public carInfo:boolean = false;
   public toggleView:boolean = false;
+  public s: string ="";
   constructor(
     private modalController: ModalController,
     private toastController: ToastController,
@@ -142,6 +143,9 @@ export class ItemsDetailsPage implements OnInit {
   if(e.detail.checked){
     this.carInfo? this.carInfo = false : null;
   }
+ }
+ async search(e){
+  this.s = e.detail.value;
  }
 
 }

@@ -17,12 +17,12 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
+import { SearchPipe } from "./pipes/search.pipe";
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    PipesModule,
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
@@ -31,14 +31,15 @@ import "@capacitor-community/camera-preview";
     HttpClientModule,
     ReactiveFormsModule,
     CommonModule,
-    NgxCurrencyModule
+    NgxCurrencyModule,
+    PipesModule
   ],
   exports: [],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    BarcodeScanner,
+    BarcodeScanner
   ],
   bootstrap: [AppComponent],
 })
