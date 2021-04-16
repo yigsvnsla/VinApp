@@ -1,9 +1,13 @@
+import { LoadingController, ToastController } from "@ionic/angular";
+import { throwError as  observableThrowError} from "rxjs"
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { LoadingController } from "@ionic/angular";
 import { CorePart, CoreVechicle } from "./temp.service";
+import { Injectable } from "@angular/core";
+import { catchError } from "rxjs/operators";
 import { Plugins } from "@capacitor/core";
+import { Router } from '@angular/router';
 const { Device } = Plugins;
+
 
 @Injectable({
   providedIn: "root",
@@ -12,7 +16,11 @@ export class CoreConexionService {
   URL = "http://backuppapa.sytes.net:1337/";
   PANEL = "https://panel.mdautoparts.com/form/storeMultipleFile";
 
-  constructor(private http: HttpClient, private loading: LoadingController) { }
+  constructor(
+    private http: HttpClient,
+    private loading: LoadingController, 
+    private toastController:ToastController,
+    private router:Router) { }
 
   async showLoading(message: string): Promise<HTMLIonLoadingElement> {
     let r: HTMLIonLoadingElement;
@@ -25,20 +33,33 @@ export class CoreConexionService {
     });
   }
 
+
+  async showToast(message:string):Promise<HTMLIonToastElement> {
+    let element:HTMLIonToastElement = await this.toastController.create({
+      message:message,
+      duration:1000
+    })
+    return new Promise(async (value)=>{
+      await element.present();
+      value(element);
+    })
+  }
+
   public filterSlash(str:string):string[]{
     return str.split("/");
   }
 
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
+    let loading = await this.showLoading("Loading...");
     return new Promise(async (value) => {
-      let loading = await this.showLoading("Loading...");
       this.http
         .get<SearchAPI>(
           `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json`
-        )
-        .subscribe(
-          async (res) => {
+        ).pipe(
+          catchError(this.errorHandler)
+        ).subscribe(
+          async res => {
             value({
               Id: "0",
               Maker: res.Results[6].Value,
@@ -54,15 +75,20 @@ export class CoreConexionService {
               Device: info.uuid,
               Name: "",
             });
-            console.log(res)
+            this.router.navigateByUrl("/manual") 
             loading.dismiss();
           },
           (fail) => {
             loading.dismiss();
             value(null);
+            this.showToast('this service is temporarily out of service')
           }
-        );
+        )
     });
+  }
+
+  private errorHandler(error:HttpErrorResponse){
+    return observableThrowError(error.message)
   }
 
   async searchVehicle(id: string): Promise<CoreVechicle> {

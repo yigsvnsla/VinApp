@@ -22,7 +22,7 @@ export class TempService {
 
   setVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = vehicle;
-    this.router.navigateByUrl("/manual");
+    
   }
   async viewVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = await this.core.searchVehicle(vehicle.Id);

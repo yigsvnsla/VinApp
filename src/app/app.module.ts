@@ -1,15 +1,15 @@
-import { PipesModule } from "./pipes/pipes.module";
+import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouteReuseStrategy } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
-import { BrowserModule } from "@angular/platform-browser";
-import { CommonModule } from "@angular/common";
-import { NgModule } from "@angular/core";
 import { NgxCurrencyModule } from "ngx-currency";
-import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
+import { HttpClientModule } from "@angular/common/http";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
+import { BrowserModule } from "@angular/platform-browser";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
+import { CommonModule } from "@angular/common";
+import { PipesModule } from "./pipes/pipes.module";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
+import { NgModule } from "@angular/core";
 
 //Imports.
 import { AppRoutingModule } from "./app-routing.module";
