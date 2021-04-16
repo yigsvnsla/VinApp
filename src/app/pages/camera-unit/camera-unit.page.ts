@@ -94,8 +94,8 @@ export class CameraUnitPage implements OnInit {
     CameraPreview.start(cameraPreviewOptions).then(() => {});
   }
   async stopCamera() {
-    document.getElementById("ionFooter").classList.toggle("hidden");
     await CameraPreview.stop().then(() => {});
+    document.getElementById("ionFooter").classList.toggle("hidden");
     this.cameraActive = false;
     this.viewCam = false;
     this.nameIcon= "close";

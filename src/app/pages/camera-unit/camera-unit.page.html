@@ -74,8 +74,8 @@
   </ion-item-group>
 </ion-content>
 
-<ion-footer id="ionFooter" *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' ">
-  <ion-toolbar class="ion-text-center" *ngIf="!viewCam">
+<ion-footer id="ionFooter">
+  <ion-toolbar class="ion-text-center" *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' || !viewCam " >
     <ion-grid class="" fixed>
       <ion-row>
         <ion-col>
