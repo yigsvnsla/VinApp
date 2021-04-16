@@ -26,7 +26,7 @@
   <ion-item-group>
     <ion-item-divider style="margin-top: -32px"> </ion-item-divider>
     <ion-item-divider>
-      <ion-label>Toggle view</ion-label>
+      <ion-label>Parts list</ion-label>
       <ion-toggle slot="end" (ionChange)="toggleViewf($event)" [(ngModel)]="toggleView"></ion-toggle>
     </ion-item-divider>
     <ion-item-divider>
@@ -40,10 +40,10 @@
         <ion-col size="6">
           <ion-item>
             <!-- <ion-icon slot="start" name="hammer" class="component"></ion-icon> -->
-            <ion-label position="floating">Maker</ion-label>
+            <ion-label position="floating">Make</ion-label>
             <ion-input
               type="text"
-              placeholder="Select Maker"
+              placeholder="Select Make"
               [value]="car.Maker"
               readonly="true"
               autocapitalize="true"
@@ -176,7 +176,10 @@
     </ion-grid>
   </ion-item-group>
   <ion-item-group *ngIf="toggleView">
-    <ion-card button *ngFor="let item of components; let i = index"  class="ion-no-padding">
+    <ion-item-divider>
+    <ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3"></ion-searchbar>
+    </ion-item-divider>
+    <ion-card button *ngFor="let item of components | search:s; let i = index"  class="ion-no-padding">
       <ion-card-content class="ion-no-padding" (click)="goComponent(item)">
         <ion-item>
           <ion-label position="floating" >{{item.category}}</ion-label>

@@ -134,7 +134,7 @@ export class ManualPagePage implements OnInit {
     await loading.present();
     this.http.getMakers().subscribe((success) => {
       loading.dismiss();
-      this.presentModal(true, success, "Makers")
+      this.presentModal(true, success, "Make")
         .then((x) => {
           this.Vehicle.Maker = x.name;
           this.makeId = x.id;
@@ -151,7 +151,7 @@ export class ManualPagePage implements OnInit {
     }
     let alerta = await this.alert.create({
       header: "ERROR",
-      subHeader: "Select maker first",
+      subHeader: "Select make first",
       buttons: [
         {
           text: "Ok",
@@ -195,12 +195,11 @@ export class ManualPagePage implements OnInit {
   // En caso contrario, mostrara un aviso de error.
   async submit() {
     if (this.main.currentVehicle.Id !== "0") {
-      console.log("Editando carro!");
       await this.main.updateVehicle();
       this.loc.back();
     } else {
       if (this.Vehicle.Maker == "" || this.Vehicle.Model == "") {
-        this.main.showMessage("Falta maker o model!")
+        this.main.showMessage("Please, select Make or Model!")
         return
       }
       console.log(this.Vehicle);
