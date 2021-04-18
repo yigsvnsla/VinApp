@@ -102,13 +102,13 @@
     <ion-label position="floating">Body Class</ion-label>
     <ion-select
       placeholder="Insert body class"
-      [value]="Vehicle.Body"
+      (ionChange)="getBodyClass($event)"
       interface="action-sheet"
     >
       <ion-select-option
         *ngFor="let x of filterSlash(Vehicle.Body,this.listBodyClass)"
-        value="x"
-        >{{x}}</ion-select-option
+        [value]="x"
+        >{{x | uppercase}}</ion-select-option
       >
     </ion-select>
   </ion-item>
@@ -122,13 +122,14 @@
     <ion-select
     autocapitalize
       placeholder="Insert type vehicle"
-      [(ngModel)]="this.Vehicle.Type"
+      (ionChange)="getType($event)"
       interface="action-sheet"
+    
     >
       <ion-select-option
         *ngFor="let item of this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)"
         [value]="item"
-        >{{item}}</ion-select-option
+        >{{item | uppercase}}</ion-select-option
       >
     </ion-select>
   </ion-item>
