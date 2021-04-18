@@ -67,8 +67,8 @@ export class CoreConexionService {
               Year: parseInt(res.Results[9].Value),
               Trim: res.Results[12].Value,//aqui ingresar algoritmo para devolver un array delista
               Serie: res.Results[11].Value,
-              Body: res.Results[22].Value,
-              Cylinders: parseInt(res.Results[69].Value),
+              Body: res.Results[21].Value,
+              Cylinders: parseInt(res.Results[68].Value),
               Type: res.Results[13].Value,
               Parts: null,
               Vin: vin,
@@ -441,4 +441,8 @@ export interface ApiValues {
   ValueId: null | string;
   Variable: string;
   VariableId: number;
+}
+
+export interface ApiTypeVehicle {
+  
 }

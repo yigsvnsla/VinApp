@@ -37,7 +37,7 @@ export class ManualPagePage implements OnInit {
     private platform:Platform
   ) {
 
-    this.platform.backButton.subscribeWithPriority(10,()=>{
+    this.platform.backButton.subscribeWithPriority(11,()=>{
       this.loc.back();
     })
 
@@ -52,13 +52,14 @@ export class ManualPagePage implements OnInit {
       "WAGON",
       "CONVERTIBLE",
       "SPORTS CAR",
-      "MULTIPURPOSE  VEHICLE (SUV)",
-      "MULTIPURPOSE  VEHICLE (MUV)",
-      "MULTIPURPOSE PASSENGER VEHICLE (MPV)",]
+      "MULTIPURPOSE VEHICLE (SUV)",
+      "MULTIPURPOSE VEHICLE (MUV)",
+      "Multi-Purpose Vehicle (MPV)",
+      "Sport Utility Vehicle (SUV)",]
 
     this.listTypeVehicle = [
       "Automobile",
-      "All-Terrain Vehicle (ATV/Four-wheeler)",
+      "All-Terrain Vehicle",
       "Boat Jet Ski",
       "Camper/Trailer/RV",
       "Commercial Truck",
@@ -70,21 +71,9 @@ export class ManualPagePage implements OnInit {
       "Motorcycle",]
   }
 
-  bodyClassEvent(e) {
-    this.Vehicle.Body = e.detail.value
-  }
-
-  typeVehicleEvent(e) {
-    this.Vehicle.Type = e.detail.value
-  }
-
-  cylinderEvent(e) {
-    this.Vehicle.Cylinders = parseInt(e.detail.value)
-  }
-
   public filterSlash(str: string, arr: string[]): string[] {
-    if (str.split("/").length > 1) {
-      return str.split("/")
+    if (str.split("/").length > 1 ) {
+      return str.split("/");
     } else {
       return arr
     }
@@ -98,7 +87,12 @@ export class ManualPagePage implements OnInit {
 
     this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
-  
+
+  }
+
+  ionViewWillEnter(){
+    this.main.empty()
+    this.Vehicle = this.main.currentVehicle;
   }
 
   selectYear() {
@@ -173,9 +167,18 @@ export class ManualPagePage implements OnInit {
   }
 
   getBodyClass(event:CustomEvent){
+
     this.Vehicle.Body = event.detail.value.toLocaleUpperCase()
+    console.log(this.Vehicle.Body)
   }
 
+  getCylinder(e:CustomEvent) {
+    this.Vehicle.Cylinders = parseInt(e.detail.value)
+  }
+
+  getTrim(e:CustomEvent){
+    this.Vehicle.Trim = e.detail.value
+  }
   async presentModal(_tumbnail: boolean, _items?: any, _nameList?: string) {
     const modal = await this.modalController.create({
       component: DinamicModalComponent,
@@ -198,16 +201,17 @@ export class ManualPagePage implements OnInit {
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.
   async submit() {
-    if (this.main.currentVehicle.Id !== "0") {
-      await this.main.updateVehicle();
-      this.loc.back();
-    } else {
-      if (this.Vehicle.Maker == "" || this.Vehicle.Model == "") {
-        this.main.showMessage("Please, select Make or Model!")
-        return
-      }
-      console.log(this.Vehicle);
-      this.main.uploadVehicle();
-    }
+    // if (this.main.currentVehicle.Id !== "0") {
+    //   await this.main.updateVehicle();
+    //   this.loc.back();
+    // } else {
+    //   if (this.Vehicle.Maker == "" || this.Vehicle.Model == "") {
+    //     this.main.showMessage("Please, select Make or Model!")
+    //     return
+    //   }
+    //   console.log(this.Vehicle);
+    //   this.main.uploadVehicle();
+    // }
+    console.log(this.Vehicle)
   }
 }
