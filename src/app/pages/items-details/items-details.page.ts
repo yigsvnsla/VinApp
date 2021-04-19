@@ -40,7 +40,7 @@ export class ItemsDetailsPage implements OnInit {
     this.components = this.main.currentVehicle.Parts;
     this.car = this.main.currentVehicle;
     this.maxYear = new Date().getFullYear().toString();
-    console.log(this.components)
+    console.log(this.car);
   }
   addComponent(){
     this.main.viewPart();

@@ -18,13 +18,7 @@ const routes: Routes = [
         (m) => m.ManualPagePageModule
       ),
   },
-  {
-    path: "area",
-    loadChildren: () =>
-      import("./pages/area-components/area-components.module").then(
-        (m) => m.AreaComponentsPageModule
-      ),
-  },
+  
   {
     path: "camera",
     loadChildren: () =>

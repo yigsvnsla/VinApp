@@ -105,7 +105,7 @@
       placeholder="Insert body class"
       (ionChange)="getBodyClass($event)"
       interface="action-sheet"
-      [value]="filterSlash(Vehicle.Body,this.listBodyClass)[0]"
+      [(ngModel)]="filterSlash(Vehicle.Body, this.listBodyClass)[0]"
     >
       <ion-select-option
         *ngFor="let x of filterSlash(Vehicle.Body,this.listBodyClass)"
