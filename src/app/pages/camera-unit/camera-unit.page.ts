@@ -87,8 +87,8 @@ export class CameraUnitPage implements OnInit {
       parent: "cameraPreview",
       className: "cameraPreview",
       toBack: true,
-      rotateWhenOrientationChanged: false,
-      disableExifHeaderStripping: false,
+      rotateWhenOrientationChanged: true,
+      disableExifHeaderStripping: true,
     };
     this.cameraActive = true;
     CameraPreview.start(cameraPreviewOptions).then(() => {});

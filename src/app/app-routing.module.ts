@@ -32,10 +32,12 @@ const routes: Routes = [
       import("./pages/items-details/items-details.module").then(
         (m) => m.ItemsDetailsPageModule
       ),
-  },  {
-    path: 'configurations-app',
+  },
+  {
+    path: 'settings',
     loadChildren: () => import('./pages/configurations-app/configurations-app.module').then( m => m.ConfigurationsAppPageModule)
   },
+
 
 ];
 

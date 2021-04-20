@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TempService } from 'src/app/services/temp.service';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { ModalPage } from '../modal/modal.page';
 
@@ -9,7 +10,7 @@ import { ModalPage } from '../modal/modal.page';
 })
 export class MenuHomeComponent implements OnInit {
 
-  constructor(private uiComponentsService:UiComponentsService) { }
+  constructor(private uiComponentsService:UiComponentsService, private main: TempService) { }
 
 
   ngOnInit() {}

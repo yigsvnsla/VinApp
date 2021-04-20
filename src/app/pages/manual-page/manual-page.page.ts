@@ -239,3 +239,4 @@ export class ManualPagePage implements OnInit {
     }
   }
 }
+
