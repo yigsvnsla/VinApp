@@ -1,3 +1,4 @@
+import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { Router } from '@angular/router';
 import { ModalPage } from "./../../component/modal/modal.page";
 import { Component, OnInit } from "@angular/core";
@@ -47,14 +48,12 @@ export class HomePage implements OnInit {
   private modalState: boolean
   constructor(
     private barcode: BarcodeScanner,
-    private loading: LoadingController,
     private modalController: ModalController,
     private alertController: AlertController,
-    private toastController: ToastController,
     private main: TempService,
     private core: CoreConexionService,
     private platform: Platform,
-    private router: Router
+    private uiComponentsService:UiComponentsService
   ) {
 
     this.subcribe = this.platform.backButton.subscribeWithPriority(10, () => {
@@ -81,8 +80,9 @@ export class HomePage implements OnInit {
     alert.present()
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     this.result = ""
+ 
   }
 
   private compareTable = [
@@ -210,7 +210,7 @@ export class HomePage implements OnInit {
   };
 
   //"SALMH13446A220123"
-  result: string = "";
+  result: string = "SALMH13446A220123";
   public activateFilter: boolean = false
   async searchVin() {
     switch (this.activateFilter) {

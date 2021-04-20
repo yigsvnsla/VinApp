@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
 import { HttpService } from "src/app/services/http.service";
 import {
   AlertController,
@@ -24,10 +23,10 @@ export class ManualPagePage implements OnInit {
 
   public listBodyClass: string[];
   public listTypeVehicle: string[];
+  public listTrim: string[];
+  public listSeries: string[];
 
-  public subcribe;
   constructor(
-    private router: Router,
     private http: HttpService,
     private loading: LoadingController,
     private alert: AlertController,
@@ -36,9 +35,23 @@ export class ManualPagePage implements OnInit {
     private loc: Location,
     private platform: Platform
   ) {
-    this.platform.backButton.subscribeWithPriority(11, () => {
+    this.platform.backButton.subscribeWithPriority(9, () => {
       this.loc.back();
     });
+
+    this.listTrim = [
+      "TRIM 1",
+      "TRIM 2",
+      "TRIM 3",
+      "TRIM 4",
+    ]
+
+    this.listSeries =[
+      "SERIE 1",
+      "SERIE 2",
+      "SERIE 3",
+      "SERIE 4",
+    ]
 
     this.listBodyClass = [
       "SEDAN",
@@ -70,23 +83,38 @@ export class ManualPagePage implements OnInit {
       "Moped",
       "Motorcycle",
     ];
-  }
-
-  public filterSlash(str: string, arr: string[]): string[] {
-    if (str.split("/").length > 1) {
-      return str.split("/");
-    } else {
-      return arr;
-    }
-  }
-
-  async ngOnInit() {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
     // dado el caso que no exista, se debe instanciar uno vacio
-
-    this.maxYear = this.date.getFullYear();
     this.Vehicle = this.main.currentVehicle;
+    this.maxYear = this.date.getFullYear();   
+  }
+
+  public filterSlash(str: string, arr: string[]): string[] | string {
+    if(str == "" || str == null){
+      return arr
+    }
+    if(str.split("/").length == 0){
+      return str
+    }
+    if (str.split("/").length > 1) {
+      return str.split("/");
+    }else{
+      return arr;
+    } 
+
+  }
+
+  public tempBody: string;
+  public tempClass:string;
+  public tempTrim: string;
+  public tempSerie:string;
+
+  async ngOnInit() {
+    this.tempTrim = this.filterSlash(this.Vehicle.Trim,this.listTrim)[0];
+    this.tempBody = this.filterSlash(this.Vehicle.Body,this.listBodyClass)[0];
+    this.tempClass= this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)[0];
+    this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0]
   }
 
   selectYear() {
@@ -103,7 +131,6 @@ export class ManualPagePage implements OnInit {
 
     this.presentModal(false, temp.reverse(), "Select Year").then((x) => {
       this.Vehicle.Year = x.id;
-      console.log(this.Vehicle.Year);
     });
   }
 
@@ -146,9 +173,10 @@ export class ManualPagePage implements OnInit {
     if (this.makeId == undefined || this.makeId == 0) {
       await alerta.present();
     } else {
-      this.http.getModels(this.makeId.toString()).subscribe((success) => {
-        console.log(success.sort());
-        this.presentModal(false, success, "Models").then((x) => {
+      this.http.getModels(this.makeId.toString())
+        .subscribe((success) => {
+          this.presentModal(false, success, "Models")
+        .then((x) => {
           this.Vehicle.Model = x.name;
         });
       });
@@ -171,6 +199,7 @@ export class ManualPagePage implements OnInit {
   getTrim(e: CustomEvent) {
     this.Vehicle.Trim = e.detail.value;
   }
+
   async presentModal(_tumbnail: boolean, _items?: any, _nameList?: string) {
     const modal = await this.modalController.create({
       component: DinamicModalComponent,
@@ -193,6 +222,11 @@ export class ManualPagePage implements OnInit {
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.
   async submit() {
+    this.Vehicle.Body=this.tempBody;
+    this.Vehicle.Type=this.tempClass;
+    this.Vehicle.Trim = this.tempTrim;
+    this.Vehicle.Serie=this.tempSerie;
+    
     if (this.main.currentVehicle.Id !== "0") {
       await this.main.updateVehicle();
       this.loc.back();
@@ -203,6 +237,5 @@ export class ManualPagePage implements OnInit {
       }
       this.main.uploadVehicle();
     }
-    console.log(this.Vehicle);
   }
 }

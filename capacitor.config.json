@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "SearchVin",
+  "appName": "VinApp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

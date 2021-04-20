@@ -1,0 +1,49 @@
+<ion-menu contentId="menu-home" menuId="menu-home" side="start" type="overlay">
+  <ion-content>
+    <div class="menu-header-bg"></div>
+    <div class="header-content">
+      <img src="../../../assets/icon/user-icon.svg" alt="">
+      <ion-label>
+        <h1>VinApp Menu</h1>
+      </ion-label>
+    </div>
+<!-- 
+    <ion-item style="margin-bottom: -10px;" lines="none">
+      <ion-label>Strict filter</ion-label>
+      <ion-toggle [(ngModel)]="activateFilter"></ion-toggle>
+      <ion-icon  slot="end" name="bulb"></ion-icon>
+    </ion-item> -->
+
+    <ion-list lines="none">
+
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>List</ion-label>
+        </ion-item-divider>
+        <ion-item button (click)="modalList()">
+          <ion-icon slot="start" name="list"></ion-icon>
+          <ion-label>List vehicle</ion-label>
+        </ion-item>
+        <ion-item button (click)="listComponents()">
+          <ion-label>List Components</ion-label>
+          <ion-icon slot="start" name="grid"></ion-icon>
+        </ion-item>
+      </ion-item-group>
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-label>Label</ion-label>
+        </ion-item-divider>
+        <ion-item>
+          <ion-label>Label</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Label</ion-label>
+        </ion-item>
+      </ion-item-group>
+    </ion-list>
+  </ion-content>
+  <ion-footer>
+    <div class="footer-gb"></div>
+  </ion-footer>
+</ion-menu>
+<ion-router-outlet id="menu-home"></ion-router-outlet>

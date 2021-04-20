@@ -1,3 +1,4 @@
+import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouteReuseStrategy } from "@angular/router";
@@ -17,7 +18,6 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
-import { SearchPipe } from "./pipes/search.pipe";
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +36,7 @@ import { SearchPipe } from "./pipes/search.pipe";
   ],
   exports: [],
   providers: [
+    UiComponentsService,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

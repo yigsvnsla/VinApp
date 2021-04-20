@@ -72,23 +72,14 @@
       src="../../../assets/img/svg/020-checklist.svg"
     ></ion-icon>
     <ion-label position="floating">Trim</ion-label>
-    <ion-input
-      *ngIf="this.filterSlash(this.Vehicle.Trim,[]).length == 0"
-      type="text"
-      placeholder="Insert trim"
-      [(ngModel)]="Vehicle.Trim"
-    ></ion-input>
-
     <ion-select
-      *ngIf="this.filterSlash(this.Vehicle.Trim,[]).length >= 1"
       placeholder="Insert trim"
       interface="action-sheet"
-      (ionChange)="getTrim($event)"
-      [value]="this.filterSlash(this.Vehicle.Trim,[])[0]"
+      [(ngModel)]="this.tempTrim"
     >
       <ion-select-option
         autocapitalize
-        *ngFor="let item of this.filterSlash(this.Vehicle.Trim,[])"
+        *ngFor="let item of this.filterSlash(this.Vehicle.Trim,this.listTrim)"
         [value]="item"
         >{{item | uppercase}}</ion-select-option
       >
@@ -103,9 +94,8 @@
     <ion-label position="floating">Body Class</ion-label>
     <ion-select
       placeholder="Insert body class"
-      (ionChange)="getBodyClass($event)"
       interface="action-sheet"
-      [(ngModel)]="filterSlash(Vehicle.Body, this.listBodyClass)[0]"
+      [(ngModel)]="this.tempBody"
     >
       <ion-select-option
         *ngFor="let x of filterSlash(Vehicle.Body,this.listBodyClass)"
@@ -122,11 +112,10 @@
     ></ion-icon>
     <ion-label position="floating">Type Vehicle</ion-label>
     <ion-select
-    autocapitalize
+      autocapitalize
       placeholder="Insert type vehicle"
-      (ionChange)="getType($event)"
       interface="action-sheet"
-      [value]="filterSlash(this.Vehicle.Type,this.listTypeVehicle)[0]"
+      [(ngModel)]="tempClass"
     >
       <ion-select-option
         *ngFor="let item of this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)"
@@ -139,15 +128,25 @@
   <ion-item>
     <ion-label position="floating">Series</ion-label>
     <ion-icon slot="start" name="car"></ion-icon>
-    <ion-input
-      type="text"
-      placeholder="Insert serie"
-      [(ngModel)]="Vehicle.Serie"
-    ></ion-input>
+    <ion-select
+      [(ngModel)]="tempSerie"
+      interface="action-sheet"
+      placeholder="Select Serie"
+    >
+    <ion-select-option
+    *ngFor=" let serie of this.filterSlash(this.Vehicle.Serie,this.listSeries)"
+    [value]="serie"
+  >
+  {{serie | uppercase}}</ion-select-option>
+    </ion-select>
   </ion-item>
 </ion-content>
 
-<ion-footer id="ionFooter" *ngIf="Vehicle.Maker != '' && Vehicle.Year != 0 && Vehicle.Model != '' && Vehicle.Trim != '' && Vehicle.Cylinders != 0 && Vehicle.Type != '' && Vehicle.Body != '' " id="ionFooter">
+<ion-footer
+  id="ionFooter"
+  *ngIf="Vehicle.Maker != '' && Vehicle.Year != 0 && Vehicle.Model != '' "
+  id="ionFooter"
+>
   <ion-button
     size="large"
     class="ion-margin"

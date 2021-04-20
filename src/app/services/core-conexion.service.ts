@@ -69,7 +69,7 @@ export class CoreConexionService {
               Serie: res.Results[11].Value,
               Body: res.Results[21].Value,
               Cylinders: parseInt(res.Results[68].Value),
-              Type: res.Results[13].Value,
+              Type: "",//res.Results[13].Value -> la api devuelve datos fuera de contexto 
               Parts: null,
               Vin: vin,
               Device: info.uuid,
