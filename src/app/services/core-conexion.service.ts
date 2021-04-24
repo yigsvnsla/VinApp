@@ -1,3 +1,4 @@
+import { UiComponentsService } from './ui-components.service';
 import { LoadingController, ToastController } from "@ionic/angular";
 import { throwError as  observableThrowError} from "rxjs"
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
@@ -13,37 +14,15 @@ const { Device } = Plugins;
   providedIn: "root",
 })
 export class CoreConexionService {
-  URL = "http://backuppapa.sytes.net:1337/";
+  URL = "http://backup1.myvnc.com:1337/";
   PANEL = "https://panel.mdautoparts.com/form/storeMultipleFile";
 
   constructor(
     private http: HttpClient,
     private loading: LoadingController, 
     private toastController:ToastController,
-    private router:Router) { }
-
-  async showLoading(message: string): Promise<HTMLIonLoadingElement> {
-    let r: HTMLIonLoadingElement;
-    return new Promise(async (value) => {
-      r = await this.loading.create({
-        message: message,
-      });
-      await r.present();
-      value(r);
-    });
-  }
-
-
-  async showToast(message:string):Promise<HTMLIonToastElement> {
-    let element:HTMLIonToastElement = await this.toastController.create({
-      message:message,
-      duration:1000
-    })
-    return new Promise(async (value)=>{
-      await element.present();
-      value(element);
-    })
-  }
+    private router:Router,
+    private uiComponentsService:UiComponentsService) { }
 
   public filterSlash(str:string):string[]{
     return str.split("/");
@@ -51,7 +30,7 @@ export class CoreConexionService {
 
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
-    let loading = await this.showLoading("Loading...");
+    let toast = this.uiComponentsService.showLoading()
     return new Promise(async (value) => {
       this.http
         .get<SearchAPI>(
@@ -75,13 +54,14 @@ export class CoreConexionService {
               Device: info.uuid,
               Name: "",
             });
-            this.router.navigateByUrl("/manual") 
-            loading.dismiss();
+            (await toast).dismiss()
+            this.router.navigateByUrl("/manual"); 
           },
-          (fail) => {
-            loading.dismiss();
+          async (fail) => {
+            console.error("Search: ",fail);
+            (await toast).dismiss()
             value(null);
-            this.showToast('this service is temporarily out of service')
+            this.uiComponentsService.showToast('this service is temporarily out of service')
           }
         )
     });
@@ -93,7 +73,7 @@ export class CoreConexionService {
 
   async searchVehicle(id: string): Promise<CoreVechicle> {
     return new Promise(async (value) => {
-      let loading = await this.showLoading("Search vehicle...");
+      let toast = this.uiComponentsService.showLoading("Search vehicle...")
       let info = await Device.getInfo();
       this.http.get<any>(this.URL + `Products/${id}`).subscribe(async (res) => {
         value({
@@ -111,7 +91,9 @@ export class CoreConexionService {
           Device: info.uuid,
           Name: res.name,
         });
-        await loading.dismiss();
+        (await toast).dismiss()
+      },fail=>{
+        console.error("searchVehicle: ",fail);
       });
     });
   }
@@ -144,6 +126,7 @@ export class CoreConexionService {
             });
           },
           (fail) => {
+            console.error("findVehicle: ",fail);
             value(null);
           }
         );
@@ -159,6 +142,7 @@ export class CoreConexionService {
             value(res);
           },
           (fail) => {
+            console.error("findArray: ",fail);
             value(null);
           }
         );
@@ -187,7 +171,7 @@ export class CoreConexionService {
           },
           (fail) => {
             value(null);
-            console.log("Fail");
+            console.error("findComponent: ",fail);
           }
         );
     });
@@ -225,6 +209,7 @@ export class CoreConexionService {
             value(r);
           },
           (fail) => {
+            console.error("uploadPart",fail)
             value(null);
           }
         );
@@ -233,7 +218,7 @@ export class CoreConexionService {
 
   async uploadVehicle(data: CoreVechicle): Promise<number> {
     return new Promise(async (value) => {
-      let loading = await this.showLoading("Sing in...");
+      let loading = this.uiComponentsService.showLoading("Sing in...")
       this.http
         .post<any>(this.URL + "Products", {
           name: this.capitalizeAtWord(`${data.Year} ${data.Maker} ${data.Model}`, " "),
@@ -249,31 +234,32 @@ export class CoreConexionService {
           vin: data.Vin,
         })
         .subscribe(
-          (res) => {
-            loading.dismiss();
+          async (res) => {
+            (await loading).dismiss();
             value(res.id);
           },
-          (fail) => {
-            loading.dismiss();
+          async (fail) => {
+            (await loading).dismiss();
             value(null);
+            console.error("uploadVehicle: ",fail)
           }
         );
     });
   }
-
+  
   async imagesStrapi(data: FormData): Promise<number[]> {
     return new Promise(async (value) => {
       if (!data.has("files")) {
         value([]);
         return;
       } else {
-        let loading = await this.showLoading("Subiendo imagenes...");
-        this.http.post<any>(this.URL + "upload", data).subscribe((res) => {
+        let loading =this.uiComponentsService.showLoading("Subiendo imagenes...");
+        this.http.post<any>(this.URL + "upload", data).subscribe(async (res) => {
           let r: number[] = [];
           res.forEach((element) => {
             r.push(element.id);
           });
-          loading.dismiss();
+          (await loading).dismiss();
           value(r);
         });
       }
@@ -282,17 +268,18 @@ export class CoreConexionService {
 
   async uploadHeisler(data: FormData): Promise<any> {
     return new Promise(async (value) => {
-      let loading = await this.showLoading("Uploading to server!");
+      let loading = this.uiComponentsService.showLoading("Upload server primary")
       if (!data.has("files[]")) {
         value("No changes on heisler");
-        loading.dismiss()
+        (await loading).dismiss()
         return
       }
-      this.http.post<any>(this.PANEL, data).subscribe((res) => {
-        loading.dismiss()
+      this.http.post<any>(this.PANEL, data).subscribe(async (res) => {
+        (await loading).dismiss()
         value(res);
-      }, fail => {
-        loading.dismiss()
+      }, async fail => {
+        (await loading).dismiss()
+        console.error("upload heisler: ",fail)
         value(null);
       });
     });

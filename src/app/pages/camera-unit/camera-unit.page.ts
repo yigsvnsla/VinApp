@@ -83,15 +83,20 @@ export class CameraUnitPage implements OnInit {
   torchActive = false;
   openCamera() {
     const cameraPreviewOptions: CameraPreviewOptions = {
+      x: 0,
+      y: 0,
+      width: window.screen.width,
+      height: window.screen.height,
       position: "rear",
       parent: "cameraPreview",
       className: "cameraPreview",
       toBack: true,
       rotateWhenOrientationChanged: true,
       disableExifHeaderStripping: true,
+      
     };
     this.cameraActive = true;
-    CameraPreview.start(cameraPreviewOptions).then(() => {});
+    CameraPreview.start(cameraPreviewOptions)
   }
   async stopCamera() {
     await CameraPreview.stop().then(() => {});

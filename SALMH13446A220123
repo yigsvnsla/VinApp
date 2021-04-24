@@ -1,5 +1,12 @@
 SALMH13446A220123
 
+
+//1er intento de metodo :
+
+crear un observable que escuche las orientaciones del dispositivo,
+ una vez procesadas redimencionar en tiempo real los valores del mismo mediante el observer
+
+
 config.XML:
      // <preference name="resizeOnFullScreen" value="true" />
 

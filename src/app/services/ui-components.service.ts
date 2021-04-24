@@ -23,7 +23,7 @@ export class UiComponentsService {
     })
   }
 
-  async showLoading(message: string): Promise<HTMLIonLoadingElement> {
+  async showLoading(message: string="Loading"): Promise<HTMLIonLoadingElement> {
     let loading: HTMLIonLoadingElement = await this.loadingController.create({
       message: message,
     });

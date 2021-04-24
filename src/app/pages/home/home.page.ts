@@ -189,11 +189,11 @@ export class HomePage implements OnInit {
           if (!(/[IOQ]/g.test(vin))) {
             return calculator(await replace(vin))
           } else {
-            this.core.showToast("this is invalid vin code")
+            this.uiComponentsService.showToast("this is invalid vin code")
           }
         } else {
           if (vin.length > 0) {
-            this.core.showToast("this vin code is much short o much large")
+            this.uiComponentsService.showToast("this vin code is much short o much large")
           } else {
             this.manualPage();
           }
@@ -230,7 +230,7 @@ export class HomePage implements OnInit {
             })
         }  else {
           if (this.result.length > 0) {
-            this.core.showToast("this vin code is much short o much large")
+            this.uiComponentsService.showToast("this vin code is much short o much large")
           } else {
             this.manualPage();
           }

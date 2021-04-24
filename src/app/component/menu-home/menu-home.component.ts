@@ -1,5 +1,5 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { TempService } from 'src/app/services/temp.service';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { ModalPage } from '../modal/modal.page';
 
@@ -10,26 +10,31 @@ import { ModalPage } from '../modal/modal.page';
 })
 export class MenuHomeComponent implements OnInit {
 
-  constructor(private uiComponentsService:UiComponentsService, private main: TempService) { }
+  constructor(
+    private uiComponentsService: UiComponentsService, 
+    private router: Router
+  ) { }
 
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  async modalList(){
+  async modalList() {
     (await this.uiComponentsService.menuControl())
-      .close("menu-home").then(()=>{
-      this.uiComponentsService.showModal({
-        component: ModalPage,
-        cssClass: "my-custom-class",
-        swipeToClose: true,
+      .close("menu-home").then(() => {
+        this.uiComponentsService.showModal({
+          component: ModalPage,
+          cssClass: "my-custom-class",
+          swipeToClose: true,
+        })
       })
-    })
+  }
 
+  goConfig() {
+    this.router.navigateByUrl("/settings")
+  }
+
+  listComponents() {
 
   }
 
-  listComponents(){
-    
-  }
-  
 }
