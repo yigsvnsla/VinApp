@@ -240,7 +240,7 @@ export class Image {
     }
   }
   setURL(url: string) {
-    this.url = `http://backuppapa.sytes.net:1337${url}`;
+    this.url = url;
   }
   getImage(): string {
     return this.id === "0" ? "data:image/jpge;base64," + this.b64 : this.url;
