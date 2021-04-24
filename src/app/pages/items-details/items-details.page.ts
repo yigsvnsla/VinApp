@@ -55,7 +55,7 @@ export class ItemsDetailsPage implements OnInit {
     this.car.Year = parseInt(event.detail.value);
   }
   public getSantizeUrl(url: string) {
-    return this.sanitizer.bypassSecurityTrustUrl(`${url}`);
+    return this.sanitizer.bypassSecurityTrustUrl(`${this.core.URL.substr(0,this.core.URL.lastIndexOf("/"))}${url}`);
   }
   async copyInfoVehicle() {
     const toast = await this.toastController.create({

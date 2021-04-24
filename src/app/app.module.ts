@@ -18,6 +18,7 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
+import { IonicStorageModule } from '@ionic/storage-angular';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,7 +33,8 @@ import "@capacitor-community/camera-preview";
     ReactiveFormsModule,
     CommonModule,
     NgxCurrencyModule,
-    PipesModule
+    PipesModule,
+    IonicStorageModule.forRoot()
   ],
   exports: [],
   providers: [

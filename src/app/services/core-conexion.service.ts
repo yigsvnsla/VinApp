@@ -1,14 +1,13 @@
-import { UiComponentsService } from './ui-components.service';
-import { LoadingController, ToastController } from "@ionic/angular";
-import { throwError as  observableThrowError} from "rxjs"
+import { UiComponentsService } from "./ui-components.service";
+import { throwError as observableThrowError } from "rxjs";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { CorePart, CoreVechicle } from "./temp.service";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { Plugins } from "@capacitor/core";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
+import { Storage } from "@ionic/storage";
 const { Device } = Plugins;
-
 
 @Injectable({
   providedIn: "root",
@@ -19,82 +18,87 @@ export class CoreConexionService {
 
   constructor(
     private http: HttpClient,
-    private loading: LoadingController, 
-    private toastController:ToastController,
-    private router:Router,
-    private uiComponentsService:UiComponentsService) { }
+    private router: Router,
+    private uiComponentsService: UiComponentsService,
+    private storage: Storage
+  ) {}
 
-  public filterSlash(str:string):string[]{
+  public filterSlash(str: string): string[] {
     return str.split("/");
   }
 
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
-    let toast = this.uiComponentsService.showLoading()
+    let toast = this.uiComponentsService.showLoading();
     return new Promise(async (value) => {
       this.http
         .get<SearchAPI>(
           `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json`
-        ).pipe(
-          catchError(this.errorHandler)
-        ).subscribe(
-          async res => {
+        )
+        .pipe(catchError(this.errorHandler))
+        .subscribe(
+          async (res) => {
             value({
               Id: "0",
               Maker: res.Results[6].Value,
               Model: res.Results[8].Value,
               Year: parseInt(res.Results[9].Value),
-              Trim: res.Results[12].Value,//aqui ingresar algoritmo para devolver un array delista
+              Trim: res.Results[12].Value, //aqui ingresar algoritmo para devolver un array delista
               Serie: res.Results[11].Value,
               Body: res.Results[21].Value,
               Cylinders: parseInt(res.Results[68].Value),
-              Type: "",//res.Results[13].Value -> la api devuelve datos fuera de contexto 
+              Type: "", //res.Results[13].Value -> la api devuelve datos fuera de contexto
               Parts: null,
               Vin: vin,
               Device: info.uuid,
               Name: "",
             });
-            (await toast).dismiss()
-            this.router.navigateByUrl("/manual"); 
+            (await toast).dismiss();
+            this.router.navigateByUrl("/manual");
           },
           async (fail) => {
-            console.error("Search: ",fail);
-            (await toast).dismiss()
+            console.error("Search: ", fail);
+            (await toast).dismiss();
             value(null);
-            this.uiComponentsService.showToast('this service is temporarily out of service')
+            this.uiComponentsService.showToast(
+              "this service is temporarily out of service"
+            );
           }
-        )
+        );
     });
   }
 
-  private errorHandler(error:HttpErrorResponse){
-    return observableThrowError(error.message)
+  private errorHandler(error: HttpErrorResponse) {
+    return observableThrowError(error.message);
   }
 
   async searchVehicle(id: string): Promise<CoreVechicle> {
     return new Promise(async (value) => {
-      let toast = this.uiComponentsService.showLoading("Search vehicle...")
+      let toast = this.uiComponentsService.showLoading("Search vehicle...");
       let info = await Device.getInfo();
-      this.http.get<any>(this.URL + `Products/${id}`).subscribe(async (res) => {
-        value({
-          Maker: res.maker,
-          Model: res.model,
-          Year: parseInt(res.year),
-          Trim: res.trim,
-          Serie: res.serie,
-          Body: res.boddyClass,
-          Cylinders: parseInt(res.cylinders),
-          Parts: await this.findComponents(id),
-          Vin: res.vin,
-          Id: res.id,
-          Type: res.type,
-          Device: info.uuid,
-          Name: res.name,
-        });
-        (await toast).dismiss()
-      },fail=>{
-        console.error("searchVehicle: ",fail);
-      });
+      this.http.get<any>(this.URL + `Products/${id}`).subscribe(
+        async (res) => {
+          value({
+            Maker: res.maker,
+            Model: res.model,
+            Year: parseInt(res.year),
+            Trim: res.trim,
+            Serie: res.serie,
+            Body: res.boddyClass,
+            Cylinders: parseInt(res.cylinders),
+            Parts: await this.findComponents(id),
+            Vin: res.vin,
+            Id: res.id,
+            Type: res.type,
+            Device: info.uuid,
+            Name: res.name,
+          });
+          (await toast).dismiss();
+        },
+        (fail) => {
+          console.error("searchVehicle: ", fail);
+        }
+      );
     });
   }
 
@@ -126,7 +130,7 @@ export class CoreConexionService {
             });
           },
           (fail) => {
-            console.error("findVehicle: ",fail);
+            console.error("findVehicle: ", fail);
             value(null);
           }
         );
@@ -142,7 +146,7 @@ export class CoreConexionService {
             value(res);
           },
           (fail) => {
-            console.error("findArray: ",fail);
+            console.error("findArray: ", fail);
             value(null);
           }
         );
@@ -171,13 +175,17 @@ export class CoreConexionService {
           },
           (fail) => {
             value(null);
-            console.error("findComponent: ",fail);
+            console.error("findComponent: ", fail);
           }
         );
     });
   }
 
-  async uploadPart(id: string, part: CorePart, param: number[]): Promise<CorePart> {
+  async uploadPart(
+    id: string,
+    part: CorePart,
+    param: number[]
+  ): Promise<CorePart> {
     return new Promise(async (value) => {
       this.http
         .post<any>(
@@ -209,7 +217,7 @@ export class CoreConexionService {
             value(r);
           },
           (fail) => {
-            console.error("uploadPart",fail)
+            console.error("uploadPart", fail);
             value(null);
           }
         );
@@ -218,10 +226,13 @@ export class CoreConexionService {
 
   async uploadVehicle(data: CoreVechicle): Promise<number> {
     return new Promise(async (value) => {
-      let loading = this.uiComponentsService.showLoading("Sing in...")
+      let loading = this.uiComponentsService.showLoading("Sing in...");
       this.http
         .post<any>(this.URL + "Products", {
-          name: this.capitalizeAtWord(`${data.Year} ${data.Maker} ${data.Model}`, " "),
+          name: this.capitalizeAtWord(
+            `${data.Year} ${data.Maker} ${data.Model}`,
+            " "
+          ),
           maker: this.capitalizeAtWord(data.Maker, "dasdasd"),
           model: this.capitalizeAtWord(data.Model, "dasdasdasd"),
           year: data.Year,
@@ -241,47 +252,56 @@ export class CoreConexionService {
           async (fail) => {
             (await loading).dismiss();
             value(null);
-            console.error("uploadVehicle: ",fail)
+            console.error("uploadVehicle: ", fail);
           }
         );
     });
   }
-  
+
   async imagesStrapi(data: FormData): Promise<number[]> {
     return new Promise(async (value) => {
       if (!data.has("files")) {
         value([]);
         return;
       } else {
-        let loading =this.uiComponentsService.showLoading("Subiendo imagenes...");
-        this.http.post<any>(this.URL + "upload", data).subscribe(async (res) => {
-          let r: number[] = [];
-          res.forEach((element) => {
-            r.push(element.id);
+        let loading = this.uiComponentsService.showLoading(
+          "Subiendo imagenes..."
+        );
+        this.http
+          .post<any>(this.URL + "upload", data)
+          .subscribe(async (res) => {
+            let r: number[] = [];
+            res.forEach((element) => {
+              r.push(element.id);
+            });
+            (await loading).dismiss();
+            value(r);
           });
-          (await loading).dismiss();
-          value(r);
-        });
       }
     });
   }
 
   async uploadHeisler(data: FormData): Promise<any> {
     return new Promise(async (value) => {
-      let loading = this.uiComponentsService.showLoading("Upload server primary")
+      let loading = this.uiComponentsService.showLoading(
+        "Upload server primary"
+      );
       if (!data.has("files[]")) {
         value("No changes on heisler");
-        (await loading).dismiss()
-        return
+        (await loading).dismiss();
+        return;
       }
-      this.http.post<any>(this.PANEL, data).subscribe(async (res) => {
-        (await loading).dismiss()
-        value(res);
-      }, async fail => {
-        (await loading).dismiss()
-        console.error("upload heisler: ",fail)
-        value(null);
-      });
+      this.http.post<any>(this.PANEL, data).subscribe(
+        async (res) => {
+          (await loading).dismiss();
+          value(res);
+        },
+        async (fail) => {
+          (await loading).dismiss();
+          console.error("upload heisler: ", fail);
+          value(null);
+        }
+      );
     });
   }
   //UPDATES
@@ -310,19 +330,22 @@ export class CoreConexionService {
           type: vehicle.Type,
           boddyClass: vehicle.Body,
         })
-        .subscribe((res) => {
-          value({
-            Trim: res.trim,
-            Serie: res.serie,
-            Body: res.boddyClass,
-            Cylinders: parseInt(res.cylinders),
-            Type: res.type,
-            Name: res.name,
-          });
-        }, fail => {
-          value(null);
-        });
-    })
+        .subscribe(
+          (res) => {
+            value({
+              Trim: res.trim,
+              Serie: res.serie,
+              Body: res.boddyClass,
+              Cylinders: parseInt(res.cylinders),
+              Type: res.type,
+              Name: res.name,
+            });
+          },
+          (fail) => {
+            value(null);
+          }
+        );
+    });
   }
   //DELETES
   async delete(table: string, param?: string): Promise<boolean> {
@@ -346,15 +369,11 @@ export class CoreConexionService {
       }
       value(await this.delete("Products/", id));
     });
-    
   }
 
-
   //ERROR HANDLING
-  heislerHandler(error: HttpErrorResponse) {
+  heislerHandler(error: HttpErrorResponse) {}
 
-  }  
-  
   //UTILITIES
   capitalizeAtWord(message: string, split: string): string {
     if (message.split(split).length > 1) {
@@ -430,6 +449,4 @@ export interface ApiValues {
   VariableId: number;
 }
 
-export interface ApiTypeVehicle {
-  
-}
+export interface ApiTypeVehicle {}
