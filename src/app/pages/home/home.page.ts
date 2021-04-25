@@ -1,15 +1,12 @@
+import { StorageService } from './../../services/storage.service';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
-import { Router } from '@angular/router';
-import { ModalPage } from "./../../component/modal/modal.page";
 import { Component, OnInit } from "@angular/core";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
 import { FormControl, Validators } from "@angular/forms";
 import {
   AlertController,
-  LoadingController,
-  ModalController,
   Platform,
-  ToastController,
+
 } from "@ionic/angular";
 
 import { Plugins, KeyboardInfo } from "@capacitor/core";
@@ -17,8 +14,6 @@ import { TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
 
 const { Device, Keyboard } = Plugins;
-
-try {
   //keyboard Show
   Keyboard.addListener("keyboardWillShow", (_info: KeyboardInfo) => {
     document.getElementById("ionFooter").classList.toggle("hidden");
@@ -26,10 +21,8 @@ try {
   //keyboard Hide
   Keyboard.addListener("keyboardWillHide", () => {
     document.getElementById("ionFooter").classList.toggle("hidden");
-  }).remove();
-} catch (e) {
-  console.error('WEB/PC Keyborad not load')
-}
+  });
+
 
 @Component({
   selector: "app-home",
@@ -37,53 +30,49 @@ try {
   styleUrls: ["home.page.scss"],
 })
 export class HomePage implements OnInit {
+  public result: string = "";
   codeResult: string = "";
   vinInput = new FormControl(this.codeResult, [
     Validators.required,
     Validators.maxLength(17),
     Validators.minLength(17),
   ]);
-
+  
   subcribe: any
-  private modalState: boolean
+
   constructor(
     private barcode: BarcodeScanner,
-    private modalController: ModalController,
     private alertController: AlertController,
     private main: TempService,
     private core: CoreConexionService,
     private platform: Platform,
-    private uiComponentsService:UiComponentsService
-  ) {
-
-    this.subcribe = this.platform.backButton.subscribeWithPriority(10, () => {
-      if (this.modalState == false) {
+    private uiComponentsService:UiComponentsService,
+    private storageService:StorageService
+    ) {
+      this.subcribe = this.platform.backButton.subscribeWithPriority(10, () => {
         if (this.constructor.name == 'HomePage') {
           if (window.confirm("do you want to exit app")) {
             navigator['app'].exitApp()
           }
+          return
         }
-      }
-    })
-  }
-
-  async ngOnInit() {
+      })
+      this.storageService.set('filter',{status:true})
+    }
     
-  }
+  async ngOnInit() { 
 
-  async quest(){
-    let alert = await this.alertController.create({
-      header:"alert",
-      message:"activating the strict filter could efficiently validate your vin code",
-      buttons:['ok']
-    })
-    alert.present()
+  }
+  
+  manualPage() {
+    this.main.empty();
   }
 
   async ionViewWillEnter(){
     this.result = ""
- 
   }
+
+
 
   private compareTable = [
     { "A": 1, "J": 1 },
@@ -98,7 +87,6 @@ export class HomePage implements OnInit {
   ];
 
   private async filter(vin: string) {
-    let scope: string = ""
     // funcion que nos retorna un arreglo con datos modificados para calcularlos
     let replace = (str: string): Promise<string[]> => {
       return new Promise(async (res, _rej) => {
@@ -210,10 +198,9 @@ export class HomePage implements OnInit {
   };
 
   //"SALMH13446A220123"
-  result: string = "SALMH13446A220123";
-  public activateFilter: boolean = false
+
   async searchVin() {
-    switch (this.activateFilter) {
+    switch (await this.storageService.get('filter')) {
       case true:
         if (await this.filter(this.result)) {
           await this.core.search(this.result)
@@ -237,12 +224,8 @@ export class HomePage implements OnInit {
         }
         break;
     }
-
   }
 
-  manualPage() {
-    this.main.empty();
-  }
 
   async scan() {
     const _result = await this.barcode.scan({
@@ -252,24 +235,4 @@ export class HomePage implements OnInit {
     this.result = _result.text;
   }
 
-  async modalList() {
-    const modal = await this.modalController.create({
-      component: ModalPage,
-      cssClass: "my-custom-class",
-      swipeToClose: true,
-    });
-
-    await modal.present().then(_e => {
-      this.modalState = true;
-      console.log(this.modalState)
-    });
-    // el formulario hijo al dispara el evento ondissmiss
-    // returna un objeto global que es data
-    // de este objeto data trae los datos del formulario hijo
-    const { data } = await modal.onDidDismiss();
-    if (data) {
-      console.log("-", data);
-      this.modalState = false
-    }
-  }
 }

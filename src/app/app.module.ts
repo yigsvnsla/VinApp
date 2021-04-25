@@ -1,3 +1,4 @@
+import { StorageService } from './services/storage.service';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -38,6 +39,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
   ],
   exports: [],
   providers: [
+    StorageService,
     UiComponentsService,
     StatusBar,
     SplashScreen,

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>configurationsApp</ion-title>
+    <ion-title>Configurations</ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
@@ -8,9 +8,16 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
-      <ion-label>Awesome Label</ion-label>
+  <ion-item>
+    <ion-label>Strict filter</ion-label>
+    <ion-toggle [(ngModel)]="activateFilter" (ionChange)="toogleEvent($event)"></ion-toggle>
+    <ion-icon slot="end" name="bulb"></ion-icon>
+  </ion-item>
+  
+  <ion-list lines="none" class="ion-no-padding">
+    <ion-item *ngFor="let item of templateItems">
+      <ion-label>{{item.title}}</ion-label>
+      <ion-icon slot="start" [name]="item.icon"></ion-icon>
     </ion-item>
   </ion-list>
 </ion-content>
