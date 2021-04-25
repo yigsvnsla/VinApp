@@ -7,7 +7,7 @@ import { AlertController } from "@ionic/angular";
   providedIn: "root",
 })
 export class HttpService {
-  url = "http://backuppapa.sytes.net:1337/";
+  url = "http://backup1.myvnc.com:1337/";
 
   constructor(private http: HttpClient, private alert: AlertController) {}
 

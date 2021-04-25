@@ -49,10 +49,7 @@ export class StorageService {
   //     return { key: key, value: value, index: index }
   //   })
   // };
-  // //To enable encryption when using the Ionic Secure Storage driver:
 
-  // public encryption(databaseName: string) {
-  //   this._storage.setEncryptionKey(databaseName)
-  // };
+
 
 }
