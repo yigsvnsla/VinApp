@@ -68,6 +68,9 @@ export class CameraUnitPage implements OnInit {
       this.statusId = this.setStatus(this.part.status)
     }
     this.da=""
+    window.screen.orientation.removeEventListener("change", e =>{
+      this.main.showMessage("Event Deleted");
+    });
   }
 
   eventPrice(e){
@@ -114,7 +117,7 @@ export class CameraUnitPage implements OnInit {
     if (this.count > 0) this.nameIcon = "checkmark";
   }
   flipCamera() {
-    CameraPreview.flip();
+    //CameraPreview.flip();
   }
   iAdd() {
     this.viewCam = true;
