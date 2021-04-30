@@ -13,9 +13,20 @@
     <ion-toggle [(ngModel)]="activateFilter" (ionChange)="toogleEvent($event)"></ion-toggle>
     <ion-icon slot="end" name="bulb"></ion-icon>
   </ion-item>
+
+  <ion-item>
+    <ion-label position="floating">url Primary</ion-label>
+    <ion-input disabled="true" [(ngModel)]="urlPrimary"></ion-input>
+    <ion-icon slot="end" name="cog" (click)="editUrl(urlPrimary)"></ion-icon>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">url Heisler</ion-label>
+    <ion-input disabled="true" [(ngModel)]="urlHeisler"></ion-input>
+    <ion-icon slot="end" name="cog" (click)="editUrl(urlHeisler)"></ion-icon>
+  </ion-item>
   
   <ion-list lines="none" class="ion-no-padding">
-    <ion-item *ngFor="let item of templateItems">
+    <ion-item button *ngFor="let item of templateItems">
       <ion-label>{{item.title}}</ion-label>
       <ion-icon slot="start" [name]="item.icon"></ion-icon>
     </ion-item>

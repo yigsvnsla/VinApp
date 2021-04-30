@@ -1,39 +1,30 @@
+import { CoreConexionService } from 'src/app/services/core-conexion.service';
+import { ListComponent } from './../../component/list/list.component';
+import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { Component, OnInit } from "@angular/core";
-import { HttpService } from "src/app/services/http.service";
-import {
-  AlertController,
-  LoadingController,
-  ModalController,
-  Platform,
-} from "@ionic/angular";
-
-import { DinamicModalComponent } from "../../component/dinamic-modal/dinamic-modal.component";
+import { Platform } from "@ionic/angular";
 import { CoreVechicle, TempService } from "src/app/services/temp.service";
 import { Location } from "@angular/common";
+
 @Component({
   selector: "app-manual-page",
   templateUrl: "./manual-page.page.html",
   styleUrls: ["./manual-page.page.scss"],
 })
 export class ManualPagePage implements OnInit {
-  public maxYear: number;
-  private date = new Date();
   public makeId: any;
-  Vehicle: CoreVechicle;
-
+  public Vehicle: CoreVechicle;
   public listBodyClass: string[];
   public listTypeVehicle: string[];
   public listTrim: string[];
   public listSeries: string[];
 
   constructor(
-    private http: HttpService,
-    private loading: LoadingController,
-    private alert: AlertController,
-    private modalController: ModalController,
     private main: TempService,
     private loc: Location,
-    private platform: Platform
+    private platform: Platform,
+    private uiComponentsService:UiComponentsService,
+    private coreConexionService:CoreConexionService
   ) {
     this.platform.backButton.subscribeWithPriority(9, () => {
       this.loc.back();
@@ -86,8 +77,7 @@ export class ManualPagePage implements OnInit {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
     // dado el caso que no exista, se debe instanciar uno vacio
-    this.Vehicle = this.main.currentVehicle;
-    this.maxYear = this.date.getFullYear();   
+    this.Vehicle = this.main.currentVehicle;  
   }
 
   public filterSlash(str: string, arr: string[]): string[] | string {
@@ -117,72 +107,6 @@ export class ManualPagePage implements OnInit {
     this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0]
   }
 
-  selectYear() {
-    if (this.main.currentVehicle.Id !== "0") {
-      return;
-    }
-    let temp: {}[] = [];
-    for (let i = 1985; i < this.maxYear + 1; i++) {
-      temp.push({
-        id: i,
-        name: i,
-      });
-    }
-
-    this.presentModal(false, temp.reverse(), "Select Year").then((x) => {
-      this.Vehicle.Year = x.id;
-    });
-  }
-
-  async getMakers() {
-    if (this.main.currentVehicle.Id !== "0") {
-      return;
-    }
-    let loading = await this.loading.create({
-      message: "Loading...",
-    });
-    await loading.present();
-    this.http.getMakers().subscribe((success) => {
-      loading.dismiss();
-      this.presentModal(true, success, "Make")
-        .then((x) => {
-          this.Vehicle.Maker = x.name;
-          this.makeId = x.id;
-        })
-        .catch(async (e) => {
-          console.log(e);
-        });
-    });
-  }
-
-  async getModels() {
-    if (this.main.currentVehicle.Id !== "0") {
-      return;
-    }
-    let alerta = await this.alert.create({
-      header: "ERROR",
-      subHeader: "Select make first",
-      buttons: [
-        {
-          text: "Ok",
-          role: "Ok",
-        },
-      ],
-    });
-
-    if (this.makeId == undefined || this.makeId == 0) {
-      await alerta.present();
-    } else {
-      this.http.getModels(this.makeId.toString())
-        .subscribe((success) => {
-          this.presentModal(false, success, "Models")
-        .then((x) => {
-          this.Vehicle.Model = x.name;
-        });
-      });
-    }
-  }
-
   getType(event: CustomEvent) {
     this.Vehicle.Type = event.detail.value.toLocaleUpperCase();
   }
@@ -200,24 +124,68 @@ export class ManualPagePage implements OnInit {
     this.Vehicle.Trim = e.detail.value;
   }
 
-  async presentModal(_tumbnail: boolean, _items?: any, _nameList?: string) {
-    const modal = await this.modalController.create({
-      component: DinamicModalComponent,
-      cssClass: "my-modal-class",
-      swipeToClose: true,
-      componentProps: {
-        Items: _items,
-        Title: _nameList,
-        _templateTumbnails: _tumbnail,
-      },
-    });
-    await modal.present();
-
-    let { data } = await modal.onDidDismiss();
-    if (data) {
-      return data;
+  async getModels() {
+    if (this.main.currentVehicle.Id !== "0") {
+      return;
+    }
+    if (this.makeId == undefined || this.makeId == 0) {
+      this.uiComponentsService.showToast("Select make first")
+    } else {
+      this.uiComponentsService.showModal({
+        component: ListComponent,
+        cssClass: "my-modal-listComponent",
+        swipeToClose: true,
+        componentProps: {
+          Items: await this.coreConexionService.getModels(this.makeId.toString())
+        },
+      }).then((e)=>{
+        this.Vehicle.Model = e.name;
+      });
     }
   }
+
+  async getListMakers(){
+    if (this.main.currentVehicle.Id !== "0") {
+      return;
+    }else{
+      this.uiComponentsService.showModal({
+        component: ListComponent,
+        cssClass: "my-modal-listComponent",
+        swipeToClose: true,
+        componentProps: {
+          Items:await this.coreConexionService.getMakers()
+        },
+      }).then(e=>{
+        this.Vehicle.Maker = e.name;
+        this.makeId = e.id;
+      })
+    }
+  }
+
+  getListYear() {
+    if (this.main.currentVehicle.Id !== "0") {
+      return;
+    }else{
+      let temp: {}[] = [];
+      for (let i = 1985; i < new Date().getFullYear() ; i++) {
+        temp.push({
+          id: i,
+          name: i,
+        });
+      }
+      this.uiComponentsService.showModal({
+        component: ListComponent,
+        cssClass: "my-modal-listComponent",
+        swipeToClose: true,
+        componentProps: {
+          Items:temp
+        },
+      }).then(e=>{
+        this.Vehicle.Year=e.id
+      })
+    }
+  }
+
   // Funcion que se encarga de verificar si todos los datos estan ingresados correctamente
   // En caso de de este todo bien, reedireccionara a el area de componentes
   // En caso contrario, mostrara un aviso de error.

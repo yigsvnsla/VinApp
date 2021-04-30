@@ -1,5 +1,4 @@
-import { ActivatedRoute, Router } from "@angular/router";
-import { HttpService } from "./../../services/http.service";
+import { Router } from "@angular/router";
 import { ModalController, ToastController,IonSlides, AlertController} from "@ionic/angular";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ModalPage } from "src/app/component/modal/modal.page";

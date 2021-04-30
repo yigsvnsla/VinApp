@@ -1,3 +1,4 @@
+import { ListComponent } from './list/list.component';
 import { UiComponentsService } from './../services/ui-components.service';
 import { PipesModule } from "./../pipes/pipes.module";
 import { IonicModule } from "@ionic/angular";
@@ -10,9 +11,10 @@ import { MenuHomeComponent } from "./menu-home/menu-home.component";
   declarations: [
     DinamicModalComponent,
     ListPartComponent,
-    MenuHomeComponent
+    MenuHomeComponent,
+    ListComponent
   ],
-  exports: [DinamicModalComponent, ListPartComponent,MenuHomeComponent],
+  exports: [DinamicModalComponent, ListPartComponent,MenuHomeComponent,ListComponent],
   imports: [CommonModule, IonicModule, PipesModule],
   providers:[CurrencyPipe,UiComponentsService]
 })

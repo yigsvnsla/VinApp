@@ -1,7 +1,9 @@
+import { CoreConexionService } from 'src/app/services/core-conexion.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { ModalPage } from '../modal/modal.page';
+import { ListComponent } from '../list/list.component';
 
 @Component({
   selector: 'app-menu-home',
@@ -12,7 +14,8 @@ export class MenuHomeComponent implements OnInit {
 
   constructor(
     private uiComponentsService: UiComponentsService, 
-    private router: Router
+    private router: Router,
+    private coreConexionService:CoreConexionService
   ) { }
 
 
@@ -25,7 +28,7 @@ export class MenuHomeComponent implements OnInit {
           component: ModalPage,
           cssClass: "my-custom-class",
           swipeToClose: true,
-        })
+        });
       })
   }
 
@@ -33,8 +36,9 @@ export class MenuHomeComponent implements OnInit {
     this.router.navigateByUrl("/settings")
   }
 
-  listComponents() {
+  async listComponents() {    
 
+    
   }
 
 }

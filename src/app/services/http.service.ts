@@ -30,11 +30,7 @@ export class HttpService {
   getOneComponent(id: string) {
     return this.http.get<any>(this.url + `components/${id}`);
   }
-  ApiSearch(vin: string) {
-    return this.http.get<any>(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json`
-    );
-  }
+
 
   uploadCar(options: {}) {
     return this.http.post(this.url + "Products", options, {
@@ -61,15 +57,6 @@ export class HttpService {
 
   //Gestion de Modelos
 
-  getMakers() {
-    return this.http.get<any[]>(this.url + "Makers");
-  }
-
-  getModels(id: string) {
-    return this.http.get<any[]>(this.url + `Models?maker.id=${id}&_sort=name:asc`);
-  }
-
-  showCategories() {}
 
   async showAlert(data: any[], header?: string): Promise<any> {
     return new Promise(async (res) => {

@@ -1,12 +1,10 @@
+import { UiComponentsService } from './../../services/ui-components.service';
 import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import {
-  AlertController,
   ModalController,
-  ToastController,
 } from "@ionic/angular";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
-import { HttpService } from "src/app/services/http.service";
 import { CoreVechicle, TempService } from "src/app/services/temp.service";
 
 @Component({
@@ -15,16 +13,12 @@ import { CoreVechicle, TempService } from "src/app/services/temp.service";
   styleUrls: ["./list-part.component.scss"],
 })
 export class ListPartComponent implements OnInit {
-  URL = "http://backuppapa.sytes.net:1337";
   Vehicles: CoreVechicle[];
   constructor(
-    private http: HttpService,
-    private router: Router,
     private modalController: ModalController,
     private core: CoreConexionService,
     private main: TempService,
-    private alertController: AlertController,
-    private toastController: ToastController
+    private uiComponentsService:UiComponentsService
   ) {}
 
   async ngOnInit() {
@@ -33,7 +27,6 @@ export class ListPartComponent implements OnInit {
 
   async cardClick(index: CoreVechicle) {
     this.modalController.dismiss();
-    console.log(index)
     this.main.viewVehicle(index);
   }
 
@@ -52,39 +45,27 @@ export class ListPartComponent implements OnInit {
     };
     //action
 
-    let msg: string;
-    let toat = await this.toastController.create({
-      header: "Delete",
-      duration: 3000,
-      message: msg,
-    });
-    let alert = await this.alertController.create({
+    this.uiComponentsService.showAlert({
       header: "Alert",
-      subHeader:
-        "you are about to delete this vehicle and its internal components",
+      message:"you are about to delete this vehicle and its internal components",
       buttons: [
-        {
-          text: "Cancel",
-          role: "cancel",
-        },
         {
           text: "Continue",
           role: "success",
           handler: async () => {
             if (await this.core.deleteAll(y)) {
               this.Vehicles= removeItemFromArr(this.Vehicles, filter(this.Vehicles[x]));
-              msg = "vehicle delete successfully";
-              toat.present();
-              msg;
+              this.uiComponentsService.showToast("vehicle delete successfully")
             } else {
-              msg = "Error deleting vehicle";
-              toat.present();
+              this.uiComponentsService.showToast("Error deleting vehicle")
             }
           },
         },
+        {
+          text: "Cancel",
+          role: "cancel",
+        },
       ],
-    });
-
-    alert.present();
+    })
   }
 }

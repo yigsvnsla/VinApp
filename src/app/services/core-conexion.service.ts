@@ -1,3 +1,4 @@
+import { StorageService } from 'src/app/services/storage.service';
 import { UiComponentsService } from "./ui-components.service";
 import { throwError as observableThrowError } from "rxjs";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
@@ -6,27 +7,62 @@ import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { Plugins } from "@capacitor/core";
 import { Router } from "@angular/router";
-import { Storage } from "@ionic/storage";
 const { Device } = Plugins;
 
 @Injectable({
   providedIn: "root",
 })
 export class CoreConexionService {
-  URL = "http://backup1.myvnc.com:1337/";
-  PANEL = "https://panel.mdautoparts.com/form/storeMultipleFile";
+  URL: string;
+  PANEL: string ;
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private uiComponentsService: UiComponentsService,
-    private storage: Storage
-  ) {}
-
-  public filterSlash(str: string): string[] {
-    return str.split("/");
+    private storageService:StorageService
+  ) {
+    this.init();
   }
 
+  private async init(){
+    this.URL = (await this.storageService.get("url")).urlPrimary
+    this.PANEL = (await this.storageService.get("url")).urlHeisler
+  }
+
+  async getMakers(){
+    let loading = this.uiComponentsService.showLoading("Loading");
+    return new Promise(async (value,reject)=>{
+      this.http
+        .get<any[]>( this.URL + "Makers")
+        .pipe(catchError(this.errorHandler))
+        .subscribe( async (res)=>{
+          (await loading).dismiss()
+          value(res)
+        },async (err)=>{
+          (await loading).dismiss()
+          reject(err)
+        });
+       
+    })
+  }
+
+  getModels(id: string) {
+    let loading = this.uiComponentsService.showLoading("Loading");
+    return new Promise(async (value,reject)=>{
+      this.http
+        .get<any[]>(this.URL + `Models?maker.id=${id}&_sort=name:asc`)
+        .pipe(catchError(this.errorHandler))
+        .subscribe(async(res)=>{
+          (await loading).dismiss()
+          value(res)
+        },async (err)=>{
+          (await loading).dismiss()
+          reject(err)
+        })
+    })
+  }
+  
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
     let toast = this.uiComponentsService.showLoading();
@@ -103,6 +139,7 @@ export class CoreConexionService {
   }
 
   async findVehicles(): Promise<CoreVechicle[]> {
+    let loading = this.uiComponentsService.showLoading("Find Vehicles")
     let uuid = await Device.getInfo();
     return new Promise(async (value) => {
       this.http
@@ -128,24 +165,29 @@ export class CoreConexionService {
               });
               value(v);
             });
+            (await loading).dismiss()
           },
-          (fail) => {
+          async (fail) => {
             console.error("findVehicle: ", fail);
             value(null);
+            (await loading).dismiss()
           }
         );
     });
   }
 
   async findArray(table: string, query?: string): Promise<any[]> {
+    this.uiComponentsService.showLoading()
     return new Promise(async (value) => {
       this.http
-        .get<any[]>(this.URL + `${table}${query ? "/" + query : ""}`)
+        .get<any[]>(this.URL+`${table}${query?"/"+query:""}`)
         .subscribe(
           async (res) => {
+            (await this.uiComponentsService.showLoading()).dismiss()
             value(res);
           },
-          (fail) => {
+          async (fail) => {
+            (await this.uiComponentsService.showLoading()).dismiss()
             console.error("findArray: ", fail);
             value(null);
           }

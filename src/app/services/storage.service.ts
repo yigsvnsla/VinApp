@@ -9,7 +9,16 @@ const { Storage } = Plugins;
 
 export class StorageService {
 
-  constructor() { }
+  private urlPrimary:string = "http://backup1.myvnc.com:1337/"
+  private urlHeisler:string = "https://panel.mdautoparts.com/form/storeMultipleFile"
+  constructor() { 
+    this.init()
+  }
+  
+  private async init(){
+    this.set('url',{ urlPrimary:this.urlPrimary,  urlHeisler:this.urlHeisler })
+    this.set('filter',{status:true})
+  }
 
     //  To set an item, use set(key, value):
   public async set(key:string,value:{}) {
@@ -27,29 +36,17 @@ export class StorageService {
       await Storage.set({  key,  value:JSON.stringify(value)  });
     }// else { this element not exist }
   }
-  //To remove an item:
+    //To remove an item:
   public async remove(key: string) {
-    //sawait Storage.remove(key);
+    await Storage.remove({key:key});
   }
-  // //To clear all items:
-  // public async clear() {
-  //   return await this._storage.clear();
-  // }
-  // //To get all keys stored:
-  // public async getKeys() {
-  //   return await this._storage.keys()
-  // }
-  // //To get the quantity of key/value pairs stored:
-  // public async length() {
-  //   return await this._storage.length()
-  // }
-  // //To enumerate the stored key/value pairs:
-  // public async enumerate() {
-  //   return await this._storage.forEach((key, value, index) => {
-  //     return { key: key, value: value, index: index }
-  //   })
-  // };
-
-
+     //To clear all items:
+  public async clear() {
+    await Storage.clear();
+  }
+     //To get all keys stored:
+  public async getKeys() {
+    return await Storage.keys()
+  }
 
 }

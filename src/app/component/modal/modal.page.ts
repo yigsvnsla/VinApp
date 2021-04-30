@@ -13,7 +13,7 @@ export class ModalPage implements OnInit {
 
   modalDismiss() {
     //dentro del objeto pasa los datos a el formulario padre de este
-    this.modalController.dismiss({});
+    this.modalController.dismiss();
   }
 
   cardClick() {}

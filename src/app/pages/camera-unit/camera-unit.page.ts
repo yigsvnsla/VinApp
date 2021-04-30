@@ -1,29 +1,14 @@
+import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { DomSanitizer } from "@angular/platform-browser";
-import { Component, Input, OnInit } from "@angular/core";
-import {
-  AlertController,
-  LoadingController,
-  ModalController,
-  Platform,
-  ToastController,
-} from "@ionic/angular";
-import { Plugins, KeyboardInfo } from "@capacitor/core";
+import { Component, OnInit } from "@angular/core";
+import { Platform} from "@ionic/angular";
+import { Plugins,} from "@capacitor/core";
 import "@capacitor-community/camera-preview";
 const { CameraPreview, Keyboard } = Plugins;
-import {
-  CameraPreviewOptions,
-  CameraPreviewPictureOptions,
-} from "@capacitor-community/camera-preview";
-
-import { DinamicModalComponent } from "src/app/component/dinamic-modal/dinamic-modal.component";
-import {
-  CorePart,
-  CoreVechicle,
-  Image,
-  TempService,
-} from "src/app/services/temp.service";
+import { CorePart,CoreVechicle,Image,TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
 import { CurrencyPipe } from "@angular/common";
+import { ListComponent } from 'src/app/component/list/list.component';
 
 @Component({
   selector: "app-camera-unit",
@@ -31,23 +16,21 @@ import { CurrencyPipe } from "@angular/common";
   styleUrls: ["./camera-unit.page.scss"],
 })
 export class CameraUnitPage implements OnInit {
-  nameIcon: string = "close-circle";
+  public nameIcon: string = "close-circle";
   public viewCam: boolean = false;
-  vehicle: CoreVechicle;
-  part: CorePart;
-  statusId: number;
-  editMode: boolean;
-  subcribe:any
-  da:any
+  public vehicle: CoreVechicle;
+  public part: CorePart;
+  public statusId: number;
+  public editMode: boolean;
+  public subcribe:any
+  
   constructor(
     private sanitizer: DomSanitizer,
-    public modalController: ModalController,
-    public alertController: AlertController,
     private main: TempService,
-    private core: CoreConexionService,
-    private toastcontroller: ToastController,
     private platform: Platform,
-    private currencyPipe : CurrencyPipe
+    private currencyPipe : CurrencyPipe,
+    private uiComponentsService:UiComponentsService,
+    private coreConexionService:CoreConexionService
   ) {
     this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
       if(this.constructor.name == 'CameraUnitPage'){
@@ -59,7 +42,7 @@ export class CameraUnitPage implements OnInit {
   ngOnInit() {
     this.vehicle = this.main.currentVehicle;
     this.part = this.main.currentPart;
-    this.sliderOptions = this.sliderBoostrap();
+    //this.sliderOptions = this.sliderBoostrap();
     this.part.code !== 0? this.editMode = true : this.editMode = false;
     if(this.part.status == ""){
       this.part.status = "Used (normal wear)"
@@ -67,7 +50,6 @@ export class CameraUnitPage implements OnInit {
     }else{
       this.statusId = this.setStatus(this.part.status)
     }
-    this.da=""
   }
 
   eventPrice(e){
@@ -81,8 +63,9 @@ export class CameraUnitPage implements OnInit {
   //camera
   public cameraActive: boolean = false;
   torchActive = false;
+  count: number = 0;
   openCamera() {
-    const cameraPreviewOptions: CameraPreviewOptions = {
+    CameraPreview.start({
       x: 0,
       y: 0,
       width: window.screen.width,
@@ -92,26 +75,22 @@ export class CameraUnitPage implements OnInit {
       className: "cameraPreview",
       toBack: true,
       rotateWhenOrientationChanged: true,
-    };
+    })
     this.cameraActive = true;
-    CameraPreview.start(cameraPreviewOptions)
   }
+
   async stopCamera() {
-    await CameraPreview.stop().then(() => {});
-    document.getElementById("ionFooter").classList.toggle("hidden");
+    CameraPreview.stop();
     this.cameraActive = false;
     this.viewCam = false;
     this.nameIcon= "close";
   }
-  count: number = 0;
+
+
   async captureImage() {
-    const cameraPreviewPictureOptions: CameraPreviewPictureOptions = {
-      quality: 85,
-    };
-    const result = await CameraPreview.capture(cameraPreviewPictureOptions);
-    this.part.images.push(new Image(result.value, `Testing ${this.count}`));
+    this.part.images.push(new Image((await CameraPreview.capture({quality:90})).value, `Testing ${this.count}`));
     this.count++;
-    if (this.count > 0) this.nameIcon = "checkmark";
+    if (this.part.images.length  > 0) this.nameIcon = "checkmark";
   }
   flipCamera() {
     CameraPreview.flip();
@@ -170,6 +149,81 @@ export class CameraUnitPage implements OnInit {
     console.log(event);
     this.part.status = this.status(event.detail.value);
   }
+
+  async getCategories() {
+    this.uiComponentsService.showModal({
+      component: ListComponent,
+      cssClass: "my-modal-listComponent",
+      swipeToClose: true,
+      componentProps: {
+        Items:await this.coreConexionService.findArray("Categories")
+      },
+    }).then(e=>{
+      this.part.category = e.name;
+      this.part.categoryId = e.id;
+      this.part.part = "";
+    })
+  }
+
+  async getParts() {
+    this.uiComponentsService.showModal({
+      component: ListComponent,
+      cssClass: "my-modal-listComponent",
+      swipeToClose: true,
+      componentProps: {
+        Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}`)
+      },
+    }).then((e=>{
+      this.part.part =  e.name;
+      this.part.id = e.id;
+    }))
+  }
+
+  async validation() {
+    if (  this.part.images.length == 0 ||  this.part.price == 0 ||  this.part.category == "" ||  this.part.part == "" ) {
+      this.uiComponentsService.showAlert({
+        header: "Alert",
+        message: `need add data in the form`,
+        buttons: ["okay"]
+      })
+    return false;
+    }
+    return true;
+  }
+
+  async finish() {
+    if ((await this.validation()) == true) {
+      this.main.uploadPart(true);
+    }
+  }
+
+  async verify(): Promise<Image[]> {
+    return new Promise(async (value) => {
+      let r: Image[] = [];
+      this.part.images.forEach((element) => {
+        if (!element.url && !element.id) {
+          r.push(element);
+        }
+      });
+      value(r);
+    });
+  }
+
+  async cleanForm() {
+    if ((await this.validation()) == true) {
+      await this.main.uploadPart(false);
+      this.part = new CorePart();
+      this.main.currentPart = this.part;
+      if(this.part.status == ""){
+        this.part.status = "Used (normal wear)"
+        this.statusId = 4;
+      }else{
+        this.statusId = this.setStatus(this.part.status)
+      }
+      this.uiComponentsService.showToast("the inputs have been cleaned")
+    }
+  }
+
   status(id: any) {
     switch (id) {
       case 1:
@@ -201,117 +255,6 @@ export class CameraUnitPage implements OnInit {
         return 5;
       case "New":
         return 6;
-    }
-  }
-
-  async getCategories() {
-    this.presentModal(
-      false,
-      await this.core.findArray("Categories"),
-      "Categories"
-    ).then((x) => {
-      this.part.category = x.name;
-      this.part.categoryId = x.id;
-      this.part.part = "";
-    });
-  }
-
-  async getParts() {
-
-    console.log(await this.core.findArray(
-      "Parts",
-      `?category.id_eq=${this.part.categoryId}`
-    ))
-
-    this.presentModal(
-      false,
-      await this.core.findArray(
-        "Parts",
-        `?category.id_eq=${this.part.categoryId}`
-      ),
-      "Parts"
-    ).then((x) => {
-      this.part.part = x.name;
-      this.part.id = x.id;
-    });
-  }
-
-  async validation() {
-    let alert = await this.alertController.create({
-      header: "Alert",
-      message: `need to add data`,
-      buttons: [
-        {
-          text: "okay",
-        },
-      ],
-    });
-    if (
-      this.part.images.length == 0 ||
-      this.part.price == 0 ||
-      this.part.category == "" ||
-      this.part.part == ""
-    ) {
-      alert.present();
-      return false;
-    }
-    return true;
-  }
-
-  // Modal Template
-  async presentModal(_tumbnail: boolean, _items?: any, _nameList?: string) {
-    const modal = await this.modalController.create({
-      component: DinamicModalComponent,
-      cssClass: "my-modal-class",
-      swipeToClose: true,
-      componentProps: {
-        Items: _items,
-        Title: _nameList,
-        _templateTumbnails: _tumbnail,
-      },
-    });
-    await modal.present();
-
-    let { data } = await modal.onDidDismiss();
-    if (data) {
-      return data;
-    }
-  }
-  //Funcion que se encarga de agregar y modificar partes a un vehiculo dentro del modal.
-  async finish() {
-    if ((await this.validation()) == true) {
-      this.main.uploadPart(true);
-    }
-  }
-
-  async verify(): Promise<Image[]> {
-    return new Promise(async (value) => {
-      let r: Image[] = [];
-      this.part.images.forEach((element) => {
-        if (!element.url && !element.id) {
-          r.push(element);
-        }
-      });
-      value(r);
-    });
-  }
-
-  async cleanForm() {
-    let toast = await this.toastcontroller.create({
-      duration: 1000,
-      message: "the inputs have been cleaned",
-    });
-    if ((await this.validation()) == true) {
-      await this.main.uploadPart(false);
-      this.part = new CorePart();
-      this.main.currentPart = this.part;
-      if(this.part.status == ""){
-        this.part.status = "Used (normal wear)"
-        this.statusId = 4;
-      }else{
-        this.statusId = this.setStatus(this.part.status)
-      }
-      toast.present();
     }
   }
 }

@@ -9,6 +9,8 @@ import { StorageService } from 'src/app/services/storage.service';
 export class ConfigurationsAppPage implements OnInit {
 
   public activateFilter: boolean;
+  public urlPrimary:string
+  public urlHeisler:string
 
   public templateItems:templateItems[]=[
     {title:'config1',icon:'cog'},
@@ -17,15 +19,27 @@ export class ConfigurationsAppPage implements OnInit {
     {title:'config4',icon:'cog'}
   ]
 
-  constructor(private storageService:StorageService) { }
+  constructor(private storageService:StorageService) { 
+    this.init()
+  }
 
-  ngOnInit() {
+  async ngOnInit() {
+
+  }
+
+  private async init(){
+    this.activateFilter= (await this.storageService.get('filter')).status
+    this.urlPrimary = (await this.storageService.get("url")).urlPrimary
+    this.urlHeisler = (await this.storageService.get('url')).urlHeisler
   }
 
   toogleEvent(e: CustomEvent){
     this.storageService.update('filter',{status:e.detail.checked})
   }
-
+  
+  async editUrl(value:string){
+    this.storageService.update('url',{})
+  }
 }
 
 interface templateItems{

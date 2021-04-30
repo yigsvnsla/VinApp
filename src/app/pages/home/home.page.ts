@@ -3,12 +3,7 @@ import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { Component, OnInit } from "@angular/core";
 import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
 import { FormControl, Validators } from "@angular/forms";
-import {
-  AlertController,
-  Platform,
-
-} from "@ionic/angular";
-
+import { Platform } from "@ionic/angular";
 import { Plugins, KeyboardInfo } from "@capacitor/core";
 import { TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
@@ -42,7 +37,6 @@ export class HomePage implements OnInit {
 
   constructor(
     private barcode: BarcodeScanner,
-    private alertController: AlertController,
     private main: TempService,
     private core: CoreConexionService,
     private platform: Platform,
@@ -57,7 +51,6 @@ export class HomePage implements OnInit {
           return
         }
       })
-      this.storageService.set('filter',{status:true})
     }
     
   async ngOnInit() { 
@@ -87,6 +80,12 @@ export class HomePage implements OnInit {
   ];
 
   private async filter(vin: string) {
+
+    let cleanString = ()=>{
+      // varificar que al inicio del string .. no contenga caracteres no validos (I,L,O)
+    }
+
+
     // funcion que nos retorna un arreglo con datos modificados para calcularlos
     let replace = (str: string): Promise<string[]> => {
       return new Promise(async (res, _rej) => {
