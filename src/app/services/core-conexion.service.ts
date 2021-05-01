@@ -266,7 +266,7 @@ export class CoreConexionService {
     });
   }
 
-  async genericUpload(table: string, param: any,id:number):Promise<boolean>{
+  async genericUpload(table: string, param: any,id:string):Promise<boolean>{
     return new Promise(async (value) => {
       this.http
         .post<any>(`${this.URL}${table}/`,

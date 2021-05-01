@@ -714,17 +714,29 @@ public class CameraActivity extends Fragment implements SensorEventListener {
           } else {
             int ori = mPreview.getDisplayOrientation();
             switch (deviceOrientation.getOrientation()){
+              //case 3:
+              //  ori = 90;
+              //  break;
+              //case 6:
+              //  ori = 0;
+              //  break;
+              //case 8:
+              //  ori = 180;
+              //  break;
+              //case 1:
+              //  ori = 270;
+              //  break;
               case 3:
-                ori = 90;
-                break;
-              case 6:
-                ori = 0;
-                break;
-              case 8:
                 ori = 180;
                 break;
-              case 1:
+              case 6:
+                ori = 90;
+                break;
+              case 8:
                 ori = 270;
+                break;
+              case 1:
+                ori = 0;
                 break;
             }
             params.setRotation(ori);

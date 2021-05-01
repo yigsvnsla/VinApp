@@ -22,7 +22,7 @@ export class TempService {
 
   setVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = vehicle;
-    
+
   }
   async viewVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = await this.core.searchVehicle(vehicle.Id);
@@ -179,26 +179,63 @@ export class CorePart {
     this.categoryId = id;
     switch (id) {
       case 1:
-        this.category = "EXTERIOR";
+        this.category = "Axle";
         break;
       case 2:
-        this.category = "INTERIOR";
+        this.category = "Brakes";
         break;
       case 3:
-        this.category = "UNDERHOOD";
+        this.category = "Cooling And Heating";
         break;
       case 4:
-        this.category = "UNDERNEATH";
+        this.category = "Doors";
         break;
       case 5:
-        this.category = "WHEEL";
+        this.category = "Electrical";
         break;
       case 6:
-        this.category = "BODY";
+        this.category = "Air And Fuel";
         break;
       case 7:
-        this.category = "MECHANICAL";
+        this.category = "Center Body";
         break;
+      case 8:
+        this.category = "Engine";
+        break;
+      case 9:
+        this.category = "Engine Accesories";
+        break;
+      case 10:
+        this.category = "Entertainment";
+        break;
+      case 11:
+        this.category = "Front Body";
+        break;
+      case 12:
+        this.category = "Glass And Mirror";
+        break;
+      case 13:
+        this.category = "Interior";
+        break;
+      case 13:
+        this.category = "Ligths";
+        break;
+      case 15:
+        this.category = "Rear Body";
+        break;
+      case 16:
+        this.category = "Safety";
+        break;
+      case 16:
+        this.category = "Suspension Steering";
+        break;
+      case 18:
+        this.category = "Transmission";
+        break;
+      case 19:
+        this.category = "Wheels";
+        break;
+
     }
   }
 

@@ -12,10 +12,13 @@ export class ListComponent implements OnInit {
   textSearch: string = ""
   @Input() AddElements?:boolean = false
   @Input() Items:[]=[]
+  @Input() id?: string
+  @Input() table?: string
 
   constructor(
     private modalController:ModalController,
-    private uiComponentsService:UiComponentsService
+    private uiComponentsService:UiComponentsService,
+    private core: CoreConexionService
   ) { }
 
   async ngOnInit() {
@@ -52,7 +55,9 @@ export class ListComponent implements OnInit {
         text:'AGREE',
         role:'ok',
         handler:async (e)=>{
-          
+          if(this.id && this.table){
+            console.log(await this.core.genericUpload(this.table, e.alertValue, this.id));
+          }
           console.log(e);
           // realizar busqueda si el componente existe
           //  si exite... | console.log('este elemento ya existe)

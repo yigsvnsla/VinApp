@@ -104,7 +104,8 @@ export class ManualPagePage implements OnInit {
     this.tempTrim = this.filterSlash(this.Vehicle.Trim,this.listTrim)[0];
     this.tempBody = this.filterSlash(this.Vehicle.Body,this.listBodyClass)[0];
     this.tempClass= this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)[0];
-    this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0]
+    this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0];
+
   }
 
   getType(event: CustomEvent) {
@@ -167,7 +168,7 @@ export class ManualPagePage implements OnInit {
       return;
     }else{
       let temp: {}[] = [];
-      for (let i = 1985; i < new Date().getFullYear() ; i++) {
+      for (let i = 1985; i < new Date().getFullYear()+2 ; i++) {
         temp.push({
           id: i,
           name: i,
@@ -178,7 +179,7 @@ export class ManualPagePage implements OnInit {
         cssClass: "my-modal-listComponent",
         swipeToClose: true,
         componentProps: {
-          Items:temp
+          Items:temp.reverse()
         },
       }).then(e=>{
         this.Vehicle.Year=e.id

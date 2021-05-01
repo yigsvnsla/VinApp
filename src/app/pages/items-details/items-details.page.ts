@@ -1,7 +1,7 @@
+import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { Router } from "@angular/router";
-import { ModalController, ToastController,IonSlides, AlertController} from "@ionic/angular";
+import { ToastController,IonSlides} from "@ionic/angular";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { ModalPage } from "src/app/component/modal/modal.page";
 import { Plugins } from "@capacitor/core";
 import { CorePart, CoreVechicle, TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
@@ -15,7 +15,7 @@ const { Clipboard } = Plugins;
 })
 export class ItemsDetailsPage implements OnInit {
   @ViewChild('mySlider') slides:IonSlides;
-  public maxYear:string;
+
   public sliderFather : {} ={
     allowTouchMove: false
   }
@@ -24,22 +24,28 @@ export class ItemsDetailsPage implements OnInit {
   public car: CoreVechicle;
   public carInfo:boolean = false;
   public toggleView:boolean = false;
-  public s: string ="";
+  public string: string ="";
   constructor(
-    private modalController: ModalController,
     private toastController: ToastController,
     private main: TempService,
-    private alertController: AlertController,
     private core: CoreConexionService,
     private sanitizer: DomSanitizer,
-    private route: Router
+    private route: Router,
+    private uiComponentsService:UiComponentsService
   ) {}
 
   ngOnInit() {
     this.components = this.main.currentVehicle.Parts;
     this.car = this.main.currentVehicle;
-    this.maxYear = new Date().getFullYear().toString();
   }
+  
+  async ionViewWillEnter(){
+    console.log(":v")
+    this.components = this.main.currentVehicle.Parts;
+    this.car = this.main.currentVehicle;
+
+  }
+
   addComponent(){
     this.main.viewPart();
   }
@@ -72,25 +78,11 @@ export class ItemsDetailsPage implements OnInit {
       return
     })
   }
-  async modalList() {
-    const modal = await this.modalController.create({
-      component: ModalPage,
-      cssClass: "my-custom-class",
-      swipeToClose: true,
-    });
 
-    await modal.present();
-
-    // el formulario hijo al dispara el evento ondissmiss
-    // returna un objeto global que es data
-    // de este objeto data trae los datos del formulario hijo
-    const { data } = await modal.onDidDismiss();
-    if (data) {
-    }
-  }
   goComponent(com: any) {
    this.main.viewPart(com);
   }
+
   async deletePart(id: any, index: any) {
     //deleting
     var removeItemFromArr = (arr, item) => {
@@ -104,8 +96,7 @@ export class ItemsDetailsPage implements OnInit {
        console.log("item not found");
      }
    };
-
-   let alert = await this.alertController.create({
+   this.uiComponentsService.showAlert({
     header:'Alert',
     message:'are you sure you want to remove this component?',
     buttons: [
@@ -127,7 +118,6 @@ export class ItemsDetailsPage implements OnInit {
       }
     ]
   })
-  alert.present()
  }
  async editVehicle(){
   this.route.navigateByUrl("/manual");
@@ -143,7 +133,7 @@ export class ItemsDetailsPage implements OnInit {
   }
  }
  async search(e){
-  this.s = e.detail.value;
+  this.string = e.detail.value;
  }
 
 }

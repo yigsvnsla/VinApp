@@ -179,7 +179,7 @@
     <ion-item-divider>
     <ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3"></ion-searchbar>
     </ion-item-divider>
-    <ion-card button *ngFor="let item of components | search:s; let i = index"  class="ion-no-padding">
+    <ion-card button *ngFor="let item of components | search:string; let i = index"  class="ion-no-padding">
       <ion-card-content class="ion-no-padding" (click)="goComponent(item)">
         <ion-item>
           <ion-label position="floating" >{{item.category}}</ion-label>

@@ -179,7 +179,9 @@ export class CameraUnitPage implements OnInit {
         swipeToClose: true,
         componentProps: {
           Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}?_sort=name:ASC`),
-          AddElements:true
+          AddElements:true,
+          id: this.part.categoryId,
+          table: "Parts"
         },
       }).then((e=>{
         if(e != undefined){
