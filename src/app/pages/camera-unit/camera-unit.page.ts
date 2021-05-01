@@ -159,28 +159,37 @@ export class CameraUnitPage implements OnInit {
       cssClass: "my-modal-listComponent",
       swipeToClose: true,
       componentProps: {
-        Items:await this.coreConexionService.findArray("Categories")
+        Items:await this.coreConexionService.findArray("Categories","?_sort=name:ASC")
       },
     }).then(e=>{
-      this.part.category = e.name;
-      this.part.categoryId = e.id;
-      this.part.part = "";
+      if(e != undefined){
+
+        this.part.category = e.name;
+        this.part.categoryId = e.id;
+        this.part.part = "";
+      }
     })
   }
 
   async getParts() {
-    this.uiComponentsService.showModal({
-      component: ListComponent,
-      cssClass: "my-modal-listComponent",
-      swipeToClose: true,
-      componentProps: {
-        Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}`),
-        AddElements:true
-      },
-    }).then((e=>{
-      this.part.part =  e.name;
-      this.part.id = e.id;
-    }))
+    if(this.part.categoryId !== ""){
+      this.uiComponentsService.showModal({
+        component: ListComponent,
+        cssClass: "my-modal-listComponent",
+        swipeToClose: true,
+        componentProps: {
+          Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}?_sort=name:ASC`),
+          AddElements:true
+        },
+      }).then((e=>{
+        if(e != undefined){
+          this.part.part =  e.name;
+          this.part.id = e.id;
+        }
+      }))
+    }else{
+      this.uiComponentsService.showToast("Select first one category")
+    }
   }
 
   async validation() {

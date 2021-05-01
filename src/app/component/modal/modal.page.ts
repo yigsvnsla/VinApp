@@ -25,7 +25,6 @@ export class ModalPage implements OnInit {
 
   async ngOnInit() {
     this.Vehicles = await this.core.findVehicles();
-    console.log(this.Vehicles)
   }
 
   async cardClick(index: CoreVechicle) {
