@@ -174,7 +174,8 @@ export class CameraUnitPage implements OnInit {
       cssClass: "my-modal-listComponent",
       swipeToClose: true,
       componentProps: {
-        Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}`)
+        Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}`),
+        AddElements:true
       },
     }).then((e=>{
       this.part.part =  e.name;

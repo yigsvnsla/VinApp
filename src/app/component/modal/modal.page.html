@@ -11,7 +11,11 @@
 </ion-header>
 
 <ion-content>
-
-<app-list-part></app-list-part>
-  
+  <ion-list lines="none">
+    <ion-item *ngFor="let item of this.Vehicles; let index = index">
+      <ion-icon (click)="delete(index,item.Id)" name="close" slot="end"  ></ion-icon>
+      <ion-label position="floating">{{item.Id}}#</ion-label>
+      <ion-input button (click)="cardClick(item)"  readonly="true" [value]="item.Name" class="ion-text-center"></ion-input>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -177,17 +177,17 @@ export class CoreConexionService {
   }
 
   async findArray(table: string, query?: string): Promise<any[]> {
-    this.uiComponentsService.showLoading()
+   let loading = this.uiComponentsService.showLoading()
     return new Promise(async (value) => {
       this.http
         .get<any[]>(this.URL+`${table}${query?"/"+query:""}`)
         .subscribe(
           async (res) => {
-            (await this.uiComponentsService.showLoading()).dismiss()
+            (await loading).dismiss()
             value(res);
           },
           async (fail) => {
-            (await this.uiComponentsService.showLoading()).dismiss()
+            (await loading).dismiss()
             console.error("findArray: ", fail);
             value(null);
           }
@@ -261,6 +261,32 @@ export class CoreConexionService {
           (fail) => {
             console.error("uploadPart", fail);
             value(null);
+          }
+        );
+    });
+  }
+
+  async genericUpload(table: string, param: any,id:number):Promise<boolean>{
+    return new Promise(async (value) => {
+      this.http
+        .post<any>(`${this.URL}${table}/`,
+          {
+            name:param,
+            category:id
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .subscribe(
+          (res) => {
+            value(true);
+          },
+          (fail) => {
+            console.error("uploadGeneric", fail);
+            value(false);
           }
         );
     });

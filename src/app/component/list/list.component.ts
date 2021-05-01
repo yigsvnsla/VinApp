@@ -19,7 +19,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-
+    
   }
 
   backClick() {
@@ -36,6 +36,8 @@ export class ListComponent implements OnInit {
       subHeader:'Gracias por apoyarnos en seguir creciendo...',
       message:'esta opcion es temporal aqui puedes agregar un componente en caso que no existan en nuestra base de datos :)',
       inputs:[{
+        name:'alertValue',
+        type: 'text',
         placeholder:'insert here the component',
         attributes:{
           required:true,
@@ -49,7 +51,9 @@ export class ListComponent implements OnInit {
       },{
         text:'AGREE',
         role:'ok',
-        handler:()=>{
+        handler:async (e)=>{
+          
+          console.log(e);
           // realizar busqueda si el componente existe
           //  si exite... | console.log('este elemento ya existe)
           // en caso contrario
@@ -62,7 +66,7 @@ export class ListComponent implements OnInit {
 
   returnSelect(_val: any) {
     if (_val) {
-      this.modalController.dismiss({ _val });
+    this.modalController.dismiss(_val)
     }
   }
 }

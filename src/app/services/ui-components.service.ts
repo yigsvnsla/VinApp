@@ -53,9 +53,7 @@ export class UiComponentsService {
     let modal: HTMLIonModalElement = await this.modalController.create(options);
     modal.present()
     return new Promise(async (value) => {
-      if((await modal.onDidDismiss()).data != undefined){
-        value((await modal.onDidDismiss()).data._val)
-      }
+        value((await modal.onDidDismiss()).data)
     })
   }
 
