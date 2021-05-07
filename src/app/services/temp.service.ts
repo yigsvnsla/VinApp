@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Plugins } from "@capacitor/core";
 import { AlertController } from "@ionic/angular";
 import { CoreConexionService } from "./core-conexion.service";
+import { StorageService } from "./storage.service";
 const { Device } = Plugins;
 
 @Injectable({
@@ -17,7 +18,8 @@ export class TempService {
   constructor(
     private router: Router,
     private core: CoreConexionService,
-    private alert: AlertController
+    private alert: AlertController,
+    private storageService:StorageService
   ) { }
 
   setVehicle(vehicle: CoreVechicle) {
@@ -26,7 +28,7 @@ export class TempService {
   }
   async viewVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = await this.core.searchVehicle(vehicle.Id);
-    await this.router.navigateByUrl("/item");
+    this.router.navigateByUrl("/item");
   }
   async viewPart(part?: CorePart) {
     this.currentPart = part ? part : new CorePart();
@@ -252,10 +254,10 @@ export class CorePart {
     });
   }
 
-  setImagesFromURL(param: any[]) {
+  setImagesFromURL(param: any[],  url:string) {
     param.forEach((element) => {
       let a: Image = new Image();
-      a.setURL(element.url);
+      a.setURL(url + element.url.substr(1));
       a.id = element.id;
       this.images.push(a);
     });

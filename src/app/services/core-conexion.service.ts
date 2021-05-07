@@ -194,17 +194,17 @@ export class CoreConexionService {
         .subscribe(
           (res) => {
             let c: CorePart[] = [];
-            res.forEach((element) => {
+            res.forEach(async e=>{
               let a: CorePart = new CorePart();
-              a.code = element.id;
-              a.part = element.part.name;
-              a.id = element.part.id;
-              a.price = element.price;
-              a.status = element.status;
-              a.setCategory(element.part.category);
-              a.setImagesFromURL(element.photos);
+              a.code = e.id;
+              a.part = e.part.name;
+              a.id = e.part.id;
+              a.price = e.price;
+              a.status = e.status;
+              a.setCategory(e.part.category);
+              a.setImagesFromURL(e.photos, (await this.storageService.get("url")).urlPrimary);
               c.push(a);
-            });
+            })
             value(c);
           },
           (fail) => {
@@ -239,7 +239,7 @@ export class CoreConexionService {
           }
         )
         .subscribe(
-          (res) => {
+          async (res) => {
             console.log(res);
             let r: CorePart = new CorePart();
             r.code = res.id;
@@ -247,7 +247,7 @@ export class CoreConexionService {
             r.price = res.price;
             r.status = res.status;
             r.setCategory(res.part.category);
-            r.setImagesFromURL(res.photos);
+            r.setImagesFromURL(res.photos, (await this.storageService.get("url")).urlPrimary)
             value(r);
           },
           (fail) => {

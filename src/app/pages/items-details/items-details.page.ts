@@ -42,10 +42,8 @@ export class ItemsDetailsPage implements OnInit {
   }
   
   async ionViewWillEnter(){
-    console.log(":v")
     this.components = this.main.currentVehicle.Parts;
     this.car = this.main.currentVehicle;
-
   }
 
   addComponent(){
@@ -60,9 +58,9 @@ export class ItemsDetailsPage implements OnInit {
   change(event) {
     this.car.Year = parseInt(event.detail.value);
   }
-  public async getSantizeUrl(url: string) {
-    let server = await this.storageService.get("url")
-    return this.sanitizer.bypassSecurityTrustUrl(`${server.urlPrimary.substr(0,server.urlPrimary.lastIndexOf("/"))}${url}`);
+  getSantizeUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+
   }
   async copyInfoVehicle() {
     const toast = await this.toastController.create({
