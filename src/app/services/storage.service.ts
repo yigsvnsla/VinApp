@@ -9,14 +9,17 @@ const { Storage } = Plugins;
 
 export class StorageService {
 
-  private urlPrimary:string = "http://backup1.myvnc.com:1337/"
-  private urlHeisler:string = "https://panel.mdautoparts.com/form/storeMultipleFile"
+  private urlPrimary:string;
+  private urlHeisler:string;
   constructor() { 
+
     this.init()
   }
   
   private async init(){
-    this.set('url',{ urlPrimary:this.urlPrimary,  urlHeisler:this.urlHeisler })
+    this.urlPrimary="http://backup1.myvnc.com:1337/";
+    this.urlHeisler="https://panel.mdautoparts.com/form/storeMultipleFile";
+    this.set('url',{ urlPrimary:this.urlPrimary, urlHeisler:this.urlHeisler })
     this.set('filter',{status:true})
   }
 

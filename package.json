@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~10.0.0",
     "@angular/platform-browser-dynamic": "~10.0.0",
     "@angular/router": "~10.0.0",
-    "@capacitor-community/camera-preview": "file:@darwin-preview",
+    "@capacitor-community/camera-preview": "^1.2.1",
     "@capacitor/android": "^2.4.7",
     "@capacitor/core": "^2.4.5",
     "@ionic-native/barcode-scanner": "^5.30.0",

@@ -11,14 +11,14 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ListComponent implements OnInit {
   textSearch: string = ""
   @Input() AddElements?:boolean = false
-  @Input() Items:[]=[]
+  @Input() Items:any[]=[]
   @Input() id?: string
   @Input() table?: string
 
   constructor(
     private modalController:ModalController,
     private uiComponentsService:UiComponentsService,
-    private core: CoreConexionService
+    private coreConexionService: CoreConexionService
   ) { }
 
   async ngOnInit() {
@@ -56,14 +56,9 @@ export class ListComponent implements OnInit {
         role:'ok',
         handler:async (e)=>{
           if(this.id && this.table){
-            console.log(await this.core.genericUpload(this.table, e.alertValue, this.id));
+            this.Items.push(await this.coreConexionService.genericUpload(this.table, e.alertValue, this.id))
+            this.uiComponentsService.showToast("Component address in the list")
           }
-          console.log(e);
-          // realizar busqueda si el componente existe
-          //  si exite... | console.log('este elemento ya existe)
-          // en caso contrario
-          //  desplegar la lista para selecionar a que categoria pertenece,
-          //    y dar un post a la base datos con el valor del alertInput.
         }
       }]
     })
@@ -71,8 +66,9 @@ export class ListComponent implements OnInit {
 
   returnSelect(_val: any) {
     if (_val) {
+      console.log(_val)
     this.modalController.dismiss(_val)
-    }
+    } 
   }
 }
 

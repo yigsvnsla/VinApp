@@ -4,6 +4,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
+    <ion-icon slot="end" name="cog" (click)="editUrl(urlPrimary,urlHeisler)"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -17,12 +18,10 @@
   <ion-item>
     <ion-label position="floating">url Primary</ion-label>
     <ion-input disabled="true" [(ngModel)]="urlPrimary"></ion-input>
-    <ion-icon slot="end" name="cog" (click)="editUrl(urlPrimary)"></ion-icon>
   </ion-item>
   <ion-item>
     <ion-label position="floating">url Heisler</ion-label>
     <ion-input disabled="true" [(ngModel)]="urlHeisler"></ion-input>
-    <ion-icon slot="end" name="cog" (click)="editUrl(urlHeisler)"></ion-icon>
   </ion-item>
   
   <ion-list lines="none" class="ion-no-padding">

@@ -1,3 +1,4 @@
+import { StorageService } from './../../services/storage.service';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { Router } from "@angular/router";
 import { ToastController,IonSlides} from "@ionic/angular";
@@ -31,7 +32,8 @@ export class ItemsDetailsPage implements OnInit {
     private core: CoreConexionService,
     private sanitizer: DomSanitizer,
     private route: Router,
-    private uiComponentsService:UiComponentsService
+    private uiComponentsService:UiComponentsService,
+    private storageService:StorageService
   ) {}
 
   ngOnInit() {
@@ -58,8 +60,9 @@ export class ItemsDetailsPage implements OnInit {
   change(event) {
     this.car.Year = parseInt(event.detail.value);
   }
-  public getSantizeUrl(url: string) {
-    return this.sanitizer.bypassSecurityTrustUrl(`${this.core.URL.substr(0,this.core.URL.lastIndexOf("/"))}${url}`);
+  public async getSantizeUrl(url: string) {
+    let server = await this.storageService.get("url")
+    return this.sanitizer.bypassSecurityTrustUrl(`${server.urlPrimary.substr(0,server.urlPrimary.lastIndexOf("/"))}${url}`);
   }
   async copyInfoVehicle() {
     const toast = await this.toastController.create({

@@ -1,3 +1,4 @@
+import { UiComponentsService } from './../../services/ui-components.service';
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 
@@ -19,7 +20,10 @@ export class ConfigurationsAppPage implements OnInit {
     {title:'config4',icon:'cog'}
   ]
 
-  constructor(private storageService:StorageService) { 
+  constructor(
+    private storageService:StorageService,
+    private uiComponentsService:UiComponentsService
+    ) { 
     this.init()
   }
 
@@ -37,8 +41,41 @@ export class ConfigurationsAppPage implements OnInit {
     this.storageService.update('filter',{status:e.detail.checked})
   }
   
-  async editUrl(value:string){
-    this.storageService.update('url',{})
+  async editUrl(value:string,value2:string){
+    console.log(value)
+    let alert = await this.uiComponentsService.showAlert({
+      header:'Alert',
+      message:'Insert new url',
+      inputs:[{
+        name:'urlPrimary',
+        type: 'text',
+        placeholder:'insert here the new url',
+        attributes:{
+          value:this.urlPrimary
+        }
+      },{
+        name:'urlHeisler',
+        type: 'text',
+        placeholder:'insert here the new url 2',
+        attributes:{
+          value:this.urlHeisler
+        }
+      }],
+      buttons:[{
+        text:'Cancel',
+        role:'cancel'
+      },{
+        text:'AGREE',
+        role:'ok',
+        handler:async (e)=>{
+          this.urlPrimary = e.urlPrimary !== "" ? e.urlPrimary:this.urlPrimary;
+          this.urlHeisler = e.urlHeisler !== "" ? e.urlHeisler:this.urlHeisler;
+          this.storageService.update('url',{ urlPrimary:this.urlPrimary, urlHeisler: this.urlHeisler})
+          this.uiComponentsService.showToast("Component address in the list")
+          alert.dismiss()
+        }
+      }]
+    })
   }
 }
 
