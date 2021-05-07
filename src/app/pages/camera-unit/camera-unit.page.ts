@@ -1,3 +1,4 @@
+import { ViewPhotoComponent } from './../../component/view-photo/view-photo.component';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { DomSanitizer } from "@angular/platform-browser";
 import { Component, OnInit } from "@angular/core";
@@ -53,6 +54,18 @@ export class CameraUnitPage implements OnInit {
     window.screen.orientation.removeEventListener("change", e =>{
       this.main.showMessage("Event Deleted");
     });
+  }
+
+  async viewPhoto(data){
+    console.log(data)
+    this.uiComponentsService.showModal({
+      component: ViewPhotoComponent,
+      cssClass: "my-modal-listComponent",
+      swipeToClose: true,
+      componentProps: { 
+        Image:data
+      },
+    })
   }
 
   eventPrice(e){
