@@ -4,6 +4,7 @@ ion-content {
 ion-card.carrousel {
   width: calc(100px);
   height: calc(160px);
+  display: flex;
   ion-icon.carrousel {
     z-index: 5;
     font-size: 2.5em;

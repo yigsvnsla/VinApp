@@ -105,7 +105,7 @@ export class CoreConexionService {
       let toast = this.uiComponentsService.showLoading("Search vehicle...");
       let info = await Device.getInfo();
       this.http.get<any>((await this.storageService.get("url")).urlPrimary+ `Products/${id}`).subscribe(
-        async (res) => {
+        async (res) => {          
           value({
             Maker: res.maker,
             Model: res.model,

@@ -19,7 +19,6 @@ export class TempService {
     private router: Router,
     private core: CoreConexionService,
     private alert: AlertController,
-    private storageService:StorageService
   ) { }
 
   setVehicle(vehicle: CoreVechicle) {

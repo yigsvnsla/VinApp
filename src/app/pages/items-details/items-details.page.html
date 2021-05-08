@@ -200,7 +200,7 @@
     <ion-slide *ngFor="let c of components; let i = index; let count = count">
       <ion-slides mode="md" pager="md">
         <ion-slide *ngFor="let z of c.images;">
-          <img class="slide" [src]="getSantizeUrl(z.getImage())" alt="" />
+          <img tappable class="slide" [src]="getSantizeUrl(z.getImage())" alt="" (click)="this.viewPhoto(getSantizeUrl(z.getImage()))"/>
         </ion-slide>
       </ion-slides>
 

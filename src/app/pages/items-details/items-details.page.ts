@@ -7,6 +7,7 @@ import { Plugins } from "@capacitor/core";
 import { CorePart, CoreVechicle, TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
 import { DomSanitizer } from "@angular/platform-browser";
+import { ViewPhotoComponent } from 'src/app/component/view-photo/view-photo.component';
 
 const { Clipboard } = Plugins;
 @Component({
@@ -80,6 +81,17 @@ export class ItemsDetailsPage implements OnInit {
     })
   }
 
+  async viewPhoto(data){
+    this.uiComponentsService.showModal({
+      component: ViewPhotoComponent,
+      cssClass: "View-Photo-Component",
+      swipeToClose: true,
+      componentProps: { 
+        Image:data
+      },
+    })
+  }
+  
   goComponent(com: any) {
    this.main.viewPart(com);
   }

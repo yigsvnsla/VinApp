@@ -77,7 +77,7 @@ export class ManualPagePage implements OnInit {
     // instanciar un objeto tipo CarVehicle al iniciar la pagina manual
     // primero verifica que exista un objeto instanciado en el servicio TransferService
     // dado el caso que no exista, se debe instanciar uno vacio
-    this.Vehicle = this.main.currentVehicle;  
+    
   }
 
   public filterSlash(str: string, arr: string[]): string[] | string {
@@ -95,16 +95,29 @@ export class ManualPagePage implements OnInit {
 
   }
 
+  async ionViewWillEnter(){
+    this.Vehicle = this.main.currentVehicle;  
+  }
+
+
   public tempBody: string;
   public tempClass:string;
   public tempTrim: string;
   public tempSerie:string;
 
   async ngOnInit() {
-    this.tempTrim = this.filterSlash(this.Vehicle.Trim,this.listTrim)[0];
-    this.tempBody = this.filterSlash(this.Vehicle.Body,this.listBodyClass)[0];
-    this.tempClass= this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)[0];
-    this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0];
+    this.Vehicle = this.main.currentVehicle;  
+    if(parseInt(this.Vehicle.Id) > 0){
+      this.tempBody=this.Vehicle.Body;
+      this.tempClass=this.Vehicle.Type;
+      this.tempSerie=this.Vehicle.Serie
+      this.tempTrim=this.Vehicle.Trim
+    }else{
+      this.tempTrim = this.filterSlash(this.Vehicle.Trim,this.listTrim)[0];
+      this.tempBody = this.filterSlash(this.Vehicle.Body,this.listBodyClass)[0];
+      this.tempClass= this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)[0];
+      this.tempSerie= this.filterSlash(this.Vehicle.Serie,this.listSeries)[0];
+    }
 
   }
 
