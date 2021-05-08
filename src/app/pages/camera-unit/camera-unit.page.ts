@@ -57,10 +57,9 @@ export class CameraUnitPage implements OnInit {
   }
 
   async viewPhoto(data){
-    console.log(data)
     this.uiComponentsService.showModal({
       component: ViewPhotoComponent,
-      cssClass: "my-modal-listComponent",
+      cssClass: "View-Photo-Component",
       swipeToClose: true,
       componentProps: { 
         Image:data

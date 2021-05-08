@@ -1,13 +1,31 @@
 <ion-content>
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-button (click)="exitView()">
-          <ion-icon slot="start" name="exit"></ion-icon>
-          exit
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <img [src]="Image">
+  <ion-slides mode="md" pager="md" [options]="this.sliderOpts">
+    <ion-slide>
+      <div class="swiper-zoom-container">
+        <img [src]="Image"/>
+      </div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col size="4" class="ion-text-center">
+      <ion-button (click)="viewZoom(false)" fill="clear" color="light">
+        <ion-icon slot="start" name="remove"></ion-icon>
+        out
+      </ion-button>
+    </ion-col>
+    <ion-col size="4" class="ion-text-center">
+      <ion-button (click)="viewClose()" fill="clear" color="light">
+        <ion-icon slot="start" name="close"></ion-icon>
+        close
+      </ion-button>
+    </ion-col>
+    <ion-col size="4" class="ion-text-center">
+      <ion-button (click)="viewZoom(true)" fill="clear" color="light">
+        <ion-icon slot="start" name="add"></ion-icon>
+        in
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
