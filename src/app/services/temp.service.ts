@@ -54,7 +54,8 @@ export class TempService {
     this.router.navigateByUrl("/manual");
     return this.currentVehicle;
   }
-  async uploadPart(boo: boolean) {
+  async uploadPart(boo: boolean, part: CorePart) {
+    this.currentPart = part;
     if (this.currentPart.code === 0) {
       let tempPart: CorePart = await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
         await this.core.imagesStrapi(await this.form(true))

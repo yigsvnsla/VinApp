@@ -24,6 +24,7 @@ export class CameraUnitPage implements OnInit {
   public statusId: number;
   public editMode: boolean;
   public subcribe:any
+
   
   constructor(
     private sanitizer: DomSanitizer,
@@ -42,7 +43,8 @@ export class CameraUnitPage implements OnInit {
 
   ngOnInit() {
     this.vehicle = this.main.currentVehicle;
-    this.part = this.main.currentPart;
+    const PART: CorePart = this.main.currentPart;
+    this.part = PART;
     //this.sliderOptions = this.sliderBoostrap();
     this.part.code !== 0? this.editMode = true : this.editMode = false;
     if(this.part.status == ""){
@@ -220,7 +222,7 @@ export class CameraUnitPage implements OnInit {
 
   async finish() {
     if ((await this.validation()) == true) {
-      this.main.uploadPart(true);
+      this.main.uploadPart(true, this.part);
     }
   }
 
@@ -238,7 +240,7 @@ export class CameraUnitPage implements OnInit {
 
   async cleanForm() {
     if ((await this.validation()) == true) {
-      await this.main.uploadPart(false);
+      await this.main.uploadPart(false, this.part);
       this.part = new CorePart();
       this.main.currentPart = this.part;
       if(this.part.status == ""){
