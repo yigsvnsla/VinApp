@@ -1,3 +1,4 @@
+import { ListPartComponent } from './../../component/list-part/list-part.component';
 import { ViewPhotoComponent } from './../../component/view-photo/view-photo.component';
 import { UiComponentsService } from 'src/app/services/ui-components.service';
 import { DomSanitizer } from "@angular/platform-browser";
@@ -56,6 +57,27 @@ export class CameraUnitPage implements OnInit {
     window.screen.orientation.removeEventListener("change", e =>{
       this.main.showMessage("Event Deleted");
     });
+  }
+
+
+  async onSearch(){
+    this.coreConexionService.findArray('Parts','?_limit=-1')
+    .then(e=>{
+      this.uiComponentsService.showModal({
+        component: ListPartComponent,
+        cssClass: "List-Part-Component",
+        swipeToClose: true,
+        componentProps: { 
+          Items:e
+        },
+      }).then(e=>{
+        this.part.category = e.category.name;
+        this.part.categoryId = e.category.id;
+        this.part.part =  e.name;
+        this.part.id = e.id;
+      })
+    })
+
   }
 
   async viewPhoto(data){
@@ -163,7 +185,6 @@ export class CameraUnitPage implements OnInit {
   }
   // Ion-Range
   rangeChange(event) {
-    console.log(event);
     this.part.status = this.status(event.detail.value);
   }
 

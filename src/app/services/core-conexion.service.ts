@@ -46,10 +46,10 @@ export class CoreConexionService {
         .get<any[]>((await this.storageService.get("url")).urlPrimary + `Models?maker.id=${id}&_sort=name:asc`)
         .pipe(catchError(this.errorHandler))
         .subscribe(async(res)=>{
-          (await loading).dismiss()
+          
           value(res)
         },async (err)=>{
-          (await loading).dismiss()
+          
           reject(err)
         })
     })

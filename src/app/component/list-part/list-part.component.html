@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="this.onExit()">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>List Part</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-searchbar placeholder="Search Part" inputmode="text" type="text" (ionChange)="onSearchChange($event)"></ion-searchbar>
+<ion-content>
+  <ion-list>
+    <ion-item button *ngFor="let item of Items | filterSearchPipe:textSearch" (click)="selectItem(item)">
+      <ion-label position="floating">Category:{{item.category.name}}</ion-label>
+      <ion-input type="text" [value]="item.name" readonly="true"></ion-input>
+    </ion-item>
+  </ion-list>
+</ion-content>
