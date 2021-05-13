@@ -1,3 +1,4 @@
+import { ListPartComponent } from './list-part/list-part.component';
 import { ViewPhotoComponent } from './view-photo/view-photo.component';
 import { ModalPage } from 'src/app/component/modal/modal.page';
 import { ListComponent } from './list/list.component';
@@ -14,14 +15,16 @@ import { MenuHomeComponent } from "./menu-home/menu-home.component";
     MenuHomeComponent,
     ListComponent,
     ModalPage,
-    ViewPhotoComponent
+    ViewPhotoComponent,
+    ListPartComponent
   ],
   exports: [
     DinamicModalComponent,
     MenuHomeComponent,
     ListComponent,
     ModalPage,
-    ViewPhotoComponent
+    ViewPhotoComponent,
+    ListPartComponent
   ],
   imports: [CommonModule, IonicModule, PipesModule],
   providers:[CurrencyPipe,UiComponentsService]

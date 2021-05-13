@@ -1,5 +1,3 @@
-
-
 ion-slides.content {
   .swiper-slide {
     display: block;
@@ -9,12 +7,6 @@ ion-slides.content {
     }
   }
 }
-
-// ion-icon.component {
-//   margin-left: -6px;
-//   margin-right: 10px;
-// }
-
 
   div.notComponents {
     z-index: -10;
@@ -32,3 +24,6 @@ ion-slides.content {
     }
   }
 
+ion-item::part(native){
+  overflow: initial;
+}
