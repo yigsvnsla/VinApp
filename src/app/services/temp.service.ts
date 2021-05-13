@@ -12,7 +12,7 @@ const { Device } = Plugins;
 
 export class TempService {
   currentVehicle: CoreVechicle;
-  currentPart: CorePart;
+  private currentPart: CorePart;
   formStrapi: FormData;
   formHeisler: FormData;
   constructor(
@@ -20,6 +20,7 @@ export class TempService {
     private core: CoreConexionService,
     private alert: AlertController,
   ) { }
+
 
   setVehicle(vehicle: CoreVechicle) {
     this.currentVehicle = vehicle;
@@ -55,7 +56,7 @@ export class TempService {
     return this.currentVehicle;
   }
   async uploadPart(boo: boolean, part: CorePart) {
-    this.currentPart = part;
+    this.currentPart = Object.create(part);
     if (this.currentPart.code === 0) {
       let tempPart: CorePart = await this.core.uploadPart(this.currentVehicle.Id, this.currentPart, await this.currentPart.getNumbers(
         await this.core.imagesStrapi(await this.form(true))
@@ -136,6 +137,14 @@ export class TempService {
     await alert.present();
 
     return alert;
+  }
+
+  public getPart(): CorePart{
+    const r = this.currentPart;
+    return r;
+  }
+  public setPart(part: CorePart){
+    this.currentPart = part;
   }
 }
 

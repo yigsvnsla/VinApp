@@ -43,8 +43,7 @@ export class CameraUnitPage implements OnInit {
 
   ngOnInit() {
     this.vehicle = this.main.currentVehicle;
-    const PART: CorePart = this.main.currentPart;
-    this.part = PART;
+    this.part = Object.create(this.main.getPart());
     //this.sliderOptions = this.sliderBoostrap();
     this.part.code !== 0? this.editMode = true : this.editMode = false;
     if(this.part.status == ""){
@@ -242,7 +241,7 @@ export class CameraUnitPage implements OnInit {
     if ((await this.validation()) == true) {
       await this.main.uploadPart(false, this.part);
       this.part = new CorePart();
-      this.main.currentPart = this.part;
+      this.main.setPart(this.part);
       if(this.part.status == ""){
         this.part.status = "Used (normal wear)"
         this.statusId = 4;
