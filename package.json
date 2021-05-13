@@ -38,17 +38,6 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "@angular-devkit/build-angular": "^0.1100.2",
-    "@angular/cli": "~10.0.5",
-    "@angular/compiler": "~10.0.0",
-    "@angular/compiler-cli": "~10.0.0",
-    "@angular/language-service": "~10.0.0",
-    "@capacitor/cli": "^2.4.3",
-    "@ionic/angular-toolkit": "^2.3.0",
-    "@ionic/lab": "3.2.9",
-    "@types/jasmine": "~3.5.0",
-=======
     "@angular-devkit/build-angular": "~0.1102.4",
     "@angular-eslint/builder": "2.0.2",
     "@angular-eslint/eslint-plugin": "2.0.2",
@@ -60,7 +49,6 @@
     "@angular/language-service": "~11.2.0",
     "@ionic/angular-toolkit": "^3.1.1",
     "@types/jasmine": "~3.6.0",
->>>>>>> 7828f609613c658f28b88b7905a4faf4f74840dc
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.16.1",
