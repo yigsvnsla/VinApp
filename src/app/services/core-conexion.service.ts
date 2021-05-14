@@ -39,17 +39,17 @@ export class CoreConexionService {
     })
   }
 
-  getModels(id: string) {
-    let loading = this.uiComponentsService.showLoading("Loading");
+  async getModels(id: string) {
+    let loading = await this.uiComponentsService.showLoading("Loading");
     return new Promise(async (value,reject)=>{
       this.http
         .get<any[]>((await this.storageService.get("url")).urlPrimary + `Models?maker.id=${id}&_sort=name:asc`)
         .pipe(catchError(this.errorHandler))
         .subscribe(async(res)=>{
-          
+          loading.dismiss();
           value(res)
         },async (err)=>{
-          
+          loading.dismiss();
           reject(err)
         })
     })

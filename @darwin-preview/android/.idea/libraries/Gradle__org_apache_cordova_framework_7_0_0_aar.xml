@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Gradle: org.apache.cordova:framework:7.0.0@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/framework-7.0.0.aar/ab9aa6cca6704f16ca213417a51cc71b/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc383b5d55bf47d675d3e37e84c10492/jetified-framework-7.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc383b5d55bf47d675d3e37e84c10492/jetified-framework-7.0.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/fc383b5d55bf47d675d3e37e84c10492/jetified-framework-7.0.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.apache.cordova/framework/7.0.0/a176c90fc0ffbb09f5f0e25f7cb846a297a49225/framework-7.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
