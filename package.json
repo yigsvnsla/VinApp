@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~11.2.0",
     "@angular/router": "~11.2.0",
     "@capacitor-community/camera-preview": "^1.2.1",
+    "@capacitor-community/http": "^0.3.1",
     "@capacitor/android": "^2.4.7",
     "@capacitor/core": "^2.4.5",
     "@ionic-native/barcode-scanner": "^5.30.0",

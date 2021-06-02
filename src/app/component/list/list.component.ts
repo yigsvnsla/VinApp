@@ -66,7 +66,6 @@ export class ListComponent implements OnInit {
 
   returnSelect(_val: any) {
     if (_val) {
-      console.log(_val)
     this.modalController.dismiss(_val)
     } 
   }

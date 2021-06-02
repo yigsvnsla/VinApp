@@ -1,16 +1,23 @@
-import { ListPartComponent } from './../../component/list-part/list-part.component';
-import { ViewPhotoComponent } from './../../component/view-photo/view-photo.component';
-import { UiComponentsService } from 'src/app/services/ui-components.service';
+import { ListPartComponent } from "./../../component/list-part/list-part.component";
+import { ViewPhotoComponent } from "./../../component/view-photo/view-photo.component";
+import { UiComponentsService } from "src/app/services/ui-components.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Component, OnInit } from "@angular/core";
-import { Platform} from "@ionic/angular";
-import { Plugins,} from "@capacitor/core";
+import { Platform } from "@ionic/angular";
+import { Plugins } from "@capacitor/core";
 import "@capacitor-community/camera-preview";
+import "@capacitor-community/http";
 const { CameraPreview, Keyboard } = Plugins;
-import { CorePart,CoreVechicle,Image,TempService } from "src/app/services/temp.service";
+import {
+  CorePart,
+  CoreVechicle,
+  Image,
+  TempService,
+} from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
 import { CurrencyPipe } from "@angular/common";
-import { ListComponent } from 'src/app/component/list/list.component';
+import { ListComponent } from "src/app/component/list/list.component";
+import { StorageService } from "src/app/services/storage.service";
 
 @Component({
   selector: "app-camera-unit",
@@ -24,77 +31,79 @@ export class CameraUnitPage implements OnInit {
   public part: CorePart;
   public statusId: number;
   public editMode: boolean;
-  public subcribe:any
+  public subcribe: any;
+  maxFit: number;
+  minFit: number;
 
-  
   constructor(
     private sanitizer: DomSanitizer,
     private main: TempService,
     private platform: Platform,
-    private currencyPipe : CurrencyPipe,
-    private uiComponentsService:UiComponentsService,
-    private coreConexionService:CoreConexionService
+    private currencyPipe: CurrencyPipe,
+    private uiComponentsService: UiComponentsService,
+    private coreConexionService: CoreConexionService,
+    private core: CoreConexionService
   ) {
-    this.subcribe = this.platform.backButton.subscribeWithPriority(10,()=>{
-      if(this.constructor.name == 'CameraUnitPage'){
-        this.stopCamera()
+    this.subcribe = this.platform.backButton.subscribeWithPriority(10, () => {
+      if (this.constructor.name == "CameraUnitPage") {
+        this.stopCamera();
       }
-    })
-  }
-
-  ngOnInit() {
-    this.vehicle = this.main.currentVehicle;
-    this.part = Object.create(this.main.getPart());
-    //this.sliderOptions = this.sliderBoostrap();
-    this.part.code !== 0? this.editMode = true : this.editMode = false;
-    if(this.part.status == ""){
-      this.part.status = "Used (normal wear)"
-      this.statusId = 4;
-    }else{
-      this.statusId = this.setStatus(this.part.status)
-    }
-    window.screen.orientation.removeEventListener("change", e =>{
-      this.main.showMessage("Event Deleted");
     });
   }
 
+  JsonData = {};
 
-  async onSearch(){
-    this.coreConexionService.findArray('Parts','?_limit=-1')
-    .then(e=>{
-      this.uiComponentsService.showModal({
-        component: ListPartComponent,
-        cssClass: "List-Part-Component",
-        swipeToClose: true,
-        componentProps: { 
-          Items:e
-        },
-      }).then(e=>{
-        this.part.category = e.category.name;
-        this.part.categoryId = e.category.id;
-        this.part.part =  e.name;
-        this.part.id = e.id;
-      })
-    })
+  async ngOnInit() {
+    this.vehicle = this.main.currentVehicle;
+    this.part = Object.create(this.main.getPart());
+    //this.sliderOptions = this.sliderBoostrap();
+    this.part.code !== 0 ? (this.editMode = true) : (this.editMode = false);
+    if (this.part.status == "") {
+      this.part.status = "Used (normal wear)";
+      this.statusId = 4;
+    } else {
+      this.statusId = this.setStatus(this.part.status);
+    }
+    await this.checkFit();
 
   }
 
-  async viewPhoto(data){
+  async onSearch() {
+    this.coreConexionService.findArray("Parts", "?_limit=-1").then((e) => {
+      this.uiComponentsService
+        .showModal({
+          component: ListPartComponent,
+          cssClass: "List-Part-Component",
+          swipeToClose: true,
+          componentProps: {
+            Items: e,
+          },
+        })
+        .then((e) => {
+          this.part.category = e.category.name;
+          this.part.categoryId = e.category.id;
+          this.part.part = e.name;
+          this.part.id = e.id;
+        });
+    });
+  }
+
+  async viewPhoto(data) {
     this.uiComponentsService.showModal({
       component: ViewPhotoComponent,
       cssClass: "View-Photo-Component",
       swipeToClose: true,
-      componentProps: { 
-        Image:data
+      componentProps: {
+        Image: data,
       },
-    })
+    });
   }
 
-  eventPrice(e){
+  eventPrice(e) {
     this.part.price = e.target.value;
-    this.currencyPipe.transform(this.part.price, '$')
+    this.currencyPipe.transform(this.part.price, "$");
   }
-  eventClear(e){
+  eventClear(e) {
     e.target.value = "";
   }
 
@@ -113,7 +122,8 @@ export class CameraUnitPage implements OnInit {
       className: "cameraPreview",
       toBack: true,
       rotateWhenOrientationChanged: true,
-    })
+      storeToFile: true,
+    });
     this.cameraActive = true;
   }
 
@@ -121,14 +131,56 @@ export class CameraUnitPage implements OnInit {
     CameraPreview.stop();
     this.cameraActive = false;
     this.viewCam = false;
-    this.nameIcon= "close";
+    this.nameIcon = "close";
   }
 
+  async sendPost(blob: Blob) {
+    let data: FormData = new FormData();
+    data.append("files", blob, "testing");
+    console.log(JSON.stringify(await this.core.imagesStrapi(data)));
+  }
 
   async captureImage() {
-    this.part.images.push(new Image((await CameraPreview.capture({quality:90})).value, `Testing ${this.count}`));
+    this.part.images.push(
+      new Image(
+        (await CameraPreview.capture({ quality: 90 })).value,
+        `Testing ${this.count}`
+      )
+    );
+    /*
+  Funciona con el plugin HTTP community de capacitor, siempre y cuando me acuerde de modificarlo.
+  let data = (await CameraPreview.capture({quality: 80})).value; 
+    console.log(data);
+    const { Http } = Plugins;
+    Http.request({
+      method: 'POST',
+      url: (await this.storageService.get("url")).urlPrimary+"upload",
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      data: {
+        "files": [data, data, data],
+        "ref":"2373",
+        "refads": "23731",
+        "titulo": "testing part by darwin",
+        "refpart": "23732",
+        "nombre": "testing",
+        "descrip": "testing part by darwin",
+        "precio":"10000",
+        "condicion": "excelenete",
+        "categoria": "categoria testing"
+      }
+    }).then((response) => {
+      console.log("Subido con exito!!!");
+      console.log(response);
+    }, fail=>{
+      console.log("Fallido con exito!!!");
+      console.log(fail);
+    });
+      */
+
     this.count++;
-    if (this.part.images.length  > 0) this.nameIcon = "checkmark";
+    if (this.part.images.length > 0) this.nameIcon = "checkmark";
   }
   flipCamera() {
     //CameraPreview.flip();
@@ -188,54 +240,68 @@ export class CameraUnitPage implements OnInit {
   }
 
   async getCategories() {
-    this.uiComponentsService.showModal({
-      component: ListComponent,
-      cssClass: "my-modal-listComponent",
-      swipeToClose: true,
-      componentProps: {
-        Items:await this.coreConexionService.findArray("Categories","?_sort=name:ASC")
-      },
-    }).then(e=>{
-      if(e != undefined){
-
-        this.part.category = e.name;
-        this.part.categoryId = e.id;
-        this.part.part = "";
-      }
-    })
-  }
-
-  async getParts() {
-    if(this.part.categoryId !== ""){
-      this.uiComponentsService.showModal({
+    this.uiComponentsService
+      .showModal({
         component: ListComponent,
         cssClass: "my-modal-listComponent",
         swipeToClose: true,
         componentProps: {
-          Items:await this.coreConexionService.findArray("Parts",`?category.id_eq=${this.part.categoryId}?_sort=name:ASC`),
-          AddElements:true,
-          id: this.part.categoryId,
-          table: "Parts"
+          Items: await this.coreConexionService.findArray(
+            "Categories",
+            "?_sort=name:ASC"
+          ),
         },
-      }).then((e=>{
-        if(e != undefined){
-          this.part.part =  e.name;
-          this.part.id = e.id;
+      })
+      .then((e) => {
+        if (e != undefined) {
+          this.part.category = e.name;
+          this.part.categoryId = e.id;
+          this.part.part = "";
         }
-      }))
-    }else{
-      this.uiComponentsService.showToast("Select first one category")
+      });
+  }
+
+  async getParts() {
+    if (this.part.categoryId !== "") {
+      this.uiComponentsService
+        .showModal({
+          component: ListComponent,
+          cssClass: "my-modal-listComponent",
+          swipeToClose: true,
+          componentProps: {
+            Items: await this.coreConexionService.findArray(
+              "Parts",
+              `?category.id_eq=${this.part.categoryId}?_sort=name:ASC`
+            ),
+            AddElements: true,
+            id: this.part.categoryId,
+            table: "Parts",
+          },
+        })
+        .then((e) => {
+          if (e != undefined) {
+            this.part.part = e.name;
+            this.part.id = e.id;
+          }
+        });
+    } else {
+      this.uiComponentsService.showToast("Select first one category");
     }
   }
 
   async validation() {
-    if (  this.part.images.length == 0 ||  this.part.price == 0 ||  this.part.category == "" ||  this.part.part == "" ) {
+    if (
+      this.part.images.length == 0 ||
+      this.part.price == 0 ||
+      this.part.category == "" ||
+      this.part.part == "" || this.minFit == undefined || this.maxFit == undefined
+    ) {
       this.uiComponentsService.showAlert({
         header: "Alert",
         message: `need add data in the form`,
-        buttons: ["okay"]
-      })
-    return false;
+        buttons: ["okay"],
+      });
+      return false;
     }
     return true;
   }
@@ -263,13 +329,13 @@ export class CameraUnitPage implements OnInit {
       await this.main.uploadPart(false, this.part);
       this.part = new CorePart();
       this.main.setPart(this.part);
-      if(this.part.status == ""){
-        this.part.status = "Used (normal wear)"
+      if (this.part.status == "") {
+        this.part.status = "Used (normal wear)";
         this.statusId = 4;
-      }else{
-        this.statusId = this.setStatus(this.part.status)
+      } else {
+        this.statusId = this.setStatus(this.part.status);
       }
-      this.uiComponentsService.showToast("the inputs have been cleaned")
+      this.uiComponentsService.showToast("the inputs have been cleaned");
     }
   }
 
@@ -289,7 +355,7 @@ export class CameraUnitPage implements OnInit {
         return "New";
     }
   }
-  
+
   setStatus(text: string) {
     switch (text) {
       case "damage":
@@ -305,5 +371,106 @@ export class CameraUnitPage implements OnInit {
       case "New":
         return 6;
     }
+  }
+
+  DateList(): number[] {
+    let min = new Date().getFullYear();
+    let list: number[] = [];
+    for (let index = min; index > 1984; index--) {
+      list.push(index);
+    }
+    return list;
+  }
+  async minSelect(){
+    this.maxFit = undefined;
+    let min = new Date().getFullYear();
+    let temp = await this.showYearList();
+    this.minFit = temp;
+    if(temp == min){
+      this.maxFit = temp;
+    }
+  }
+  async maxSelect(){
+    if(this.minFit != undefined){
+      this.maxFit= await this.showYearList(this.minFit);
+      this.part.fit = this.generateFit().string;
+    }else{
+      this.main.showMessage("Select from year first!");
+    }
+  }
+  
+  generateFit(): {string: string, number: number[]}{
+    let s: string = "";
+    let n: number[] = [];
+      for (let i = this.minFit; i <= this.maxFit; i++) {
+        s = s + " " + i.toString();    
+        n.push(i);
+      }
+      return{
+        string: s.substr(1),
+        number: n
+      }
+  }
+  
+  async checkFit(boo?: boolean){
+    if(this.part.fit.includes(" ")){
+      let arr: number[] = this.getArryFromString(this.part.fit.split(" "));
+      this.maxFit = Math.max(... arr);
+      this.minFit = Math.min(... arr);
+      console.log(this.minFit + " " + this.maxFit);
+    }else if(!boo){
+      this.heredateFit();
+    }  
+  }
+
+  async heredateFit(){
+    if(this.vehicle.Parts.length > 0){
+      let temp: number = 100000;
+      let tempPart: CorePart;
+      console.log(this.vehicle.Parts);
+      this.vehicle.Parts.forEach(e => {
+        if(e.code < temp){
+          temp = e.code;
+          tempPart = Object.create(e);
+        }
+      });
+      this.part.fit = tempPart.fit;
+      this.checkFit(true);
+    }else{
+      console.log("No tiene partes");
+    }
+
+  }
+
+  getArryFromString(arr: string[]): number[]{
+    let r: number[] = [];
+    arr.forEach(e => {
+      r.push(parseInt(e));
+    });
+    return r;
+  }
+
+  async showYearList(start?:number): Promise<number>{
+    return new Promise(async value=>{
+      let temp: {}[] = [];
+      let s:number = start? start : 1985;
+      for (let i = s; i < new Date().getFullYear() ; i++) {
+        temp.push({
+          id: i,
+          name: i,
+        });
+      }
+      this.uiComponentsService.showModal({
+        component: ListComponent,
+        cssClass: "my-modal-listComponent",
+        swipeToClose: true,
+        componentProps: {
+          Items:temp.reverse()
+        },
+      }).then(e=>{
+        value(e.id)
+      })
+    })
+    
   }
 }

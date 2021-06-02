@@ -63,23 +63,6 @@ export class ItemsDetailsPage implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(url);
 
   }
-  async copyInfoVehicle() {
-    const toast = await this.toastController.create({
-      message: "Info vehicle copy into clipboard.",
-      duration: 2000,
-      position: "bottom",
-    });
-    toast.present();
-    
-    this.slides.getActiveIndex().then(x=>{
-      let index : number = x 
-      console.log(index)
-       Clipboard.write({
-      string: `${this.components[index].part} - ${this.car.Name}`,
-    });
-      return
-    })
-  }
 
   async viewPhoto(data){
     this.uiComponentsService.showModal({

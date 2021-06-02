@@ -1,10 +1,11 @@
-import { StorageService } from 'src/app/services/storage.service';
+import { StorageService } from "src/app/services/storage.service";
 import { UiComponentsService } from "./ui-components.service";
 import { throwError as observableThrowError } from "rxjs";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { CorePart, CoreVechicle } from "./temp.service";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
+import { Http } from "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { Router } from "@angular/router";
 const { Device } = Plugins;
@@ -13,48 +14,55 @@ const { Device } = Plugins;
   providedIn: "root",
 })
 export class CoreConexionService {
-
   constructor(
     private http: HttpClient,
     private router: Router,
     private uiComponentsService: UiComponentsService,
-    private storageService:StorageService
-  ){
-
-  }
-  async getMakers(){
+    private storageService: StorageService
+  ) {}
+  async getMakers() {
     let loading = this.uiComponentsService.showLoading("Loading");
-    return new Promise(async (value,reject)=>{
+    return new Promise(async (value, reject) => {
       this.http
-        .get<any[]>( (await this.storageService.get("url")).urlPrimary + "Makers")
+        .get<any[]>(
+          (await this.storageService.get("url")).urlPrimary + "Makers"
+        )
         .pipe(catchError(this.errorHandler))
-        .subscribe( async (res)=>{
-          (await loading).dismiss()
-          value(res)
-        },async (err)=>{
-          (await loading).dismiss()
-          reject(err)
-        });
-       
-    })
+        .subscribe(
+          async (res) => {
+            (await loading).dismiss();
+            value(res);
+          },
+          async (err) => {
+            (await loading).dismiss();
+            reject(err);
+          }
+        );
+    });
   }
 
   async getModels(id: string) {
     let loading = await this.uiComponentsService.showLoading("Loading");
-    return new Promise(async (value,reject)=>{
+    return new Promise(async (value, reject) => {
       this.http
-        .get<any[]>((await this.storageService.get("url")).urlPrimary + `Models?maker.id=${id}&_sort=name:asc`)
+        .get<any[]>(
+          (await this.storageService.get("url")).urlPrimary +
+            `Models?maker.id=${id}&_sort=name:asc`
+        )
         .pipe(catchError(this.errorHandler))
-        .subscribe(async(res)=>{
-          loading.dismiss();
-          value(res)
-        },async (err)=>{
-          loading.dismiss();
-          reject(err)
-        })
-    })
+        .subscribe(
+          async (res) => {
+            loading.dismiss();
+            value(res);
+          },
+          async (err) => {
+            loading.dismiss();
+            reject(err);
+          }
+        );
+    });
   }
-  
+
   async search(vin: string): Promise<CoreVechicle> {
     let info = await Device.getInfo();
     let toast = this.uiComponentsService.showLoading();
@@ -104,38 +112,45 @@ export class CoreConexionService {
     return new Promise(async (value) => {
       let toast = this.uiComponentsService.showLoading("Search vehicle...");
       let info = await Device.getInfo();
-      this.http.get<any>((await this.storageService.get("url")).urlPrimary+ `Products/${id}`).subscribe(
-        async (res) => {          
-          value({
-            Maker: res.maker,
-            Model: res.model,
-            Year: parseInt(res.year),
-            Trim: res.trim,
-            Serie: res.serie,
-            Body: res.boddyClass,
-            Cylinders: parseInt(res.cylinders),
-            Parts: await this.findComponents(id),
-            Vin: res.vin,
-            Id: res.id,
-            Type: res.type,
-            Device: info.uuid,
-            Name: res.name,
-          });
-          (await toast).dismiss();
-        },
-        (fail) => {
-          console.error("searchVehicle: ", fail);
-        }
-      );
+      this.http
+        .get<any>(
+          (await this.storageService.get("url")).urlPrimary + `Products/${id}`
+        )
+        .subscribe(
+          async (res) => {
+            value({
+              Maker: res.maker,
+              Model: res.model,
+              Year: parseInt(res.year),
+              Trim: res.trim,
+              Serie: res.serie,
+              Body: res.boddyClass,
+              Cylinders: parseInt(res.cylinders),
+              Parts: await this.findComponents(id),
+              Vin: res.vin,
+              Id: res.id,
+              Type: res.type,
+              Device: info.uuid,
+              Name: res.name,
+            });
+            (await toast).dismiss();
+          },
+          (fail) => {
+            console.error("searchVehicle: ", fail);
+          }
+        );
     });
   }
 
   async findVehicles(): Promise<CoreVechicle[]> {
-    let loading = this.uiComponentsService.showLoading("Find Vehicles")
+    let loading = this.uiComponentsService.showLoading("Find Vehicles");
     let uuid = await Device.getInfo();
     return new Promise(async (value) => {
       this.http
-        .get<any[]>((await this.storageService.get("url")).urlPrimary + `Products?device_eq=${uuid.uuid}`)
+        .get<any[]>(
+          (await this.storageService.get("url")).urlPrimary +
+            `Products?device_eq=${uuid.uuid}`
+        )
         .subscribe(
           async (res) => {
             let v: CoreVechicle[] = [];
@@ -157,29 +172,32 @@ export class CoreConexionService {
               });
               value(v);
             });
-            (await loading).dismiss()
+            (await loading).dismiss();
           },
           async (fail) => {
-            console.error("findVehicle: ", fail);
+            console.error("findVehicle: ");
             value(null);
-            (await loading).dismiss()
+            (await loading).dismiss();
           }
         );
     });
   }
 
   async findArray(table: string, query?: string): Promise<any[]> {
-   let loading = this.uiComponentsService.showLoading()
+    let loading = this.uiComponentsService.showLoading();
     return new Promise(async (value) => {
       this.http
-        .get<any[]>((await this.storageService.get("url")).urlPrimary+`${table}${query?"/"+query:""}`)
+        .get<any[]>(
+          (await this.storageService.get("url")).urlPrimary +
+            `${table}${query ? "/" + query : ""}`
+        )
         .subscribe(
           async (res) => {
-            (await loading).dismiss()
+            (await loading).dismiss();
             value(res);
           },
           async (fail) => {
-            (await loading).dismiss()
+            (await loading).dismiss();
             console.error("findArray: ", fail);
             value(null);
           }
@@ -190,21 +208,28 @@ export class CoreConexionService {
   async findComponents(id: string): Promise<CorePart[]> {
     return new Promise(async (value) => {
       this.http
-        .get<any[]>((await this.storageService.get("url")).urlPrimary + `Components?product.id_eq=${id}`)
+        .get<any[]>(
+          (await this.storageService.get("url")).urlPrimary +
+            `Components?product.id_eq=${id}`
+        )
         .subscribe(
           (res) => {
             let c: CorePart[] = [];
-            res.forEach(async e=>{
+            res.forEach(async (e) => {
               let a: CorePart = new CorePart();
               a.code = e.id;
               a.part = e.part.name;
               a.id = e.part.id;
               a.price = e.price;
               a.status = e.status;
+              a.fit = e.fit;
               a.setCategory(e.part.category);
-              a.setImagesFromURL(e.photos, (await this.storageService.get("url")).urlPrimary);
+              a.setImagesFromURL(
+                e.photos,
+                (await this.storageService.get("url")).urlPrimary
+              );
               c.push(a);
-            })
+            });
             value(c);
           },
           (fail) => {
@@ -231,6 +256,7 @@ export class CoreConexionService {
             product: parseInt(id),
             status: part.status,
             category: part.categoryId,
+            fit: part.fit
           },
           {
             headers: {
@@ -247,7 +273,10 @@ export class CoreConexionService {
             r.price = res.price;
             r.status = res.status;
             r.setCategory(res.part.category);
-            r.setImagesFromURL(res.photos, (await this.storageService.get("url")).urlPrimary)
+            r.setImagesFromURL(
+              res.photos,
+              (await this.storageService.get("url")).urlPrimary
+            );
             value(r);
           },
           (fail) => {
@@ -258,13 +287,14 @@ export class CoreConexionService {
     });
   }
 
-  async genericUpload(table: string, param: any,id:string):Promise<any>{
+  async genericUpload(table: string, param: any, id: string): Promise<any> {
     return new Promise(async (value) => {
       this.http
-        .post<any>(`${(await this.storageService.get("url")).urlPrimary}${table}/`,
+        .post<any>(
+          `${(await this.storageService.get("url")).urlPrimary}${table}/`,
           {
-            name:param,
-            category:id
+            name: param,
+            category: id,
           },
           {
             headers: {
@@ -274,7 +304,7 @@ export class CoreConexionService {
         )
         .subscribe(
           (res) => {
-            value({id:res.id,name:res.name});
+            value({ id: res.id, name: res.name });
           },
           (fail) => {
             console.error("uploadGeneric", fail);
@@ -288,22 +318,25 @@ export class CoreConexionService {
     return new Promise(async (value) => {
       let loading = this.uiComponentsService.showLoading("Sing in...");
       this.http
-        .post<any>((await this.storageService.get("url")).urlPrimary + "Products", {
-          name: this.capitalizeAtWord(
-            `${data.Year} ${data.Maker} ${data.Model}`,
-            " "
-          ),
-          maker: this.capitalizeAtWord(data.Maker, "dasdasd"),
-          model: this.capitalizeAtWord(data.Model, "dasdasdasd"),
-          year: data.Year,
-          cylinders: data.Cylinders,
-          serie: data.Serie,
-          trim: data.Trim,
-          device: data.Device,
-          type: data.Type,
-          boddyClass: data.Body,
-          vin: data.Vin,
-        })
+        .post<any>(
+          (await this.storageService.get("url")).urlPrimary + "Products",
+          {
+            name: this.capitalizeAtWord(
+              `${data.Year} ${data.Maker} ${data.Model}`,
+              " "
+            ),
+            maker: this.capitalizeAtWord(data.Maker, "dasdasd"),
+            model: this.capitalizeAtWord(data.Model, "dasdasdasd"),
+            year: data.Year,
+            cylinders: data.Cylinders,
+            serie: data.Serie,
+            trim: data.Trim,
+            device: data.Device,
+            type: data.Type,
+            boddyClass: data.Body,
+            vin: data.Vin,
+          }
+        )
         .subscribe(
           async (res) => {
             (await loading).dismiss();
@@ -328,7 +361,10 @@ export class CoreConexionService {
           "Subiendo imagenes..."
         );
         this.http
-          .post<any>((await this.storageService.get("url")).urlPrimary + "upload", data)
+          .post<any>(
+            (await this.storageService.get("url")).urlPrimary + "upload",
+            data
+          )
           .subscribe(async (res) => {
             let r: number[] = [];
             res.forEach((element) => {
@@ -362,20 +398,28 @@ export class CoreConexionService {
           value(null);
         }
       );
+
     });
   }
   //UPDATES
   async updatePart(part: CorePart, param: number[]): Promise<boolean> {
     return new Promise(async (value) => {
       this.http
-        .put(`${(await this.storageService.get("url")).urlPrimary}Components/${part.code}`, {
-          part: part.id,
-          price: part.price,
-          photos: param,
-          status: part.status,
-          category: part.categoryId,
-        })
+        .put(
+          `${(await this.storageService.get("url")).urlPrimary}Components/${
+            part.code
+          }`,
+          {
+            part: part.id,
+            price: part.price,
+            photos: param,
+            status: part.status,
+            category: part.categoryId,
+            fit: part.fit
+          }
+        )
         .subscribe((res) => {
+          console.log(res);
           value(true);
         });
     });
@@ -383,13 +427,18 @@ export class CoreConexionService {
   async updateVehicle(vehicle: CoreVechicle): Promise<any> {
     return new Promise(async (value) => {
       this.http
-        .put<any>(`${(await this.storageService.get("url")).urlPrimary}Products/${vehicle.Id}`, {
-          cylinders: vehicle.Cylinders,
-          serie: vehicle.Serie,
-          trim: vehicle.Trim,
-          type: vehicle.Type,
-          boddyClass: vehicle.Body,
-        })
+        .put<any>(
+          `${(await this.storageService.get("url")).urlPrimary}Products/${
+            vehicle.Id
+          }`,
+          {
+            cylinders: vehicle.Cylinders,
+            serie: vehicle.Serie,
+            trim: vehicle.Trim,
+            type: vehicle.Type,
+            boddyClass: vehicle.Body,
+          }
+        )
         .subscribe(
           (res) => {
             value({
@@ -410,14 +459,20 @@ export class CoreConexionService {
   //DELETES
   async delete(table: string, param?: string): Promise<boolean> {
     return new Promise(async (value) => {
-      this.http.delete((await this.storageService.get("url")).urlPrimary + table + `${param ? param : ""}`).subscribe(
-        (res) => {
-          value(true);
-        },
-        (fail) => {
-          value(false);
-        }
-      );
+      this.http
+        .delete(
+          (await this.storageService.get("url")).urlPrimary +
+            table +
+            `${param ? param : ""}`
+        )
+        .subscribe(
+          (res) => {
+            value(true);
+          },
+          (fail) => {
+            value(false);
+          }
+        );
     });
   }
 

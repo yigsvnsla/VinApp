@@ -19,6 +19,7 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
+import "@capacitor-community/http";
 import { IonicStorageModule } from '@ionic/storage-angular';
 
 @NgModule({
