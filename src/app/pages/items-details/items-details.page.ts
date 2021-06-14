@@ -28,13 +28,11 @@ export class ItemsDetailsPage implements OnInit {
   public toggleView:boolean = false;
   public string: string ="";
   constructor(
-    private toastController: ToastController,
     private main: TempService,
     private core: CoreConexionService,
     private sanitizer: DomSanitizer,
     private route: Router,
     private uiComponentsService:UiComponentsService,
-    private storageService:StorageService
   ) {}
 
   ngOnInit() {
@@ -45,6 +43,7 @@ export class ItemsDetailsPage implements OnInit {
   async ionViewWillEnter(){
     this.components = this.main.currentVehicle.Parts;
     this.car = this.main.currentVehicle;
+    console.log("Called ViewWill");
   }
 
   addComponent(){

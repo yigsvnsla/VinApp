@@ -5,7 +5,6 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { CorePart, CoreVechicle } from "./temp.service";
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
-import { Http } from "@capacitor-community/http";
 import { Plugins } from "@capacitor/core";
 import { Router } from "@angular/router";
 const { Device } = Plugins;

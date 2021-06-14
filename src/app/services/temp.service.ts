@@ -107,7 +107,7 @@ export class TempService {
         data.append("titulo", this.currentVehicle.Name + " - " + this.currentPart.part)
         data.append("refpart", id.toString());
         data.append("nombre", this.currentPart.part);
-        data.append("descrip", this.currentVehicle.Name + " - " + this.currentPart.part + " " + this.currentPart.fit);
+        data.append("descrip", this.currentVehicle.Name + " - " + this.currentPart.part + " " + this.currentPart.fit + " "+ this.currentPart.getFit());
         data.append("precio", this.currentPart.price.toString());
         data.append("condicion", this.currentPart.status);
         data.append("categoria", this.currentPart.category);
@@ -176,6 +176,7 @@ export class CorePart {
   images: Image[];
   arrImage: number[];
   fit: string;
+  fitYears: number[];
 
   constructor() {
     this.id = "";
@@ -274,6 +275,15 @@ export class CorePart {
       this.images.push(a);
     });
   }
+  getFit(){
+    let numbers = this.fit.split(" ");
+    let newFit: string = "";
+    numbers.forEach(e => {
+       newFit += e.slice(-2) + " ";
+    });
+    return newFit;
+  }
+  
 }
 export class Image {
   id: string;

@@ -15,6 +15,7 @@ export class ListComponent implements OnInit {
   @Input() id?: string
   @Input() table?: string
   @Input() addTemp?: boolean = false;
+  @Input() showDetails?: boolean;
 
   constructor(
     private modalController:ModalController,
@@ -23,7 +24,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    
+    console.log(this.Items);
   }
 
   backClick() {

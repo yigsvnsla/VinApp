@@ -67,19 +67,6 @@
       <ion-select-option [value]="12">12 - Cylinder</ion-select-option>
     </ion-select>
   </ion-item>
-  <ion-item (click)="getModels()">
-    <ion-icon
-      slot="start"
-      src="../../../assets/img/svg/018-garage.svg"
-    ></ion-icon>
-    <ion-label position="floating">Model</ion-label>
-    <ion-input
-      type="text"
-      placeholder="Select Model"
-      [(ngModel)]="Vehicle.Model"
-      readonly="true"
-    ></ion-input>
-  </ion-item>
 
   <ion-item (click)="showSelect(filterSlash(Vehicle.Trim,listTrim), 'trim')">
     <ion-icon

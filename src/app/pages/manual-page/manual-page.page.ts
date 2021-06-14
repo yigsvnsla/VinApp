@@ -214,8 +214,9 @@ export class ManualPagePage implements OnInit {
     this.Vehicle.Serie=this.tempSerie;
     
     if (this.main.currentVehicle.Id !== "0") {
-      await this.main.updateVehicle();
-      this.loc.back();
+      this.main.updateVehicle().then(res=>{
+        this.loc.back();
+      });
     } else {
       if (this.Vehicle.Maker == "" || this.Vehicle.Model == "") {
         this.main.showMessage("Please, select Make or Model!");

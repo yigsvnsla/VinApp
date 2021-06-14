@@ -69,7 +69,7 @@ export class CameraUnitPage implements OnInit {
   }
 
   async onSearch() {
-    this.coreConexionService.findArray("Parts", "?_limit=-1").then((e) => {
+    this.coreConexionService.findArray("Parts", "?_limit=-1&_sort=name:ASC").then((e) => {
       this.uiComponentsService
         .showModal({
           component: ListPartComponent,
@@ -140,12 +140,18 @@ export class CameraUnitPage implements OnInit {
   }*/
 
   async captureImage() {
-    this.part.images.push(
-      new Image(
-        (await CameraPreview.capture({ quality: 90 })).value,
-        `Testing ${this.count}`
-      )
-    );
+    let element = document.getElementsByClassName("darwin")[0];
+    element.classList.add("shadow");
+    CameraPreview.capture({ quality: 90 }).then(res=>{
+      this.part.images.push(
+        new Image(
+          res.value,
+          `Testing ${this.count}`
+        )
+      );
+      element.classList.remove("shadow");
+    })
+    
     /*
   Funciona con el plugin HTTP community de capacitor, siempre y cuando me acuerde de modificarlo.
   let data = (await CameraPreview.capture({quality: 80})).value; 
@@ -284,7 +290,7 @@ export class CameraUnitPage implements OnInit {
           }
         });
     } else {
-      this.uiComponentsService.showToast("Select first one category");
+      this.onSearch();
     }
   }
 
@@ -293,8 +299,7 @@ export class CameraUnitPage implements OnInit {
       this.part.images.length == 0 ||
       this.part.price == 0 ||
       this.part.category == "" ||
-      this.part.part == "" || this.minFit == undefined || this.maxFit == undefined
-    ) {
+      this.part.part == "" ) {
       this.uiComponentsService.showAlert({
         header: "Alert",
         message: `need add data in the form`,
@@ -423,7 +428,7 @@ export class CameraUnitPage implements OnInit {
   }
 
   async heredateFit(){
-    if(this.vehicle.Parts.length > 0){
+    if(this.vehicle.Parts.length > 0 && this.part.code == 0){
       let temp: number = 100000;
       let tempPart: CorePart;
       console.log(this.vehicle.Parts);
@@ -434,7 +439,7 @@ export class CameraUnitPage implements OnInit {
         }
       });
       this.part.fit = tempPart.fit;
-      this.checkFit(true);
+      this.checkFit();
     }else{
       console.log("No tiene partes");
     }

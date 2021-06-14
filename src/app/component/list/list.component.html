@@ -14,15 +14,18 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+<ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3" *ngIf="!addTemp"></ion-searchbar>
 <ion-content>
-  <ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3" *ngIf="!addTemp"></ion-searchbar>
   <ion-list>
     <ion-item button (click)="returnSelect(item)" lines="none" *ngFor="let item of Items | filterSearchPipe:textSearch "   >
       <ion-thumbnail *ngIf="item.urlPage">
         <img [src]="'//logo.clearbit.com/'+item.urlPage+'?size=56'" />
       </ion-thumbnail>
-      <ion-label>{{item.name || item}}</ion-label>
+      <ion-label *ngIf="!showDetails">{{item.name || item}}</ion-label>
+      <div *ngIf="showDetails">
+        <ion-label position="floating">{{item.category.name}}</ion-label>
+        <ion-input readonly="true" autocapitalize="on" class="ion-no-margin ion-no-padding" [value]="item.name"></ion-input>
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>
