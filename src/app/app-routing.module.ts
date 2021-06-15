@@ -10,15 +10,7 @@ const routes: Routes = [
     path: "",
     redirectTo: "home",
     pathMatch: "full",
-  },
-  {
-    path: "manual",
-    loadChildren: () =>
-      import("./pages/manual-page/manual-page.module").then(
-        (m) => m.ManualPagePageModule
-      ),
-  },
-  
+  },  
   {
     path: "camera",
     loadChildren: () =>

@@ -1,13 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-back-button defaultHref="home"></ion-back-button>
+    <ion-buttons slot="start" >
+      <ion-button (click)="close()" style="color: black;">
+        <ion-icon slot="start" name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>Create</ion-title>
+    <ion-title>Information</ion-title>
   </ion-toolbar>
+  
 </ion-header>
-
-
 
 <ion-content>
   <ion-item button (click)="getListMakers()">
@@ -109,7 +110,7 @@
       [(ngModel)]="this.tempBody"
     >
       <ion-select-option
-        *ngFor="let x of filterSlash(Vehicle.Body,this.listBodyClass)"
+        *ngFor="let x of filterSlash(Vehicle.Body, this.listBodyClass)"
         [value]="x"
         >{{x | uppercase}}</ion-select-option
       >
@@ -129,14 +130,14 @@
       [(ngModel)]="tempClass"
     >
       <ion-select-option
-        *ngFor="let item of this.filterSlash(this.Vehicle.Type,this.listTypeVehicle)"
+        *ngFor="let item of this.filterSlash(this.Vehicle.Type, this.listTypeVehicle)"
         [value]="item"
         >{{item | uppercase}}</ion-select-option
       >
     </ion-select>
   </ion-item>
 
-  <ion-item  (click)="showSelect(filterSlash(Vehicle.Serie,listSeries), 'serie')">
+  <ion-item  (click)="showSelect(filterSlash(Vehicle.Serie, listSeries), 'serie')">
     <ion-label position="floating">Series</ion-label>
     <ion-icon slot="start" name="car"></ion-icon>
     <ion-input
@@ -145,6 +146,7 @@
       [(ngModel)]="tempSerie"
       readonly="true"
     ></ion-input>
+  
     <!--
     <ion-select
       [(ngModel)]="tempSerie"

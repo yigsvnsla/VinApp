@@ -23,7 +23,7 @@ export class TempService {
 
 
   setVehicle(vehicle: CoreVechicle) {
-    this.currentVehicle = vehicle;
+    this.currentVehicle = Object.create(vehicle);
 
   }
   async viewVehicle(vehicle: CoreVechicle) {
@@ -33,27 +33,6 @@ export class TempService {
   async viewPart(part?: CorePart) {
     this.currentPart = part ? part : new CorePart();
     this.router.navigateByUrl("/camera");
-  }
-  async empty() {
-    let info = await Device.getInfo();
-    this.currentVehicle = {
-      Maker: "",
-      Model: "",
-      Year: null,
-      Trim: "",
-      Serie: "",
-      Body: "",
-      Cylinders: null,
-      Parts: null,
-      Vin: "",
-      Id: "0",
-      Type: "",
-      Device: info.uuid,
-      Name: "",
-    };
-    this.currentPart = null;
-    this.router.navigateByUrl("/manual");
-    return this.currentVehicle;
   }
   async uploadPart(boo: boolean, part: CorePart) {
     this.currentPart = Object.create(part);
@@ -162,7 +141,7 @@ export interface CoreVechicle {
   Id: string;
   Type: string;
   Device: string;
-  Name: String;
+  Name: string;
 }
 
 export class CorePart {

@@ -8,6 +8,7 @@ import { CorePart, CoreVechicle, TempService } from "src/app/services/temp.servi
 import { CoreConexionService } from "src/app/services/core-conexion.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ViewPhotoComponent } from 'src/app/component/view-photo/view-photo.component';
+import { ManualPagePage } from '../manual-page/manual-page.page';
 
 const { Clipboard } = Plugins;
 @Component({
@@ -115,7 +116,16 @@ export class ItemsDetailsPage implements OnInit {
   })
  }
  async editVehicle(){
-  this.route.navigateByUrl("/manual");
+  this.uiComponentsService.showModal({
+    component: ManualPagePage,
+    componentProps:{
+      TempVehicle: this.main.currentVehicle,
+      EditMode: true
+    }
+  }).then(res=>{
+    this.components = this.main.currentVehicle.Parts;
+    this.car = this.main.currentVehicle;
+  });
  }
  async showDetails(e){
   if(e.detail.checked){

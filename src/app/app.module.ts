@@ -19,8 +19,8 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
-import "@capacitor-community/http";
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { ManualPagePageModule } from './pages/manual-page/manual-page.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,7 +36,9 @@ import { IonicStorageModule } from '@ionic/storage-angular';
     CommonModule,
     NgxCurrencyModule,
     PipesModule,
-    IonicStorageModule.forRoot()
+    ManualPagePageModule,
+    IonicStorageModule.forRoot(),
+
   ],
   exports: [],
   providers: [

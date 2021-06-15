@@ -5,8 +5,9 @@ import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
 import { FormControl, Validators } from "@angular/forms";
 import { Platform } from "@ionic/angular";
 import { Plugins, KeyboardInfo } from "@capacitor/core";
-import { TempService } from "src/app/services/temp.service";
+import { CoreVechicle, TempService } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
+import { ManualPagePage } from '../manual-page/manual-page.page';
 
 const { Device, Keyboard } = Plugins;
   //keyboard Show
@@ -57,8 +58,13 @@ export class HomePage implements OnInit {
 
   }
   
-  manualPage() {
-    this.main.empty();
+  async manualPage(v?: CoreVechicle) {
+    this.uiComponentsService.showModal({
+      component: ManualPagePage,
+      componentProps:{
+        TempVehicle: v
+      }
+    })
   }
 
   async ionViewWillEnter(){
@@ -205,7 +211,7 @@ export class HomePage implements OnInit {
         if (await this.filter(this.result)) {
           await this.core.search(this.result)
             .then(async (e) => {
-              this.main.setVehicle(e)
+              this.manualPage(e);
             })
         }
          console.log("True");
@@ -214,7 +220,7 @@ export class HomePage implements OnInit {
         if (this.result.length == 17) {
           await this.core.search(this.result)
             .then(async (e) => {
-              this.main.setVehicle(e)
+              this.manualPage(e);
             })
         }  else {
           if (this.result.length > 0) {

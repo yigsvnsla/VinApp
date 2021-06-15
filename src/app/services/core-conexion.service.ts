@@ -7,6 +7,7 @@ import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 import { Plugins } from "@capacitor/core";
 import { Router } from "@angular/router";
+import { ManualPagePage } from "../pages/manual-page/manual-page.page";
 const { Device } = Plugins;
 
 @Injectable({
@@ -89,7 +90,6 @@ export class CoreConexionService {
               Name: "",
             });
             (await toast).dismiss();
-            this.router.navigateByUrl("/manual");
           },
           async (fail) => {
             console.error("Search: ", fail);
