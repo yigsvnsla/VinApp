@@ -276,6 +276,7 @@ export class CoreConexionService {
               res.photos,
               (await this.storageService.get("url")).urlPrimary
             );
+            r.fit = res.fit;
             value(r);
           },
           (fail) => {

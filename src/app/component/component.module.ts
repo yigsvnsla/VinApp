@@ -16,7 +16,7 @@ import { MenuHomeComponent } from "./menu-home/menu-home.component";
     ListComponent,
     ModalPage,
     ViewPhotoComponent,
-    ListPartComponent
+    ListPartComponent,
   ],
   exports: [
     DinamicModalComponent,
@@ -24,7 +24,7 @@ import { MenuHomeComponent } from "./menu-home/menu-home.component";
     ListComponent,
     ModalPage,
     ViewPhotoComponent,
-    ListPartComponent
+    ListPartComponent,
   ],
   imports: [CommonModule, IonicModule, PipesModule],
   providers:[CurrencyPipe,UiComponentsService]

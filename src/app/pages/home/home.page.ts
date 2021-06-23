@@ -243,4 +243,7 @@ export class HomePage implements OnInit {
     this.result = _result.text;
   }
 
+  async testing(){
+  }
+
 }

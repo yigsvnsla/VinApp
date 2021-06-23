@@ -7,15 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { CameraUnitPageRoutingModule } from './camera-unit-routing.module';
 
 import { CameraUnitPage } from './camera-unit.page';
+import { DragulaModule, DragulaService } from 'ng2-dragula';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CameraUnitPageRoutingModule
+    CameraUnitPageRoutingModule,
+    DragulaModule
   ],
   declarations: [CameraUnitPage],
-  providers: [CurrencyPipe]
+  providers: [CurrencyPipe, DragulaService]
 })
 export class CameraUnitPageModule {}

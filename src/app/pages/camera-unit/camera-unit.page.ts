@@ -18,6 +18,9 @@ import { CoreConexionService } from "src/app/services/core-conexion.service";
 import { CurrencyPipe } from "@angular/common";
 import { ListComponent } from "src/app/component/list/list.component";
 import { StorageService } from "src/app/services/storage.service";
+import { DragulaService } from "ng2-dragula";
+import { ImagePicker } from "@ionic-native/image-picker/ngx";
+import { ImageResizer } from "@ionic-native/image-resizer/ngx";
 
 @Component({
   selector: "app-camera-unit",
@@ -42,8 +45,14 @@ export class CameraUnitPage implements OnInit {
     private currencyPipe: CurrencyPipe,
     private uiComponentsService: UiComponentsService,
     private coreConexionService: CoreConexionService,
-    private core: CoreConexionService
+    private core: CoreConexionService,
+    private dragula: DragulaService,
+    private picker: ImagePicker,
+    private resize: ImageResizer
   ) {
+    this.dragula.createGroup("Darwin", {
+      direction: "horizontal",
+    });
     this.subcribe = this.platform.backButton.subscribeWithPriority(10, () => {
       if (this.constructor.name == "CameraUnitPage") {
         this.stopCamera();
@@ -59,33 +68,37 @@ export class CameraUnitPage implements OnInit {
     //this.sliderOptions = this.sliderBoostrap();
     this.part.code !== 0 ? (this.editMode = true) : (this.editMode = false);
     if (this.part.status == "") {
-      this.part.status = "Used (normal wear)";
+      this.part.status = "Used";
       this.statusId = 4;
     } else {
       this.statusId = this.setStatus(this.part.status);
     }
     await this.checkFit();
-
+  }
+  ionViewWillLeave() {
+    this.dragula.destroy("Darwin");
   }
 
   async onSearch() {
-    this.coreConexionService.findArray("Parts", "?_limit=-1&_sort=name:ASC").then((e) => {
-      this.uiComponentsService
-        .showModal({
-          component: ListPartComponent,
-          cssClass: "List-Part-Component",
-          swipeToClose: true,
-          componentProps: {
-            Items: e,
-          },
-        })
-        .then((e) => {
-          this.part.category = e.category.name;
-          this.part.categoryId = e.category.id;
-          this.part.part = e.name;
-          this.part.id = e.id;
-        });
-    });
+    this.coreConexionService
+      .findArray("Parts", "?_limit=-1&_sort=name:ASC")
+      .then((e) => {
+        this.uiComponentsService
+          .showModal({
+            component: ListPartComponent,
+            cssClass: "List-Part-Component",
+            swipeToClose: true,
+            componentProps: {
+              Items: e,
+            },
+          })
+          .then((e) => {
+            this.part.category = e.category.name;
+            this.part.categoryId = e.category.id;
+            this.part.part = e.name;
+            this.part.id = e.id;
+          });
+      });
   }
 
   async viewPhoto(data) {
@@ -139,19 +152,45 @@ export class CameraUnitPage implements OnInit {
     console.log(JSON.stringify(await this.core.imagesStrapi(data)));
   }*/
 
+  async pickImage() {
+    if (this.part.images.length < 11) {
+      this.picker
+        .getPictures({
+          outputType: 1,
+          maximumImagesCount: 11 - this.part.images.length,
+        })
+        .then((res) => {
+          res.forEach((e) => {
+            this.part.images.push(new Image(e, `Testing ${this.count}`));
+            console.log(e);
+          });
+        });
+    } else {
+      this.uiComponentsService.showAlert({
+        message: "Maximum number of images reached",
+        header: "Limit",
+        buttons: ["OK"],
+      });
+    }
+  }
   async captureImage() {
-    let element = document.getElementsByClassName("darwin")[0];
-    element.classList.add("shadow");
-    CameraPreview.capture({ quality: 90 }).then(res=>{
-      this.part.images.push(
-        new Image(
-          res.value,
-          `Testing ${this.count}`
-        )
-      );
-      element.classList.remove("shadow");
-    })
-    
+    if (this.part.images.length < 11) {
+      let element = document.getElementsByClassName("darwin")[0];
+      element.classList.add("shadow");
+      CameraPreview.capture({ quality: 90 }).then((res) => {
+        this.part.images.push(new Image(res.value, `Testing ${this.count}`));
+        this.count++;
+        if (this.part.images.length > 0) this.nameIcon = "checkmark";
+        element.classList.remove("shadow");
+      });
+    } else {
+      this.uiComponentsService.showAlert({
+        message: "Maximum number of images reached",
+        header: "Limit",
+        buttons: ["OK"],
+      });
+    }
+
     /*
   Funciona con el plugin HTTP community de capacitor, siempre y cuando me acuerde de modificarlo.
   let data = (await CameraPreview.capture({quality: 80})).value; 
@@ -183,9 +222,6 @@ export class CameraUnitPage implements OnInit {
       console.log(fail);
     });
       */
-
-    this.count++;
-    if (this.part.images.length > 0) this.nameIcon = "checkmark";
   }
   flipCamera() {
     //CameraPreview.flip();
@@ -208,11 +244,27 @@ export class CameraUnitPage implements OnInit {
         console.log("item not found");
       }
     };
-    this.part.images = removeItemFromArr(
-      this.part.images,
-      filter(this.part.images, x)
-    );
-    console.log(this.part.images);
+    this.uiComponentsService.showAlert({
+      header: "Delete",
+      message:
+        "Do you want to delete this image?",
+      buttons: [
+        {
+          text: "Yes",
+          role: "success",
+          handler: () => {
+            this.part.images = removeItemFromArr(
+              this.part.images,
+              filter(this.part.images, x)
+            );
+          },
+        },
+        {
+          text: "No",
+          role: "cancel",
+        },
+      ],
+    });
   }
   //Sliders
   public sliderOptions: any;
@@ -236,7 +288,7 @@ export class CameraUnitPage implements OnInit {
       }
     }
   }
-  public getSantizeUrl(url: string) {
+  getSantizeUrl(url: string) {
     return this.sanitizer.bypassSecurityTrustUrl(`${url}`);
   }
   // Ion-Range
@@ -299,7 +351,8 @@ export class CameraUnitPage implements OnInit {
       this.part.images.length == 0 ||
       this.part.price == 0 ||
       this.part.category == "" ||
-      this.part.part == "" ) {
+      this.part.part == ""
+    ) {
       this.uiComponentsService.showAlert({
         header: "Alert",
         message: `need add data in the form`,
@@ -334,12 +387,13 @@ export class CameraUnitPage implements OnInit {
       this.part = new CorePart();
       this.main.setPart(this.part);
       if (this.part.status == "") {
-        this.part.status = "Used (normal wear)";
+        this.part.status = "Used";
         this.statusId = 4;
       } else {
         this.statusId = this.setStatus(this.part.status);
       }
       this.uiComponentsService.showToast("the inputs have been cleaned");
+      this.checkFit();
     }
   }
 
@@ -385,96 +439,116 @@ export class CameraUnitPage implements OnInit {
     }
     return list;
   }
-  async minSelect(){
+  async minSelect() {
     this.maxFit = undefined;
+    this.minFit = undefined;
     let min = new Date().getFullYear();
     let temp = await this.showYearList();
-    this.minFit = temp;
-    if(temp == min){
-      this.maxFit = temp;
+    if(temp < this.vehicle.Year){
+    this.uiComponentsService.showAlert({
+      header: "Year",
+      message:
+        "Are you sure to place this year lower?",
+      buttons: [
+        {
+          text: "Yes",
+          role: "success",
+          handler: () => {
+            this.minFit = temp;
+          },
+        },
+        {
+          text: "No",
+          role: "cancel",
+        },
+      ],
+    });
+    }else{
+      this.minFit = temp;
     }
   }
-  async maxSelect(){
-    if(this.minFit != undefined){
-      this.maxFit= await this.showYearList(this.minFit);
+  async maxSelect() {
+    if (this.minFit != undefined) {
+      this.maxFit = await this.showYearList(this.minFit);
       this.part.fit = this.generateFit().string;
-    }else{
+    } else {
       this.main.showMessage("Select from year first!");
     }
   }
-  
-  generateFit(): {string: string, number: number[]}{
+
+  generateFit(): { string: string; number: number[] } {
     let s: string = "";
     let n: number[] = [];
-      for (let i = this.minFit; i <= this.maxFit; i++) {
-        s = s + " " + i.toString();    
-        n.push(i);
-      }
-      return{
-        string: s.substr(1),
-        number: n
-      }
-  }
-  
-  async checkFit(boo?: boolean){
-    if(this.part.fit.includes(" ")){
-      let arr: number[] = this.getArryFromString(this.part.fit.split(" "));
-      this.maxFit = Math.max(... arr);
-      this.minFit = Math.min(... arr);
-      console.log(this.minFit + " " + this.maxFit);
-    }else if(!boo){
-      this.heredateFit();
-    }  
+    for (let i = this.minFit; i <= this.maxFit; i++) {
+      s = s + " " + i.toString();
+      n.push(i);
+    }
+    return {
+      string: s.substr(1),
+      number: n,
+    };
   }
 
-  async heredateFit(){
-    if(this.vehicle.Parts.length > 0 && this.part.code == 0){
+  async checkFit(boo?: boolean) {
+    if (this.part.fit.includes(" ")) {
+      let arr: number[] = this.getArryFromString(this.part.fit.split(" "));
+      this.maxFit = Math.max(...arr);
+      this.minFit = Math.min(...arr);
+      console.log(this.minFit + " " + this.maxFit);
+    } else if (!boo) {
+      this.heredateFit();
+    }
+  }
+
+  async heredateFit() {
+    if (this.vehicle.Parts.length > 0 && this.part.code == 0) {
       let temp: number = 100000;
       let tempPart: CorePart;
-      console.log(this.vehicle.Parts);
-      this.vehicle.Parts.forEach(e => {
-        if(e.code < temp){
+      this.vehicle.Parts.forEach((e) => {
+        if (e.code < temp) {
           temp = e.code;
           tempPart = Object.create(e);
         }
       });
       this.part.fit = tempPart.fit;
       this.checkFit();
-    }else{
+    } else {
       console.log("No tiene partes");
+      console.log(this.vehicle.Parts);
+      console.log(this.part.code);
     }
-
   }
 
-  getArryFromString(arr: string[]): number[]{
+  getArryFromString(arr: string[]): number[] {
     let r: number[] = [];
-    arr.forEach(e => {
+    arr.forEach((e) => {
       r.push(parseInt(e));
     });
     return r;
   }
 
-  async showYearList(start?:number): Promise<number>{
-    return new Promise(async value=>{
+  async showYearList(start?: number): Promise<number> {
+    return new Promise(async (value) => {
       let temp: {}[] = [];
-      let s:number = start? start : 1985;
-      for (let i = s; i < new Date().getFullYear() ; i++) {
+      let s: number = start ? start : 1985;
+      for (let i = s; i < new Date().getFullYear(); i++) {
         temp.push({
           id: i,
           name: i,
         });
       }
-      this.uiComponentsService.showModal({
-        component: ListComponent,
-        cssClass: "my-modal-listComponent",
-        swipeToClose: true,
-        componentProps: {
-          Items:temp.reverse()
-        },
-      }).then(e=>{
-        value(e.id)
-      })
-    })
-    
+      this.uiComponentsService
+        .showModal({
+          component: ListComponent,
+          cssClass: "my-modal-listComponent",
+          swipeToClose: true,
+          componentProps: {
+            Items: temp.reverse(),
+          },
+        })
+        .then((e) => {
+          value(e.id);
+        });
+    });
   }
 }

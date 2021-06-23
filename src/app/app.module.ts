@@ -1,5 +1,5 @@
-import { StorageService } from './services/storage.service';
-import { UiComponentsService } from 'src/app/services/ui-components.service';
+import { StorageService } from "./services/storage.service";
+import { UiComponentsService } from "src/app/services/ui-components.service";
 import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouteReuseStrategy } from "@angular/router";
@@ -19,8 +19,11 @@ import { ComponentModule } from "./component/component.module";
 import { AppComponent } from "./app.component";
 
 import "@capacitor-community/camera-preview";
-import { IonicStorageModule } from '@ionic/storage-angular';
-import { ManualPagePageModule } from './pages/manual-page/manual-page.module';
+import { IonicStorageModule } from "@ionic/storage-angular";
+import { ManualPagePageModule } from "./pages/manual-page/manual-page.module";
+import { DragulaModule, DragulaService } from "ng2-dragula";
+import { ImagePicker } from "@ionic-native/image-picker/ngx";
+import { ImageResizer } from "@ionic-native/image-resizer/ngx";
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,7 +41,7 @@ import { ManualPagePageModule } from './pages/manual-page/manual-page.module';
     PipesModule,
     ManualPagePageModule,
     IonicStorageModule.forRoot(),
-
+    DragulaModule.forRoot(),
   ],
   exports: [],
   providers: [
@@ -47,7 +50,10 @@ import { ManualPagePageModule } from './pages/manual-page/manual-page.module';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    BarcodeScanner
+    BarcodeScanner,
+    DragulaService,
+    ImagePicker,
+    ImageResizer
   ],
   bootstrap: [AppComponent],
 })

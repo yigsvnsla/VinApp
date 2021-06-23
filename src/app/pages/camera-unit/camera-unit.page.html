@@ -1,6 +1,6 @@
 <ion-content>
   <div id="cameraPreview" class="cameraPreview" fullscreen>
-    <div class="darwin "></div>
+    <div class="darwin"></div>
     <div id="block" *ngIf="cameraActive">
       <!--  -->
       <ion-button (click)="stopCamera()" expand="block" id="close">
@@ -14,136 +14,169 @@
       </ion-button>
     </div>
   </div>
-
-  <ion-item-group *ngIf="!viewCam">
-    <ion-item-divider>
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="home"></ion-back-button>
-      </ion-buttons>
-      <ion-label>Form Components</ion-label>
-      <ion-buttons slot="end">
-        <ion-button (click)="onSearch()">
-          <ion-icon slot="start" name="search"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-item-divider>
-
-    <ion-item class="ion-no-margin ion-no-padding">
-      <ion-label position="">Photos</ion-label>
-      <ion-slides
-        [options]="sliderOptions"
-        class="ion-no-margin ion-no-padding"
-      >
-        <ion-slide>
-          <ion-card
-            button
-            (click)="iAdd()"
-            class="carrousel"
-            id="slideConstant"
-          >
-            <ion-icon name="camera"></ion-icon>
-          </ion-card>
-        </ion-slide>
-        <ion-slide *ngFor="let x of part.images; let i = index">
-          <ion-card button class="carrousel" (click)="viewPhoto(x.getImage())">
-            <ion-icon
-              (click)="iDelete(x)"
-              name="close"
+  <ion-grid *ngIf="!viewCam" class="main ion-no-padding">
+    <ion-row>
+      <ion-item-group>
+        <ion-item-divider>
+          <ion-buttons slot="start">
+            <ion-back-button defaultHref="home"></ion-back-button>
+          </ion-buttons>
+          <ion-label>Form Components</ion-label>
+          <ion-buttons slot="end">
+            <ion-button (click)="onSearch()">
+              <ion-icon slot="start" name="search"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-item-divider>
+        <!-- 
+      <ion-item class="ion-no-margin ion-no-padding">
+        <ion-label position="">Photos</ion-label>
+        <ion-slides
+          [options]="sliderOptions"
+          class="ion-no-margin ion-no-padding"
+        >
+          <ion-slide>
+            <ion-card
+              button
+              (click)="iAdd()"
               class="carrousel"
-            ></ion-icon>
-            <img class="slide" [src]="getSantizeUrl(x.getImage())" alt="" />
-          </ion-card>
-        </ion-slide>
-      </ion-slides>
-    </ion-item>
-
-    <ion-item button (click)="getCategories()">
-      <ion-label position="floating">Component</ion-label>
-      <ion-input
-        type="text"
-        name="inputComponent"
-        id=""
-        readonly="true"
-        [(ngModel)]="part.category"
-      ></ion-input>
-    </ion-item>
-
-    <ion-item button (click)="getParts()">
-      <ion-label position="floating">Part</ion-label>
-      <ion-input
-        type="text"
-        name="inputPart"
-        id=""
-        readonly="true"
-        [(ngModel)]="part.part"
-      ></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Price</ion-label>
-      <ion-icon name="logo-usd" slot="end"></ion-icon>
-      <ion-input
-        maxlength="12"
-        minlength="1"
-        type="tel"
-        [value]="this.part.price|currency"
-        (ionBlur)="eventPrice($event)"
-        (ionFocus)="eventClear($event)"
-      ></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating"
-        >Select Condition: {{this.part.status}}</ion-label
-      >
-      <ion-range
-        min="1"
-        max="6"
-        snaps="true"
-        ticks="true"
-        color="success"
-        [value]="statusId"
-        (ionChange)="rangeChange($event)"
-      >
-      </ion-range>
-    </ion-item>
-    
-    <ion-item>
-    <ion-label position="fixed">Fit range:</ion-label>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-item button (click)="minSelect()">
-            <ion-label position="floating">From: </ion-label>
-            <ion-input
-            type="text"
-            name="inputMin"
-            readonly="true"
-            [(ngModel)]="minFit">
-            </ion-input>
+              id="slideConstant"
+            >
+              <ion-icon name="camera"></ion-icon>
+            </ion-card>
+          </ion-slide>
+          <ion-slide *ngFor="let x of part.images; let i = index">
+            <ion-card button class="carrousel" (click)="viewPhoto(x.getImage())">
+              <ion-icon
+                (click)="iDelete(x)"
+                name="close"
+                class="carrousel"
+              ></ion-icon>
+              <img class="slide" [src]="getSantizeUrl(x.getImage())" alt="" />
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-item>
+      -->
+  
+        <ion-item class="ion-no-padding ion-no-margin" lines="none">
+          <ion-item button (click) = "getCategories()">
+              <ion-label position="floating">Component</ion-label>
+              <ion-input
+                type="text"
+                name="inputComponent"
+                id=""
+                readonly="true"
+                [(ngModel)]="part.category"
+              ></ion-input>
           </ion-item>
-        </ion-col>
-        <ion-col>
-          <ion-item button (click)="maxSelect()">
-            <ion-label position="floating">To: </ion-label>
-            <ion-input
+        <ion-item button (click)="getParts()">
+          <ion-label position="floating">Part</ion-label>
+          <ion-input
             type="text"
-            name="inputMax"
+            name="inputPart"
+            id=""
             readonly="true"
-            [(ngModel)]="maxFit">
-            </ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    </ion-item>
-  </ion-item-group>
+            [(ngModel)]="part.part"
+          ></ion-input>
+        </ion-item>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label>Price</ion-label>
+          <ion-icon name="logo-usd" slot="end"></ion-icon>
+          <ion-input
+            maxlength="12"
+            minlength="1"
+            type="tel"
+            [value]="this.part.price|currency"
+            (ionBlur)="eventPrice($event)"
+            (ionFocus)="eventClear($event)"
+          ></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="floating"
+            >Select Condition: {{this.part.status}}</ion-label
+          >
+          <ion-range
+            min="1"
+            max="6"
+            snaps="true"
+            ticks="true"
+            color="success"
+            [value]="statusId"
+            (ionChange)="rangeChange($event)"
+          >
+          </ion-range>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label position="fixed">Fit range:</ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-item button (click)="minSelect()">
+                  <ion-label position="floating">From: </ion-label>
+                  <ion-input
+                    type="text"
+                    name="inputMin"
+                    readonly="true"
+                    [(ngModel)]="minFit"
+                  >
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col>
+                <ion-item button (click)="maxSelect()">
+                  <ion-label position="floating">To: </ion-label>
+                  <ion-input
+                    type="text"
+                    name="inputMax"
+                    readonly="true"
+                    [(ngModel)]="maxFit"
+                  >
+                  </ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <div class="item-grid " lines="none">
+          <ion-label slot="start">Photos from:</ion-label>
+          <div>
+            <ion-button (click)="iAdd()" expand="block" class="ion-no-padding">
+              <ion-icon slot="icon-only" name="camera"></ion-icon>
+            </ion-button>
+            <ion-button (click)="pickImage()" expand="block" class="ion-no-padding ">
+              <ion-icon slot="icon-only" name="image"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ion-item-group>
+    </ion-row>
+    <ion-row class="show">
+      <div
+      class="ion-padding img-container"
+      dragula="Darwin"
+      [(dragulaModel)]="part.images"
+    >
+      <div
+        *ngFor="let e of part.images; let i = index"
+        class="ion-no-padding ion-no-margin i">
+        <ion-icon (click)="iDelete(e)" name="close" class="delete"></ion-icon>
+        <img [src]="getSantizeUrl(e.getImage())" alt="" />
+      </div>
+    </div>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer id="ionFooter">
   <ion-toolbar
     class="ion-text-center"
-    *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' && !viewCam ">
+    *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' && !viewCam "
+  >
     <ion-grid class="" fixed>
       <ion-row>
         <ion-col>

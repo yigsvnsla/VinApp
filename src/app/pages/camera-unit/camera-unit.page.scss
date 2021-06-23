@@ -85,7 +85,84 @@ ion-card.carrousel#slideConstant {
   height: 50px;
   z-index: 15;
 }
-.fin{
+.fin {
   position: fixed;
   top: 0%;
+}
+.img-container{
+  background-color:rgba(58, 58, 58, 0.103);
+  margin: 10px;
+  border: 2px #2dd36f solid;
+  border-radius: 15px;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+  grid-template-rows: 33.33% 33.33% 33.33%;
+  height: 100%;
+  width: 100%;
+}
+.i {
+  position: relative;
+  z-index: 1000;
+  margin-right: 7px;
+  margin-bottom: 7px;
+}
+.i img{
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+}
+
+ion-icon.delete{
+  position: absolute;
+  display: inline;
+  top: 0%;
+  right: 5%;
+  font-size: 1.5em;
+}
+ion-grid.main{
+  height: 90%;
+  ion-row:first-child{
+    height: 60%;
+  }
+  ion-row:last-child{
+    height: 40%;
+  }
+}
+.ionFooter{
+  position: relative;
+}
+div.item-grid{
+  display: grid;
+  grid-template-columns: 30% 60%;
+  z-index: 1;
+  position: relative;
+  align-items: center;
+  height: 10%;
+  margin-top: 15px;
+  ion-label{
+    align-items: center;
+    text-align: center;
+  }
+  div{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    column-gap: 10px;
+    ion-button{
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+  }
+  
+}
+.show{
+  visibility: hidden;
+}
+@media only screen and (min-height: 400px){
+  .show{
+    visibility: visible !important;
+  }
 }
