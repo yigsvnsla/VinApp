@@ -165,7 +165,7 @@
         *ngFor="let e of part.images; let i = index"
         class="ion-no-padding ion-no-margin i">
         <ion-icon (click)="iDelete(e)" name="close" class="delete"></ion-icon>
-        <img [src]="getSantizeUrl(e.getImage())" alt="" />
+        <img [src]="getSantizeUrl(e.getResized())" alt="" />
       </div>
     </div>
     </ion-row>
@@ -176,7 +176,7 @@
   <ion-toolbar
     class="ion-text-center"
     *ngIf="this.part.images.length != 0 && this.part.price != 0 && this.part.category != '' && this.part.part != '' && !viewCam "
-  >
+    >
     <ion-grid class="" fixed>
       <ion-row>
         <ion-col>

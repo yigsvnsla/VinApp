@@ -11,7 +11,7 @@ const { CameraPreview, Keyboard } = Plugins;
 import {
   CorePart,
   CoreVechicle,
-  Image,
+  Images,
   TempService,
 } from "src/app/services/temp.service";
 import { CoreConexionService } from "src/app/services/core-conexion.service";
@@ -161,7 +161,7 @@ export class CameraUnitPage implements OnInit {
         })
         .then((res) => {
           res.forEach((e) => {
-            this.part.images.push(new Image(e, `Testing ${this.count}`));
+            this.part.images.push(new Images(e, `Testing ${this.count}`));
             console.log(e);
           });
         });
@@ -178,7 +178,7 @@ export class CameraUnitPage implements OnInit {
       let element = document.getElementsByClassName("darwin")[0];
       element.classList.add("shadow");
       CameraPreview.capture({ quality: 90 }).then((res) => {
-        this.part.images.push(new Image(res.value, `Testing ${this.count}`));
+        this.part.images.push(new Images(res.value, `Testing ${this.count}`));
         this.count++;
         if (this.part.images.length > 0) this.nameIcon = "checkmark";
         element.classList.remove("shadow");
@@ -231,7 +231,7 @@ export class CameraUnitPage implements OnInit {
     this.openCamera();
   }
   //Delete photos
-  iDelete(x: Image) {
+  iDelete(x: Images) {
     //deleting
     var removeItemFromArr = (arr, item) => {
       return arr.filter((e) => e !== item);
@@ -369,9 +369,9 @@ export class CameraUnitPage implements OnInit {
     }
   }
 
-  async verify(): Promise<Image[]> {
+  async verify(): Promise<Images[]> {
     return new Promise(async (value) => {
-      let r: Image[] = [];
+      let r: Images[] = [];
       this.part.images.forEach((element) => {
         if (!element.url && !element.id) {
           r.push(element);

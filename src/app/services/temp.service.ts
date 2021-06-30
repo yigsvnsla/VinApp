@@ -152,7 +152,7 @@ export class CorePart {
   category: string;
   categoryId: string;
   price: number;
-  images: Image[];
+  images: Images[];
   arrImage: number[];
   fit: string;
   fitYears: number[];
@@ -248,7 +248,7 @@ export class CorePart {
 
   setImagesFromURL(param: any[],  url:string) {
     param.forEach((element) => {
-      let a: Image = new Image();
+      let a: Images = new Images();
       a.setURL(url + element.url.substr(1));
       a.id = element.id;
       this.images.push(a);
@@ -264,12 +264,14 @@ export class CorePart {
   }
   
 }
-export class Image {
+export class Images {
   id: string;
   url: string;
   blob: Blob;
   b64: string;
   name: string;
+  resized: string;
+
   constructor(b64?: string, name?: string) {
     if (b64 && name) {
       this.id = "0";
@@ -277,14 +279,25 @@ export class Image {
       this.blob = this.b64toBlob(b64, "image/jpeg");
       this.name = name;
       this.b64 = b64;
+      this.tool();
     }
   }
+
+  async tool(){
+    this.resized = await this.resizeImage("data:image/jpge;base64,"+this.b64);
+  }
+
   setURL(url: string) {
     this.url = url;
   }
+
   getImage(): string {
     return this.id === "0" ? "data:image/jpge;base64," + this.b64 : this.url;
   }
+  getResized(): string{
+    return this.resized ? this.resized : this.url;
+  }
+  
 
   b64toBlob(b64Data: any, contentType = "", sliceSize = 512) {
     const byteCharacters = atob(b64Data);
@@ -304,5 +317,37 @@ export class Image {
 
     const blob = new Blob(byteArrays, { type: contentType });
     return blob;
+  }
+
+  resizeImage(base64Str, maxWidth = 400, maxHeight = 350): Promise<string> {
+    return new Promise((resolve) => {
+      let img = new Image()
+      img.src = base64Str
+      img.onload = () => {
+        let canvas = document.createElement('canvas')
+        const MAX_WIDTH = maxWidth
+        const MAX_HEIGHT = maxHeight
+        let width = img.width
+        let height = img.height
+  
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width
+            width = MAX_WIDTH
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height
+            height = MAX_HEIGHT
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+        let ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+        resolve(canvas.toDataURL())
+      }
+    })
   }
 }
