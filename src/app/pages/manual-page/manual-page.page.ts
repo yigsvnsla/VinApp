@@ -138,6 +138,10 @@ export class ManualPagePage implements OnInit {
     this.Vehicle.Trim = e.detail.value;
   }
 
+  testing(){
+    console.log('Clicked')
+  }
+
   async getModels() {
     if (this.main.currentVehicle.Id !== "0") {
       return;
@@ -219,6 +223,47 @@ export class ManualPagePage implements OnInit {
       }
       this.main.uploadVehicle();
     }
+  }
+
+  showSelect(arr: any[] | any, type: string) {
+    if(type == "trim"){
+      if(Array.isArray(arr)){
+        this.uiComponentsService
+        .showModal({
+          component: ListComponent,
+          cssClass: "my-modal-listComponent",
+          swipeToClose: true,
+          componentProps: {
+            Items:arr,
+            addTemp: true
+          },
+        })
+        .then((e) => {
+          if (e != undefined) {
+            this.tempTrim = e;
+          }
+        });
+      }
+    }else{
+      if(Array.isArray(arr)){
+        this.uiComponentsService
+        .showModal({
+          component: ListComponent,
+          cssClass: "my-modal-listComponent",
+          swipeToClose: true,
+          componentProps: {
+            Items:arr,
+            addTemp: true
+          },
+        })
+        .then((e) => {
+          if (e != undefined) {
+            this.tempSerie = e;
+          }
+        });
+      }
+    }
+    
   }
 }
 

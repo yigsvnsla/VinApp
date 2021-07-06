@@ -122,7 +122,6 @@ export class CameraUnitPage implements OnInit {
       className: "cameraPreview",
       toBack: true,
       rotateWhenOrientationChanged: true,
-      storeToFile: true,
     });
     this.cameraActive = true;
   }
@@ -134,11 +133,11 @@ export class CameraUnitPage implements OnInit {
     this.nameIcon = "close";
   }
 
-  async sendPost(blob: Blob) {
+  /*async sendPost(blob: Blob) {
     let data: FormData = new FormData();
     data.append("files", blob, "testing");
     console.log(JSON.stringify(await this.core.imagesStrapi(data)));
-  }
+  }*/
 
   async captureImage() {
     this.part.images.push(

@@ -199,7 +199,8 @@ export class HomePage implements OnInit {
   //"SALMH13446A220123"
 
   async searchVin() {
-    switch (await this.storageService.get('filter')) {
+    let res = await this.storageService.get('filter');
+    switch (res.status) {
       case true:
         if (await this.filter(this.result)) {
           await this.core.search(this.result)
@@ -207,6 +208,7 @@ export class HomePage implements OnInit {
               this.main.setVehicle(e)
             })
         }
+         console.log("True");
         break;
       case false:
         if (this.result.length == 17) {
@@ -221,6 +223,7 @@ export class HomePage implements OnInit {
             this.manualPage();
           }
         }
+        console.log("False");
         break;
     }
   }

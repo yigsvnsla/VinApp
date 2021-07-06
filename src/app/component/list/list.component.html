@@ -6,23 +6,23 @@
       </ion-button>
     </ion-buttons>
     <ion-title>List</ion-title>
-    <ion-buttons slot="end" *ngIf="AddElements">
+    <ion-buttons slot="end" *ngIf="AddElements || addTemp">
       <ion-button (click)="addComponent()">
         <ion-icon slot="end" name="Add"></ion-icon>
-        <ion-label>add</ion-label>
+        <ion-label>Add</ion-label>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3"></ion-searchbar>
+  <ion-searchbar class="ion-no-margin ion-no-padding" (ionChange)="search($event)" debounce="3" *ngIf="!addTemp"></ion-searchbar>
   <ion-list>
     <ion-item button (click)="returnSelect(item)" lines="none" *ngFor="let item of Items | filterSearchPipe:textSearch "   >
       <ion-thumbnail *ngIf="item.urlPage">
         <img [src]="'//logo.clearbit.com/'+item.urlPage+'?size=56'" />
       </ion-thumbnail>
-      <ion-label>{{item.name}}</ion-label>
+      <ion-label>{{item.name || item}}</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>
